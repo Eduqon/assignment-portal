@@ -241,7 +241,6 @@ function CP1DoneOrders() {
     const [sendRequest, setSendRequest] = useState(() => new Set());
 
     const sendRequestIcon = (info) => {
-      console.log({ info });
       setSendRequest((prev) => new Set(prev).add(info._id));
     };
 

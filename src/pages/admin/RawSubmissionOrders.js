@@ -49,7 +49,7 @@ function RawSubmissionOrders() {
   const [fileUrl, setFileUrl] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isUploading, setIsUploading] = useState(false);
-  const [counter, setCounter] = useState(0);
+  const [sendRework, setSendRework] = useState(false);
 
   let assignmentList = [];
   let submissionsList = [];
@@ -137,7 +137,7 @@ function RawSubmissionOrders() {
           _fetchAssignments();
           ReworkModalDis.onClose();
         } catch (error) {
-          //console.log(error);
+          console.log(error);
         }
       } else {
         try {
@@ -146,13 +146,12 @@ function RawSubmissionOrders() {
             headers: { Authorization: `Bearer ${userToken}` },
           };
           console.log({ userToken, index, assignments });
-          setCounter(counter + 1);
-          return;
+          setSendRework(true);
           const response = await axios.post(
             apiUrl + "/assignment/update",
             {
               _id: assignments[index].id,
-              status: "Internal Rework",
+              status: "Raw Submission",
               assignedQC: userEmail,
             },
             config
@@ -186,7 +185,7 @@ function RawSubmissionOrders() {
           _fetchAssignments();
           ReworkModalDis.onClose();
         } catch (error) {
-          //console.log(error);
+          console.log(error);
         }
       }
     }
@@ -489,10 +488,10 @@ function RawSubmissionOrders() {
     }
   }
 
-  const reworkText = () => {
-    console.log({ counter });
-    return counter === 0 ? "Send for Rework" : "Asked for Rework";
-  };
+  //   const reworkText = () => {
+  //     console.log({ counter });
+  //     return counter === 0 ? "Send for Rework" : "Asked for Rework";
+  //   };
 
   return (
     <>
@@ -561,17 +560,18 @@ function RawSubmissionOrders() {
                     </Button>
                     <Flex>
                       <HStack flexDirection="column" gap={2}>
-                        <Button
+                        {/* <Button
                           color={"red"}
                           onClick={async () => openReworkModal(index)}
                         >
                           Send for Rework
-                        </Button>
+                        </Button> */}
                         <Button
                           color={"red"}
                           onClick={async () => openReworkModal(index)}
+                          disabled={sendRework}
                         >
-                          Send for Rework {counter}
+                          {sendRework ? "Asked for Rework" : "Send for Rework"}
                         </Button>
                       </HStack>
                     </Flex>
