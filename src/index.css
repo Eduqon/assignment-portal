@@ -1,0 +1,169 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* dropdown */
+ul.drop {
+  display: none;
+  cursor: pointer;
+  /* transition: 3 ease-in-out; */
+}
+
+ul.dropSupport {
+  display: none;
+  cursor: pointer;
+}
+
+ul.dropSupport li {
+  list-style: none;
+  padding: 10px 10px 10px 15px;
+  /* border: 1px solid rgba(128, 128, 128, 0.493); */
+}
+
+ul.drop li {
+  list-style: none;
+  padding: 10px 10px 10px 15px;
+  /* border: 1px solid rgba(128, 128, 128, 0.493); */
+}
+
+ul.dropOrder li {
+  list-style: none;
+  padding: 10px 10px 10px 15px;
+  /* border: 1px solid rgba(128, 128, 128, 0.493); */
+}
+
+ul.dropOrder li {
+  list-style: none;
+  padding: 10px 10px 10px 15px;
+  /* border: 1px solid rgba(128, 128, 128, 0.493); */
+}
+
+.css-vcewj5:focus {
+  box-shadow: none !important;
+}
+
+.css-mcpu91 {
+  font-weight: 500;
+  padding-bottom: 20px;
+}
+
+.css-mcpu91 a {
+  font-weight: 500;
+}
+
+/* accodion */
+.clickShow {
+  display: block;
+}
+
+.sideBarNone {
+  display: none;
+}
+.fiKefb{
+  position: fixed !important;
+  top: 47% !important;
+  left: 85%;
+}
+@media screen and (max-width: 480px) {
+  section#popover-content-11{
+    position: relative !important;
+    top: -20px !important;
+  }
+  div#tabs-11--tabpanel-0 {
+    padding: 0px !important;
+  }
+
+  .css-sxyykg {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ShowSideClick {
+    display: none;
+  }
+
+  .ShowSideClick.active {
+    display: block;
+  }
+
+  td.css-1rzgi6j {
+    padding: 10;
+    font-size: 13px;
+
+  }
+
+  .sideBarNone {
+    display: block;
+  }
+
+  /* accordion  */
+  div#accordion-panel-505 {
+    padding: 0;
+  }
+
+  tbody.paddZero.css-0 td {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  table.chakra-table.pa-z.css-5605sr Th {
+    padding-left: 8px;
+    padding-right: 5px;
+  }
+  thead.pa-ze.css-1dpunnv Th {
+    padding: 10px 0px 10px 5px;
+}
+div#accordion-panel-166 {
+  padding: 0;
+}
+
+  div#accordion-panel-418 {
+    padding: 0;
+  }
+
+  div#accordion-panel-422 {
+    padding: 0;
+  }
+  table.pa-zer th {
+    padding: 10px 0px 10px 15px !important;
+}
+   table.pa-zer td {
+    padding: 10px 5px 10px 0px !important;
+}
+button.chakra-button.btn-Neww.css-taj3dd {
+  border: 1px solid gray;
+  box-shadow: 1px 0.2px 9px grey;
+  /* text-align: center; */
+  /* display: flex; */
+}
+table.pad-setting td {
+  padding: 10px 0px;
+}
+table.pad-setting button{
+  
+  background-color: rgb(230, 227, 227);
+}
+
+table.select-td th{
+  padding: 10px 0px 10px 10px;
+}
+table.select-td td{
+  padding: 15px 0px 15px 0px;
+}
+.hyi{
+  background-color: none;
+}
+.hyi.active{
+  background-color: #00FBBD;
+}
+
+}
