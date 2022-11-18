@@ -49,7 +49,7 @@ function RawSubmissionOrders() {
   const [fileUrl, setFileUrl] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isUploading, setIsUploading] = useState(false);
-  const [sendRework, setSendRework] = useState(false);
+  const [sendRework, setSendRework] = useState(() => new Set());
 
   let assignmentList = [];
   let submissionsList = [];
@@ -145,14 +145,15 @@ function RawSubmissionOrders() {
           let config = {
             headers: { Authorization: `Bearer ${userToken}` },
           };
-          console.log({ userToken, index, assignments });
-          setSendRework(true);
+
+          setSendRework((prev) => new Set(prev).add(assignments[index].id));
           const response = await axios.post(
             apiUrl + "/assignment/update",
             {
               _id: assignments[index].id,
-              status: "Raw Submission",
+              status: "Internal Rework",
               assignedQC: userEmail,
+              sendReworkFrom: "Raw Submission",
             },
             config
           );
@@ -443,12 +444,11 @@ function RawSubmissionOrders() {
         headers: { Authorization: `Bearer ${userToken}` },
       };
       const response = await axios.get(
-        apiUrl + "/assignment/fetch?status=Raw%20Submission",
+        apiUrl + `/assignment/fetch?status=Raw%20Submission`,
         config
       );
       let data = response.data.assignmentData;
       assignmentList = [];
-      console.log("fetching");
       if (data.length !== 0) {
         for (let index = 0; index < data.length; index++) {
           assignmentList.push({
@@ -475,6 +475,7 @@ function RawSubmissionOrders() {
               ", " +
               new Date(data[index].expertDeadline).toDateString(),
             expertDeadlineNF: data[index].expertDeadline,
+            retryCount: data[index].retryCount,
           });
         }
         await _fetchToken();
@@ -482,16 +483,10 @@ function RawSubmissionOrders() {
         console.log("No Raw Submission Orders");
       }
       setAssignments(assignmentList);
-      console.log(assignments);
     } catch (err) {
       console.log(err);
     }
   }
-
-  //   const reworkText = () => {
-  //     console.log({ counter });
-  //     return counter === 0 ? "Send for Rework" : "Asked for Rework";
-  //   };
 
   return (
     <>
@@ -536,8 +531,22 @@ function RawSubmissionOrders() {
               <Tr key={assignment.id}>
                 <Td fontWeight={"semibold"}>
                   <Link href={"/admin/assignment_details/" + assignment.id}>
-                    {assignment.id}
+                    {assignment.id}&nbsp;
                   </Link>
+                  {assignment.retryCount > 1 && (
+                    <div
+                      className="d-flex align-items-center justify-content-center border-set"
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        border: "1px solid",
+                        borderRadius: "50px",
+                        fontSize: "12px",
+                      }}
+                    >
+                      R{assignment.retryCount - 1}
+                    </div>
+                  )}
                 </Td>
                 <Td color={"green.600"} fontWeight={"semibold"}>
                   {assignment.subject}
@@ -560,18 +569,14 @@ function RawSubmissionOrders() {
                     </Button>
                     <Flex>
                       <HStack flexDirection="column" gap={2}>
-                        {/* <Button
-                          color={"red"}
-                          onClick={async () => openReworkModal(index)}
-                        >
-                          Send for Rework
-                        </Button> */}
                         <Button
                           color={"red"}
                           onClick={async () => openReworkModal(index)}
-                          disabled={sendRework}
+                          disabled={sendRework.has(assignment.id)}
                         >
-                          {sendRework ? "Asked for Rework" : "Send for Rework"}
+                          {sendRework.has(assignment.id)
+                            ? "Asked for Rework"
+                            : "Send for Rework"}
                         </Button>
                       </HStack>
                     </Flex>

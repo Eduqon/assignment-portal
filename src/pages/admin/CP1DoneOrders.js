@@ -37,21 +37,27 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { apiUrl } from "../../services/contants";
+import { apiUrl, localUrl } from "../../services/contants";
 import { useNavigate } from "react-router-dom";
 
 function CP1DoneOrders() {
   const [assignments, setAssignments] = useState([]);
   const [experts, setExperts] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [sendRequest, setSendRequest] = useState(
+    [] || JSON.parse(window.localStorage.getItem("sendRequest"))
+  );
 
   let assignmentList = [];
   let expertList = [];
 
   let navigate = useNavigate();
 
+  useEffect(() => {
+    _fetchAssignments();
+  }, []);
+
   const ExpertModalDis = useDisclosure();
-  console.log({ ExpertModalDis });
   const QcModalDis = useDisclosure();
 
   const [selectedIndex, setSelectedIndex] = useState();
@@ -238,12 +244,16 @@ function CP1DoneOrders() {
     const [date, setDate] = useState("");
     const [time, setTime] = useState("");
     const [error, setError] = useState(false);
-    const [sendRequest, setSendRequest] = useState(() => new Set());
 
     const sendRequestIcon = (info) => {
-      setSendRequest((prev) => new Set(prev).add(info._id));
+      setSendRequest([...sendRequest, info._id]);
+      window.localStorage.setItem(
+        "sendRequest",
+        JSON.stringify(Array.from(new Set([...sendRequest, info._id])))
+      );
     };
 
+    let requestData = JSON.parse(window.localStorage.getItem("sendRequest"));
     return (
       <Modal
         size={"xl"}
@@ -315,12 +325,14 @@ function CP1DoneOrders() {
                 ) : (
                   experts.map((expert, index) => (
                     <Tr key={expert._id}>
-                      <Td fontWeight={"semibold"}>
-                        {expert._id}
-                        {sendRequest.has(expert._id) && <p>✅</p>}
-                      </Td>
+                      <Td fontWeight={"semibold"}>{expert._id}</Td>
                       <Td>{expert.name}</Td>
                       <Td>{expert.subject}</Td>
+                      <Td>
+                        {requestData && requestData.includes(expert._id) && (
+                          <span>✅</span>
+                        )}
+                      </Td>
                       <Td>
                         <Button
                           onClick={async () => {
@@ -368,7 +380,6 @@ function CP1DoneOrders() {
                                 config
                               );
                               let resdata = response.data;
-                              console.log({ resdata });
                               if (resdata.success) {
                                 window.alert("Expert Asked for Confirmation");
                                 ExpertModalDis.onClose();
@@ -378,8 +389,8 @@ function CP1DoneOrders() {
                             }
                           }}
                         >
-                          {sendRequest.has(expert._id)
-                            ? "Re-send Request"
+                          {requestData && requestData.includes(expert._id)
+                            ? "Re-Send Request"
                             : "Send Request"}
                         </Button>
                       </Td>
@@ -668,10 +679,6 @@ function CP1DoneOrders() {
       </Modal>
     );
   }
-
-  useEffect(() => {
-    _fetchAssignments();
-  }, []);
 
   async function _fetchAssignments() {
     try {
