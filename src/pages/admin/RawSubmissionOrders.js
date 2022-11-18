@@ -89,13 +89,14 @@ function RawSubmissionOrders() {
         {
           _id: assignments[index].id,
           status: "Proof Read",
+          sendReworkFrom: "",
           assignedQC: userEmail,
         },
         config
       );
       _fetchAssignments();
     } catch (error) {
-      //console.log(error);
+      console.log(error);
     }
   }
 

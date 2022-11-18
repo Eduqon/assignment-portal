@@ -37,16 +37,13 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { apiUrl, localUrl } from "../../services/contants";
+import { apiUrl } from "../../services/contants";
 import { useNavigate } from "react-router-dom";
 
 function CP1DoneOrders() {
   const [assignments, setAssignments] = useState([]);
   const [experts, setExperts] = useState([]);
   const [subjects, setSubjects] = useState([]);
-  const [sendRequest, setSendRequest] = useState(
-    [] || JSON.parse(window.localStorage.getItem("sendRequest"))
-  );
 
   let assignmentList = [];
   let expertList = [];
@@ -242,6 +239,9 @@ function CP1DoneOrders() {
       date: "",
       time: "",
     });
+    const [sendRequest, setSendRequest] = useState(
+      [] || JSON.parse(window.localStorage.getItem("sendRequest"))
+    );
 
     const sendRequestIcon = (info) => {
       setSendRequest([...sendRequest, info._id]);
@@ -397,7 +397,6 @@ function CP1DoneOrders() {
                               let resdata = response.data;
                               if (resdata.success) {
                                 window.alert("Expert Asked for Confirmation");
-                                ExpertModalDis.onClose();
                               }
                             } catch (err) {
                               console.log(err);
