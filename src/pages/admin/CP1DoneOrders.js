@@ -53,10 +53,6 @@ function CP1DoneOrders() {
 
   let navigate = useNavigate();
 
-  useEffect(() => {
-    _fetchAssignments();
-  }, []);
-
   const ExpertModalDis = useDisclosure();
   const QcModalDis = useDisclosure();
 
@@ -241,9 +237,11 @@ function CP1DoneOrders() {
 
   function ExpertModal() {
     let checkedListTemp = [];
-    const [date, setDate] = useState("");
-    const [time, setTime] = useState("");
     const [error, setError] = useState(false);
+    const [inputValue, setInputValue] = useState({
+      date: "",
+      time: "",
+    });
 
     const sendRequestIcon = (info) => {
       setSendRequest([...sendRequest, info._id]);
@@ -253,11 +251,19 @@ function CP1DoneOrders() {
       );
     };
 
+    const closeModal = () => {
+      setInputValue({
+        date: "",
+        time: "",
+      });
+      ExpertModalDis.onClose();
+    };
+
     let requestData = JSON.parse(window.localStorage.getItem("sendRequest"));
     return (
       <Modal
-        size={"xl"}
-        onClose={ExpertModalDis.onClose}
+        size={"5xl"}
+        onClose={closeModal}
         isOpen={ExpertModalDis.isOpen}
         onOpen={ExpertModalDis.onOpen}
         isCentered
@@ -290,17 +296,23 @@ function CP1DoneOrders() {
                 <Input
                   type="date"
                   id="date"
-                  value={date}
+                  value={inputValue.date}
                   onChange={(e) => {
-                    setDate(e.target.value);
+                    setInputValue({
+                      ...inputValue,
+                      date: e.target.value,
+                    });
                   }}
                 />
                 <Input
                   type="time"
                   id="time"
-                  value={time}
+                  value={inputValue.time}
                   onChange={(e) => {
-                    setTime(e.target.value);
+                    setInputValue({
+                      ...inputValue,
+                      time: e.target.value,
+                    });
                   }}
                 />
               </HStack>
@@ -316,6 +328,7 @@ function CP1DoneOrders() {
                   <Th>ID</Th>
                   <Th>Name</Th>
                   <Th>Subject</Th>
+                  <Th></Th>
                   <Th></Th>
                 </Tr>
               </Thead>
@@ -335,18 +348,20 @@ function CP1DoneOrders() {
                       </Td>
                       <Td>
                         <Button
-                          onClick={async () => {
+                          onClick={async (e) => {
                             let userToken = localStorage.getItem("userToken");
 
-                            !date || !time ? setError(true) : setError(false);
+                            !inputValue.date || !inputValue.time
+                              ? setError(true)
+                              : setError(false);
 
-                            let splitDate = date.split("-");
+                            let splitDate = inputValue.date.split("-");
 
                             let year = splitDate[0];
                             let month = splitDate[1];
                             let day = splitDate[2];
 
-                            let splitTime = time.split(":");
+                            let splitTime = inputValue.time.split(":");
 
                             let hour = splitTime[0];
                             let min = splitTime[1];
@@ -679,6 +694,10 @@ function CP1DoneOrders() {
       </Modal>
     );
   }
+
+  useEffect(() => {
+    _fetchAssignments();
+  }, []);
 
   async function _fetchAssignments() {
     try {
