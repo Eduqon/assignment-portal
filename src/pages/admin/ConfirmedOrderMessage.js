@@ -359,10 +359,12 @@ function ConfirmedOrderMessage({
   }
 
   async function _fetchConfirmedOrderMessages() {
-    const messages = await confirmedOrders.map((assignment) => {
-      return messageData.flat().filter((data) => data._id === assignment._id);
-    });
-    setConfirmOrderMessages(messages.flat());
+    if (confirmedOrders) {
+      const messages = await confirmedOrders.map((assignment) => {
+        return messageData.flat().filter((data) => data._id === assignment._id);
+      });
+      setConfirmOrderMessages(messages.flat());
+    }
   }
 
   return (
