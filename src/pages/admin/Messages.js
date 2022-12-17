@@ -55,7 +55,7 @@ function Messages() {
         config
       );
       let data = await response.data.assignmentData;
-      if (data.length !== 0) {
+      if (data && data.length !== 0) {
         setConfirmedOrders(data);
         await _fetchMessages();
       } else {
