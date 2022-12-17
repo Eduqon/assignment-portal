@@ -158,9 +158,10 @@ function AdminOrders() {
                 </Tr>
               </Thead>
               <Tbody>
-                {notifications.length === 0 ? (
+                {notifications && notifications.length === 0 ? (
                   <></>
                 ) : (
+                  notifications &&
                   notifications.map((notification, index) => (
                     <Tr key={notification._id}>
                       <Td fontWeight={"semibold"}>
