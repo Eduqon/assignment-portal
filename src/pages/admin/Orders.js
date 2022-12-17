@@ -6,8 +6,22 @@ import {
   Tab,
   TabPanel,
   Heading,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  ModalHeader,
+  ModalCloseButton,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Button,
 } from "@chakra-ui/react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import AssignedExpertOrders from "./AssignedExpertOrders";
 import CP1DoneOrders from "./CP1DoneOrders";
 import CP1PendingOrders from "./CP1PendingOrders";
@@ -21,51 +35,372 @@ import { useEffect, useState } from "react";
 import VendorOrders from "./VendorOrders";
 import CP2DoneOrders from "./CP2DoneOrders";
 import ClientReworkOrders from "./ClientReworkOrders";
+import axios from "axios";
+import { apiUrl, frontEndUrl } from "../../services/contants";
 
 function AdminOrders() {
   const [userRole, setUserRole] = useState("");
+  const [notifications, setNotifications] = useState([]);
+  const [notificationCounter, setNotificationCounter] = useState({});
+
+  const navigate = useNavigate();
+  const NotificationModalDis = useDisclosure();
 
   useEffect(async () => {
     setUserRole(localStorage.getItem("userRole"));
   });
 
+  useEffect(() => {
+    (async () => {
+      const {
+        data: { result: counts },
+      } = await axios.get(apiUrl + "/notifications/countByStatus");
+
+      if (counts) {
+        const countMap = Object.fromEntries(
+          counts.map(({ _id, count }) => [_id, count])
+        );
+        setNotificationCounter(countMap);
+      }
+    })();
+  }, []);
+
+  const incrementCounter = (status) => {
+    setNotificationCounter((_counters) => ({
+      ..._counters,
+      [status]: _counters[status] + 1 || 1,
+    }));
+  };
+
+  const decrementCounter = (status) => {
+    setNotificationCounter((_counters) => ({
+      ..._counters,
+      [status]: _counters[status] && _counters[status] - 1,
+    }));
+  };
+
+  async function readNotification(notification) {
+    try {
+      let userToken = localStorage.getItem("userToken");
+      if (userToken == null) {
+        navigate("/admin/login");
+      }
+
+      let config = {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      };
+
+      const response = await axios.put(
+        apiUrl + "/notifications/read",
+        {
+          assignmentId: notification._id,
+        },
+        config
+      );
+      let resData = response.data.result;
+      console.log({ response, resData });
+      if (response.data.success) {
+        await NotificationModalDis.onClose();
+        decrementCounter(notification.status);
+      }
+      //setNotifications(resData);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function openNotificationModal(status) {
+    try {
+      let userToken = localStorage.getItem("userToken");
+      if (userToken == null) {
+        navigate("/admin/login");
+      }
+
+      let config = {
+        headers: { Authorization: `Bearer ${userToken}` },
+      };
+
+      const response = await axios.get(
+        apiUrl + `/notifications?status=${status}`,
+        config
+      );
+      let resData = response.data.result;
+      console.log({ response, resData });
+      setNotifications(resData);
+    } catch (err) {
+      console.log(err);
+    }
+
+    NotificationModalDis.onOpen();
+  }
+
+  function NotificationModal(status) {
+    return (
+      <Modal
+        size={"sm"}
+        onClose={NotificationModalDis.onClose}
+        isOpen={NotificationModalDis.isOpen}
+        onOpen={NotificationModalDis.onOpen}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent maxH={"500px"} overflowY="scroll">
+          <ModalHeader>New Notification</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Table marginTop={2} variant="simple" size="sm">
+              <Thead bgColor={"gray.200"}>
+                <Tr>
+                  <Th>ID</Th>
+                  <Th></Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {notifications.length === 0 ? (
+                  <></>
+                ) : (
+                  notifications.map((notification, index) => (
+                    <Tr key={notification._id}>
+                      <Td fontWeight={"semibold"}>
+                        <a
+                          href={
+                            frontEndUrl +
+                            "/admin/assignment_details/" +
+                            notification._id
+                          }
+                          target="_blank"
+                          onClick={() => readNotification(notification)}
+                        >
+                          {notification._id}
+                        </a>
+                      </Td>
+                      <Td className="d-flex justify-content-end">
+                        <Button onClick={() => readNotification(notification)}>
+                          <span>✅</span>
+                        </Button>
+                      </Td>
+                    </Tr>
+                  ))
+                )}
+              </Tbody>
+            </Table>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  }
+  console.log({ notifications });
+
   return (
     <>
+      <NotificationModal />
       <Box padding={0}>
         <Tabs isLazy variant="soft-rounded">
           {userRole === "Super Admin" || userRole === "Admin" ? (
             <>
               <TabList>
-                <Tab>
-                  <Heading fontSize={"md"}>Fresh</Heading>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Fresh</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>CP1 Pending</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Fresh Order")}
+                >
+                  {notificationCounter["Fresh Order"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>CP1 Pending</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>CP1 Done</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Fresh Order")}
+                >
+                  {notificationCounter["Fresh Order"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>CP1 Done</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>Confirmation Asked</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Fresh Order")}
+                >
+                  {notificationCounter["Fresh Order"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Confirmation Asked</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>Assigned Expert</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Fresh Order")}
+                >
+                  {notificationCounter["Fresh Order"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Assigned Expert</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>Raw Submission</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Fresh Order")}
+                >
+                  {notificationCounter["Fresh Order"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Raw Submission</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>Internal Rework</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Fresh Order")}
+                >
+                  {notificationCounter["Fresh Order"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Internal Rework</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>Proof Read</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Fresh Order")}
+                >
+                  {notificationCounter["Fresh Order"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Proof Read</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>CP2 Done</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Fresh Order")}
+                >
+                  {notificationCounter["Fresh Order"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>CP2 Done</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>Client Rework</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Fresh Order")}
+                >
+                  {notificationCounter["Fresh Order"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Client Rework</Heading>
                 </Tab>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Client Rework")}
+                >
+                  {notificationCounter["Client Rework"]}
+                </div>
               </TabList>
 
               <TabPanels>
@@ -97,121 +432,381 @@ function AdminOrders() {
                   <CP2DoneOrders />
                 </TabPanel>
                 <TabPanel>
-                  <ClientReworkOrders />
+                  <ClientReworkOrders incrementCounter={incrementCounter} />
                 </TabPanel>
               </TabPanels>
             </>
           ) : userRole === "Operator" ? (
             <>
               <TabList>
-                <Tab>
-                  <Heading fontSize={"md"}>Fresh</Heading>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Fresh</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>CP1 Pending</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Fresh Order")}
+                >
+                  {notificationCounter["Fresh Order"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>CP1 Pending</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>CP1 Done</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("CP1 Pending")}
+                >
+                  {notificationCounter["CP1 Pending"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>CP1 Done</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>Confirmation Asked</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("CP1 Done")}
+                >
+                  {notificationCounter["CP1 Done"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Confirmation Asked</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>Assigned Expert</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Expert Asked")}
+                >
+                  {notificationCounter["Expert Asked"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Assigned Expert</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>Raw Submission</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Expert Assigned")}
+                >
+                  {notificationCounter["Expert Assigned"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Raw Submission</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>Proof Read</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Raw Submission")}
+                >
+                  {notificationCounter["Raw Submission"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Proof Read</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>CP2 Done</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Proof Read")}
+                >
+                  {notificationCounter["Proof Read"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>CP2 Done</Heading>
                 </Tab>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("CP2 Done")}
+                >
+                  {notificationCounter["CP2 Done"]}
+                </div>
               </TabList>
 
               <TabPanels>
                 <TabPanel>
-                  <FreshOrders />
+                  <FreshOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <CP1PendingOrders />
+                  <CP1PendingOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <CP1DoneOrders />
+                  <CP1DoneOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <ExpertAskedOrders />
+                  <ExpertAskedOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <AssignedExpertOrders />
+                  <AssignedExpertOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <RawSubmissionOrders />
+                  <RawSubmissionOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <ProofReadOrders />
+                  <ProofReadOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <CP2DoneOrders />
+                  <CP2DoneOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
               </TabPanels>
             </>
           ) : userRole === "QC" ? (
             <>
               <TabList>
-                <Tab>
-                  <Heading fontSize={"md"}>Raw Submission</Heading>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Raw Submission</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>Internal Rework</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Raw Submission")}
+                >
+                  {notificationCounter["Raw Submission"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Internal Rework</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>Proof Read</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Internal Rework")}
+                >
+                  {notificationCounter["Internal Rework"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Proof Read</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>CP2 Done</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Proof Read")}
+                >
+                  {notificationCounter["Proof Read"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>CP2 Done</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>Client Rework</Heading>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("CP2 Done")}
+                >
+                  {notificationCounter["CP2 Done"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Client Rework</Heading>
                 </Tab>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Client Rework")}
+                >
+                  {notificationCounter["Client Rework"]}
+                </div>
               </TabList>
 
               <TabPanels>
                 <TabPanel>
-                  <RawSubmissionOrders />
+                  <RawSubmissionOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <InternalReworkOrders />
+                  <InternalReworkOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <ProofReadOrders />
+                  <ProofReadOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <CP2DoneOrders />
+                  <CP2DoneOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <ClientReworkOrders />
+                  <ClientReworkOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
               </TabPanels>
             </>
           ) : userRole === "Sales" ? (
             <>
               <TabList>
-                <Tab>
-                  <Heading fontSize={"md"}>Fresh</Heading>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Fresh</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>CP1 Pending</Heading>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>CP1 Pending</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>CP1 Done</Heading>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>CP1 Done</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>Proof Read</Heading>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Proof Read</Heading>
                 </Tab>
-                <Tab>
-                  <Heading fontSize={"md"}>CP2 Done</Heading>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>CP2 Done</Heading>
                 </Tab>
               </TabList>
 
@@ -236,8 +831,8 @@ function AdminOrders() {
           ) : userRole === "Vendor" ? (
             <>
               <TabList>
-                <Tab>
-                  <Heading fontSize={"md"}>Vendor Orders</Heading>
+                <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Vendor Orders</Heading>
                 </Tab>
               </TabList>
 

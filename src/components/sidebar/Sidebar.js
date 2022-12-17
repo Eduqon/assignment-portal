@@ -30,7 +30,7 @@ import { __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED } from "react-dom/cj
 //   console.log("hllo");
 // };
 // calling admin sub menu one by one by name attributes
-const mobTab = (event) => {
+export const mobTab = (event) => {
   // this.onClose();
   let parentElement = document.getElementById("parent_tab");
   // document.getElementsByClassName("hyi")[0].style.backgroundColor ="red";

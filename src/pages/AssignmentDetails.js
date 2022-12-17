@@ -227,6 +227,17 @@ function AssignmentDetailsClient() {
           },
           config
         );
+
+        const createNotification = await axios.post(
+          apiUrl + "/notifications",
+          {
+            assignmentId: assignment.id,
+            status: "Client Rework",
+            read: false,
+          },
+          config
+        );
+        // incrementCounter("Client Rework");
         _fetchAssignmentDetails();
         ReworkModalDis.onClose();
       } catch (error) {

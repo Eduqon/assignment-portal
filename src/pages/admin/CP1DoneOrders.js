@@ -40,7 +40,7 @@ import { useEffect, useState } from "react";
 import { apiUrl } from "../../services/contants";
 import { useNavigate } from "react-router-dom";
 
-function CP1DoneOrders() {
+function CP1DoneOrders({ incrementCounter }) {
   const [assignments, setAssignments] = useState([]);
   const [experts, setExperts] = useState([]);
   const [subjects, setSubjects] = useState([]);
@@ -394,6 +394,17 @@ function CP1DoneOrders() {
                                 },
                                 config
                               );
+
+                              const createNotification = await axios.post(
+                                apiUrl + "/notifications",
+                                {
+                                  assignmentId: assignments[selectedIndex].id,
+                                  status: "Expert Asked",
+                                  read: false,
+                                },
+                                config
+                              );
+                              incrementCounter("Expert Asked");
                               let resdata = response.data;
                               if (resdata.success) {
                                 window.alert("Expert Asked for Confirmation");

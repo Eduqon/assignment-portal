@@ -38,7 +38,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 
-function RawSubmissionOrders() {
+function RawSubmissionOrders({ incrementCounter, decrementCounter }) {
   const [assignments, setAssignments] = useState([]);
   const [submissions, setSubmissions] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState();
@@ -94,6 +94,18 @@ function RawSubmissionOrders() {
         },
         config
       );
+
+      const createNotification = await axios.post(
+        apiUrl + "/notifications",
+        {
+          assignmentId: assignments[index].id,
+          status: "Proof Read",
+          read: false,
+        },
+        config
+      );
+      incrementCounter("Proof Read");
+      decrementCounter("Raw Submission");
       _fetchAssignments();
     } catch (error) {
       console.log(error);
@@ -122,6 +134,17 @@ function RawSubmissionOrders() {
             },
             config
           );
+          const createNotification = await axios.post(
+            apiUrl + "/notifications",
+            {
+              assignmentId: assignments[index].id,
+              status: "Internal Rework",
+              read: false,
+            },
+            config
+          );
+          incrementCounter("Internal Rework");
+          decrementCounter("Raw Submission");
           const responseQcNote = await axios.post(
             apiUrl + "/assignment/comments/QCToExpert",
             {
@@ -158,6 +181,18 @@ function RawSubmissionOrders() {
             },
             config
           );
+
+          const createNotification = await axios.post(
+            apiUrl + "/notifications",
+            {
+              assignmentId: assignments[index].id,
+              status: "Internal Rework",
+              read: false,
+            },
+            config
+          );
+          incrementCounter("Internal Rework");
+          decrementCounter("Raw Submission");
           const responseQcNoteFile = await axios.post(
             apiUrl + "/assignment/comments/QCToExpert",
             {

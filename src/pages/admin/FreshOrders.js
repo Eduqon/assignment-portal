@@ -42,7 +42,7 @@ import { apiUrl } from "../../services/contants";
 import { RepeatIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
 
-function FreshOrders() {
+function FreshOrders({ incrementCounter }) {
   const [assignments, setAssignments] = useState([]);
   const [experts, setExperts] = useState([]);
   const [subjects, setSubjects] = useState([]);
@@ -1147,7 +1147,17 @@ function FreshOrders() {
                         config
                       );
                       let resdata = response.data;
-                      console.log("resdata", resdata);
+
+                      const createNotification = await axios.post(
+                        apiUrl + "/notifications",
+                        {
+                          assignmentId: quoteAssignmentData._id,
+                          status: "CP1 Pending",
+                          read: false,
+                        },
+                        config
+                      );
+                      incrementCounter("CP1 Pending");
                       if (resdata.success) {
                         await _fetchAssignments();
                         window.alert("Quote Generated");

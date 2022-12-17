@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
+import * as qs from "qs";
 import { apiUrl } from "../../services/contants";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -737,6 +738,15 @@ function AssignmentDetails() {
                             },
                             config
                           );
+                          const createNotification = await axios.post(
+                            apiUrl + "/notifications",
+                            {
+                              assignmentId: assignment.id,
+                              status: "CP2 Done",
+                              read: false,
+                            },
+                            config
+                          );
                           SendToClientModalDis.onClose();
                           window.alert("Files Sent to Client");
                         } catch (error) {}
@@ -749,6 +759,15 @@ function AssignmentDetails() {
                             _id: params.assignmentID,
                             emailToDeliver: assignment.client_id,
                             fileLinks: checkedListTemp,
+                          },
+                          config
+                        );
+                        const createNotification = await axios.post(
+                          apiUrl + "/notifications",
+                          {
+                            assignmentId: assignment.id,
+                            status: "CP2 Done",
+                            read: false,
                           },
                           config
                         );
@@ -1321,7 +1340,7 @@ function AssignmentDetails() {
                           maxWidth={"100%"}
                           href={messageItem.msg}
                         >
-                          {messageItem.msg.substring(62)}
+                          {messageItem.msg && messageItem.msg.substring(62)}
                         </Link>
                       </VStack>
                     </Box>
@@ -1405,6 +1424,7 @@ function AssignmentDetails() {
                     <Button
                       id="sendButton"
                       onClick={async () => {
+                        let userToken = localStorage.getItem("userToken");
                         let Regex =
                           /\b[\+]?[(]?[0-9]{2,6}[)]?[-\s\.]?[-\s\/\.0-9]{3,15}\b/m;
                         let textInput = document.getElementById(
@@ -1438,6 +1458,25 @@ function AssignmentDetails() {
                                 }),
                               }
                             );
+                            let config = {
+                              headers: { Authorization: `Bearer ${userToken}` },
+                            };
+                            try {
+                              const response = await axios.post(
+                                apiUrl + "/messages",
+                                {
+                                  id: assignment.id,
+                                  expertEmail: assignment.assignedExpert,
+                                },
+                                config
+                              );
+                              let resdata = response.data;
+                              if (resdata.success) {
+                                window.alert("Message sent to Expert");
+                              }
+                            } catch (err) {
+                              console.log(err);
+                            }
                           }
                         }
                         textInput.value = "";
@@ -1826,7 +1865,7 @@ function AssignmentDetails() {
                           maxWidth={"100%"}
                           href={messageItem.msg}
                         >
-                          {messageItem.msg.substring(62)}
+                          {messageItem.msg && messageItem.msg.substring(62)}
                         </Link>
                       </VStack>
                     </Box>

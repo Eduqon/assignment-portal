@@ -40,13 +40,11 @@ import { useNavigate } from "react-router-dom";
 import { updateAssignment } from "../../services/functions/assignmentFun";
 import DeadlinePopup from "./DeadlinePopup";
 
-function CP1PendingOrders() {
+function CP1PendingOrders({ incrementCounter, decrementCounter }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [assignments, setAssignments] = useState([]);
   const [asId, setAsId] = useState("");
   const [paid, setPaid] = useState("");
-
-
 
   let assignmentList = [];
 
@@ -80,7 +78,7 @@ function CP1PendingOrders() {
         config
       );
       let data = response.data.assignmentData;
-      console.log(data, 'check data')
+      console.log(data, "check data");
       assignmentList = [];
       console.log("fetching");
       if (data.length !== 0) {
@@ -118,10 +116,7 @@ function CP1PendingOrders() {
     }
   }
   const addToDone = async () => {
-    
-    console.log("add to Done function started.....");
-    console.log(paid, "paid");
-    console.log(asId, "asid");
+    let userToken = localStorage.getItem("userToken");
     if (paid.trim().length > 0) {
       let data = {
         _id: asId,
@@ -129,7 +124,22 @@ function CP1PendingOrders() {
         paid: paid,
       };
       let response = await updateAssignment(JSON.stringify(data));
-      console.log(response , 'res')
+
+      let config = {
+        headers: { Authorization: `Bearer ${userToken}` },
+      };
+
+      const createNotification = await axios.post(
+        apiUrl + "/notifications",
+        {
+          assignmentId: asId,
+          status: "CP1 Done",
+          read: false,
+        },
+        config
+      );
+      incrementCounter("CP1 Done");
+      console.log(response, "res");
       if (response.success) {
         _fetchAssignments();
         onClose();
@@ -173,8 +183,6 @@ function CP1PendingOrders() {
   //     console.log(err);
   //   }
   // }
-
-
 
   // async function openExpertModal(index) {
   //   setSelectedIndex(index);
@@ -344,31 +352,43 @@ function CP1PendingOrders() {
               </Td>
               <Td>
                 {localStorage.getItem("userRole") === "Super Admin" ||
-                  localStorage.getItem("userRole") === "Admin"
+                localStorage.getItem("userRole") === "Admin"
                   ? assignment.client_id
                   : assignment.client_id.substring(0, 2) +
-                  "****" +
-                  "@" +
-                  "****" +
-                  ".com"}
+                    "****" +
+                    "@" +
+                    "****" +
+                    ".com"}
               </Td>
               <Td color={"green.600"} fontWeight={"semibold"}>
                 {assignment.subject}
               </Td>
               <Td>{assignment.quotation}</Td>
               <Td>{assignment.paid}</Td>
-              <Td color={"red.600"} fontWeight={"semibold"} >
+              <Td color={"red.600"} fontWeight={"semibold"}>
                 {assignment.expertDeadline}
               </Td>
               <Td color={"red.600"} fontWeight={"semibold"}>
                 {assignment.deadline}
               </Td>
-              <Td fontWeight={'semibold'} color={(assignment.status === 'Fresh Order') ? 'green' : (assignment.status === "Doability Asked") ? 'orange' : 'red'}>{assignment.status}</Td>
+              <Td
+                fontWeight={"semibold"}
+                color={
+                  assignment.status === "Fresh Order"
+                    ? "green"
+                    : assignment.status === "Doability Asked"
+                    ? "orange"
+                    : "red"
+                }
+              >
+                {assignment.status}
+              </Td>
               <Td>
                 <Button
                   onClick={() => {
                     onOpen();
                     setAsId(assignment.id);
+                    decrementCounter("CP1 Pending");
                   }}
                 >
                   Add to CP1 Done
@@ -382,13 +402,12 @@ function CP1PendingOrders() {
                   Ask Quote Expert
                 </Button>
               </Td> */}
-
             </Tr>
           ))}
         </Tbody>
       </Table>
       {/* accordion for mobile version  */}
-  
+
       <div className="ShowSideClick">
         {assignments.map((assignment) => (
           <Accordion
@@ -424,13 +443,13 @@ function CP1PendingOrders() {
                       <Th>Student Email</Th>
                       <Td>
                         {localStorage.getItem("userRole") === "Super Admin" ||
-                          localStorage.getItem("userRole") === "Admin"
+                        localStorage.getItem("userRole") === "Admin"
                           ? assignment.client_id
                           : assignment.client_id.substring(0, 2) +
-                          "****" +
-                          "@" +
-                          "****" +
-                          ".com"}
+                            "****" +
+                            "@" +
+                            "****" +
+                            ".com"}
                       </Td>
                     </Tr>
                     <Tr>
