@@ -32,7 +32,7 @@ function Messages() {
 
   async function _fetchConfirmedOrders() {
     try {
-      let clientToken = localStorage.getItem("clientToken");
+      let clientToken = localStorage.getItem("userToken");
       if (clientToken == null) {
         navigate("/admin/login");
       }
