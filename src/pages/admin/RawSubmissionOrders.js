@@ -1,4 +1,11 @@
-import { RepeatIcon, AttachmentIcon } from "@chakra-ui/icons";
+import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  RepeatIcon,
+  AttachmentIcon,
+  ChatIcon,
+  ArrowForwardIcon,
+} from "@chakra-ui/icons";
 import {
   Table,
   Thead,
@@ -24,24 +31,37 @@ import {
   Input,
   InputRightAddon,
   Flex,
-} from "@chakra-ui/react";
-import axios from "axios";
-import { useEffect, useState, useRef } from "react";
-import { apiUrl } from "../../services/contants";
-import { useNavigate } from "react-router-dom";
-import {
+  Heading,
+  VStack,
+  Text,
   Accordion,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
   Box,
+  InputLeftElement,
+  InputRightElement,
 } from "@chakra-ui/react";
+import axios from "axios";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { apiUrl } from "../../services/contants";
+import { db } from "../../services/firebase";
 
-function RawSubmissionOrders({ incrementCounter, decrementCounter }) {
+function RawSubmissionOrders({
+  incrementCounter,
+  decrementCounter,
+  confirmOrderAssignedExpertMessages,
+  operatorExpertChat,
+}) {
   const [assignments, setAssignments] = useState([]);
   const [submissions, setSubmissions] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState();
+
+  const [messages, setMessages] = useState([]);
+  const [id, setId] = useState("");
+  const inputFileOperatorExpert = useRef(null);
+  const [messageData, setMessageData] = useState([]);
 
   const [token, setToken] = useState("");
   const inputRef = useRef(null);
@@ -50,6 +70,9 @@ function RawSubmissionOrders({ incrementCounter, decrementCounter }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isUploading, setIsUploading] = useState(false);
   const [sendRework, setSendRework] = useState(() => new Set());
+
+  const MessagesModalDis = useDisclosure();
+  const ReplyMessageModalDis = useDisclosure();
 
   let assignmentList = [];
   let submissionsList = [];
@@ -72,7 +95,6 @@ function RawSubmissionOrders({ incrementCounter, decrementCounter }) {
       );
       window.alert("Operator asked for approval to remove expert");
     } catch (error) {
-      // window.alert('error',error)
       //console.log(error);
     }
   }
@@ -238,6 +260,8 @@ function RawSubmissionOrders({ incrementCounter, decrementCounter }) {
   }
 
   async function _fetchToken() {
+    let userEmail = localStorage.getItem("userEmail");
+    setId(userEmail);
     try {
       const response = await axios.get(
         apiUrl + "/util/sas-token?container_name=assignment-dscp"
@@ -524,6 +548,343 @@ function RawSubmissionOrders({ incrementCounter, decrementCounter }) {
     }
   }
 
+  async function openReplyMessageModal(data) {
+    try {
+      let userToken = localStorage.getItem("userToken");
+      if (userToken == null) {
+        navigate("/admin/login");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    setMessages(data);
+    ReplyMessageModalDis.onOpen();
+  }
+
+  function ReplyMessageModal() {
+    return (
+      <Modal
+        size={"lg"}
+        onClose={ReplyMessageModalDis.onClose}
+        isOpen={ReplyMessageModalDis.isOpen}
+        onOpen={ReplyMessageModalDis.onOpen}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent maxH={"500px"}>
+          <ModalCloseButton />
+          <ModalBody>
+            <Box
+              display="block"
+              borderWidth="1px"
+              borderRadius="md"
+              width={"md"}
+            >
+              <Box p={4} bgColor="gray.200">
+                <HStack>
+                  <Heading fontSize={"xl"}>Operator Chat with Expert</Heading>
+                </HStack>
+              </Box>
+              <VStack
+                alignItems={"start"}
+                justifyContent={"space-between"}
+                margin={3}
+                minH={"sm"}
+                maxH={"sm"}
+              >
+                <VStack
+                  overflowY={"scroll"}
+                  alignItems={"start"}
+                  width={"100%"}
+                >
+                  {messages &&
+                    operatorExpertChat &&
+                    operatorExpertChat[messages.id] &&
+                    operatorExpertChat[messages.id].map((msg, index) => {
+                      console.log({ msg });
+                      return (
+                        <Box
+                          display={
+                            msg.type === "TEXT"
+                              ? "flex"
+                              : msg.type === "MEDIA"
+                              ? "flex"
+                              : "none"
+                          }
+                          alignSelf={
+                            msg.user === id ? "flex-end" : "flex-start"
+                          }
+                          flexWrap={true}
+                          padding={2}
+                          borderRadius={"md"}
+                          maxWidth="70%"
+                          bgColor={msg.user === id ? "blue.100" : "green.100"}
+                          key={index}
+                        >
+                          <VStack maxWidth="100%" overflowWrap={"break-word"}>
+                            <Text
+                              display={msg.type === "TEXT" ? "flex" : "none"}
+                              maxWidth={"100%"}
+                            >
+                              {msg.msg}
+                            </Text>
+                            <Link
+                              color={"blue"}
+                              fontWeight={"bold"}
+                              display={msg.type === "MEDIA" ? "flex" : "none"}
+                              maxWidth={"100%"}
+                              href={msg.msg}
+                            >
+                              {msg.msg && msg.msg.substring(62)}
+                            </Link>
+                          </VStack>
+                        </Box>
+                      );
+                    })}
+                </VStack>
+                <InputGroup>
+                  <Input type="text" id="addChatOperatorExpert" />
+                  <Input
+                    type="file"
+                    id="addFileOperatorExpert"
+                    onChange={async () => {
+                      let fileUrl = "";
+                      if (inputFileOperatorExpert) {
+                        onOpen();
+                        try {
+                          var config = {
+                            method: "put",
+                            url:
+                              "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
+                              encodeURIComponent(
+                                inputFileOperatorExpert.current.files[0].name
+                              ) +
+                              "?" +
+                              token,
+                            headers: {
+                              "x-ms-blob-type": "BlockBlob",
+                            },
+                            data: inputFileOperatorExpert.current.files[0],
+                          };
+                          axios(config)
+                            .then(async function (response) {
+                              fileUrl =
+                                "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
+                                encodeURIComponent(
+                                  inputFileOperatorExpert.current.files[0].name
+                                );
+                              const message = await updateDoc(
+                                doc(
+                                  db,
+                                  "chat",
+                                  messages.chat[messages.chat.length - 1].user +
+                                    "_" +
+                                    id +
+                                    "_" +
+                                    messages.id
+                                ),
+                                {
+                                  conversation: arrayUnion({
+                                    msg: fileUrl,
+                                    time: Date.now(),
+                                    type: "MEDIA",
+                                    user: id,
+                                  }),
+                                }
+                              );
+                            })
+                            .catch(function (error) {
+                              console.log(error);
+                            });
+                        } catch (error) {
+                          console.log(error);
+                        }
+                        onClose();
+                      }
+                    }}
+                    ref={inputFileOperatorExpert}
+                    style={{ display: "none" }}
+                  />
+                  <InputLeftElement h={"full"}>
+                    <Button
+                      id="attachButton"
+                      onClick={async () => {
+                        inputFileOperatorExpert.current.click();
+                      }}
+                    >
+                      <AttachmentIcon />
+                    </Button>
+                  </InputLeftElement>
+                  <InputRightElement h={"full"}>
+                    <Button
+                      id="sendButton"
+                      onClick={async () => {
+                        let userToken = localStorage.getItem("userToken");
+                        let Regex =
+                          /\b[\+]?[(]?[0-9]{2,6}[)]?[-\s\.]?[-\s\/\.0-9]{3,15}\b/m;
+                        let textInput = document.getElementById(
+                          "addChatOperatorExpert"
+                        );
+                        if (
+                          textInput.value !== "" &&
+                          textInput.value !== undefined
+                        ) {
+                          if (Regex.test(textInput.value)) {
+                            window.alert(
+                              "Sharing Phone Numbers through Chat is not allowed"
+                            );
+                          } else {
+                            const message = await updateDoc(
+                              doc(
+                                db,
+                                "chat",
+                                messages.chat[messages.chat.length - 1].user +
+                                  "_" +
+                                  id +
+                                  "_" +
+                                  messages.id
+                              ),
+                              {
+                                conversation: arrayUnion({
+                                  msg: textInput.value,
+                                  time: Date.now(),
+                                  type: "TEXT",
+                                  user: id,
+                                }),
+                              }
+                            );
+                            console.log({ messages });
+                            let config = {
+                              headers: { Authorization: `Bearer ${userToken}` },
+                            };
+                            try {
+                              const response = await axios.post(
+                                apiUrl + "/messages",
+                                {
+                                  id: messages.id,
+                                  expertEmail:
+                                    messages.chat[messages.chat.length - 1]
+                                      .user,
+                                },
+                                config
+                              );
+                              let resdata = response.data;
+                              if (resdata.success) {
+                                textInput.value = "";
+                              }
+                            } catch (err) {
+                              console.log(err);
+                            }
+                          }
+                        }
+                      }}
+                    >
+                      <ArrowForwardIcon />
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+              </VStack>
+            </Box>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
+  async function readMessages(_assignmentId) {
+    try {
+      let userToken = localStorage.getItem("userToken");
+      if (userToken == null) {
+        navigate("/admin/login");
+      }
+
+      let config = {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      };
+
+      if (operatorExpertChat[_assignmentId]) {
+        const newChat = operatorExpertChat[_assignmentId].slice();
+        const lastMsg = newChat.pop();
+        let userEmail = localStorage.getItem("userEmail");
+        const message = await updateDoc(
+          doc(db, "chat", lastMsg.user + "_" + userEmail + "_" + _assignmentId),
+          {
+            conversation: [...newChat, { ...lastMsg, newMessageCount: 0 }],
+          }
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function openMessageModal(index) {
+    setSelectedIndex(index);
+    const message = await confirmOrderAssignedExpertMessages.filter((data) => {
+      return assignments[index].id === data.id;
+    });
+    setMessageData(message);
+    MessagesModalDis.onOpen();
+  }
+
+  function MessageModal() {
+    return (
+      <Modal
+        size={"4xl"}
+        onClose={MessagesModalDis.onClose}
+        isOpen={MessagesModalDis.isOpen}
+        onOpen={MessagesModalDis.onOpen}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Messages</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Table variant="simple" size="sm">
+              <Thead bgColor={"gray.200"}>
+                <Tr>
+                  <Th>Id</Th>
+                  <Th>Expert Email</Th>
+                  <Th>Messages</Th>
+                  <Th></Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {messageData && messageData.length === 0 ? (
+                  <></>
+                ) : (
+                  messageData &&
+                  messageData.map((msg, index) => (
+                    <Tr key={msg.id}>
+                      <Td>{msg.id}</Td>
+                      <Td>{msg.chat[msg.chat.length - 1].user}</Td>
+                      <Td>{msg.chat[msg.chat.length - 1].msg}</Td>
+                      <Td>
+                        <HStack>
+                          <Button
+                            onClick={async () => {
+                              await openReplyMessageModal(msg);
+                              readMessages(msg.id);
+                            }}
+                          >
+                            Reply
+                          </Button>
+                        </HStack>
+                      </Td>
+                    </Tr>
+                  ))
+                )}
+              </Tbody>
+            </Table>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
   return (
     <>
       <div display={{ base: "none", sm: "block", md: "block" }}>
@@ -535,6 +896,8 @@ function RawSubmissionOrders({ incrementCounter, decrementCounter }) {
             <ModalBody pb={6}>File is being uploaded, please wait..</ModalBody>
           </ModalContent>
         </Modal>
+        <MessageModal />
+        <ReplyMessageModal />
         <SubmissionsModal />
         <ReworkModal />
         <Table
@@ -565,24 +928,68 @@ function RawSubmissionOrders({ incrementCounter, decrementCounter }) {
           <Tbody>
             {assignments.map((assignment, index) => (
               <Tr key={assignment.id}>
-                <Td fontWeight={"semibold"}>
-                  <Link href={"/admin/assignment_details/" + assignment.id}>
-                    {assignment.id}&nbsp;
-                  </Link>
-                  {assignment.retryCount > 1 && (
-                    <div
-                      className="d-flex align-items-center justify-content-center border-set"
-                      style={{
-                        width: "20px",
-                        height: "20px",
-                        border: "1px solid",
-                        borderRadius: "50px",
-                        fontSize: "12px",
-                      }}
-                    >
-                      R{assignment.retryCount - 1}
-                    </div>
-                  )}
+                <Td fontWeight={"semibold"} paddingTop={9}>
+                  <Box display={"flex"}>
+                    <Link href={"/admin/assignment_details/" + assignment.id}>
+                      {assignment.id}&nbsp;
+                    </Link>
+                    {confirmOrderAssignedExpertMessages &&
+                      confirmOrderAssignedExpertMessages.length !== 0 &&
+                      confirmOrderAssignedExpertMessages.map((data) => {
+                        if (data.id === assignment.id) {
+                          if (
+                            data.chat &&
+                            data.chat[data.chat.length - 1].newMessageCount !==
+                              0
+                          ) {
+                            return (
+                              <Box
+                                display="flex"
+                                alignItems={"center"}
+                                position="relative"
+                                marginLeft={2}
+                                cursor={"pointer"}
+                                onClick={async () => openMessageModal(index)}
+                              >
+                                <ChatIcon width={"1.5em"} height={"1.5em"} />
+                                <Box
+                                  display={"flex"}
+                                  alignItems={"center"}
+                                  justifyContent={"center"}
+                                  borderRadius={15}
+                                  backgroundColor={"rgb(201, 105, 105)"}
+                                  marginLeft={2}
+                                  width={5}
+                                  height={5}
+                                  color={"white"}
+                                  position={"absolute"}
+                                  right={"-10px"}
+                                  top={"-5px"}
+                                >
+                                  {data.chat &&
+                                    data.chat[data.chat.length - 1]
+                                      .newMessageCount}
+                                </Box>
+                              </Box>
+                            );
+                          }
+                        }
+                      })}
+                    {assignment.retryCount > 1 && (
+                      <div
+                        className="d-flex align-items-center justify-content-center border-set"
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                          border: "1px solid",
+                          borderRadius: "50px",
+                          fontSize: "12px",
+                        }}
+                      >
+                        R{assignment.retryCount - 1}
+                      </div>
+                    )}
+                  </Box>
                 </Td>
                 <Td color={"green.600"} fontWeight={"semibold"}>
                   {assignment.subject}

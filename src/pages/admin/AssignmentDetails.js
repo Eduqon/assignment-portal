@@ -1472,7 +1472,7 @@ function AssignmentDetails() {
                               );
                               let resdata = response.data;
                               if (resdata.success) {
-                                window.alert("Message sent to Expert");
+                                // window.alert("Message sent to Expert");
                               }
                             } catch (err) {
                               console.log(err);

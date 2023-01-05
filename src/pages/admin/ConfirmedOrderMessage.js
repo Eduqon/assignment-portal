@@ -27,8 +27,6 @@ import { apiUrl } from "../../services/contants";
 import { ArrowForwardIcon, AttachmentIcon } from "@chakra-ui/icons";
 
 function ConfirmedOrderMessage({
-  confirmedOrders,
-  messageData,
   assignedExpertMessages,
   operatorExpertChat,
   loading,
@@ -39,12 +37,10 @@ function ConfirmedOrderMessage({
   const [token, setToken] = useState("");
   const [openModalId, setOpenModalId] = useState(null);
   const { onOpen, onClose } = useDisclosure();
-  const [confirmOrderMessages, setConfirmOrderMessages] = useState();
 
   useEffect(() => {
     (async () => {
       await _fetchToken();
-      await _fetchConfirmedOrderMessages();
     })();
   }, []);
 
@@ -259,15 +255,6 @@ function ConfirmedOrderMessage({
                               "Sharing Phone Numbers through Chat is not allowed"
                             );
                           } else {
-                            console.log({
-                              value12:
-                                assignment.chat[assignment.chat.length - 1]
-                                  .user +
-                                "_" +
-                                id +
-                                "_" +
-                                assignmentID,
-                            });
                             const message = await updateDoc(
                               doc(
                                 db,
@@ -303,7 +290,6 @@ function ConfirmedOrderMessage({
                               let resdata = response.data;
                               if (resdata.success) {
                                 textInput.value = "";
-                                window.alert("Message sent to Expert");
                               }
                             } catch (err) {
                               console.log(err);
@@ -340,11 +326,6 @@ function ConfirmedOrderMessage({
       if (operatorExpertChat[_assignmentId]) {
         const newChat = operatorExpertChat[_assignmentId].slice();
         const lastMsg = newChat.pop();
-        console.log({
-          newChat,
-          lastMsg,
-          c: [...newChat, { ...lastMsg, newMessageCount: 0 }],
-        });
         let userEmail = localStorage.getItem("userEmail");
         const message = await updateDoc(
           doc(db, "chat", lastMsg.user + "_" + userEmail + "_" + _assignmentId),
@@ -357,26 +338,20 @@ function ConfirmedOrderMessage({
       console.log(err);
     }
   }
-
-  async function _fetchConfirmedOrderMessages() {
-    if (confirmedOrders) {
-      const messages = await confirmedOrders.map((assignment) => {
-        return messageData.flat().filter((data) => data._id === assignment._id);
-      });
-      setConfirmOrderMessages(messages.flat());
-    }
-  }
-
   return (
     <>
       {assignedExpertMessages &&
-        assignedExpertMessages.map((data) => (
-          <MessageModal
-            assignment={data}
-            assignmentID={data.id}
-            openModalId={openModalId}
-          />
-        ))}
+        assignedExpertMessages
+          .filter((data) => data.chat.length !== 0)
+          .map((data) => {
+            return (
+              <MessageModal
+                assignment={data}
+                assignmentID={data.id}
+                openModalId={openModalId}
+              />
+            );
+          })}
       <Box
         display={"block"}
         borderWidth="1px"
@@ -404,66 +379,69 @@ function ConfirmedOrderMessage({
               <Spinner />
             ) : (
               assignedExpertMessages &&
-              assignedExpertMessages.map((data) => {
-                return (
-                  <Box bgColor="blackAlpha.100" width="100%" p={2}>
-                    <Box display="flex" justifyContent="space-between">
-                      <Box display="flex">
-                        <a
-                          href={"/admin/assignment_details/" + data.id}
-                          target="_blank"
-                        >
-                          {data.id}
-                        </a>
-                        {data.chat &&
-                          data.chat.length !== 0 &&
-                          data.chat[data.chat.length - 1].newMessageCount &&
-                          data.chat[data.chat.length - 1].newMessageCount !==
-                            0 && (
-                            <div
-                              className="text-center"
-                              style={{
-                                width: "25px",
-                                height: "25px",
-                                borderRadius: "5px",
-                                background: "#c96969",
-                                cursor: "pointer",
-                                margin: "2px 5px",
-                                color: "#fff",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              {data.chat &&
-                                data.chat.length !== 0 &&
-                                data.chat[data.chat.length - 1].newMessageCount}
-                            </div>
-                          )}
+              assignedExpertMessages
+                .filter((data) => data.chat.length !== 0)
+                .map((data) => {
+                  return (
+                    <Box bgColor="blackAlpha.100" width="100%" p={2}>
+                      <Box display="flex" justifyContent="space-between">
+                        <Box display="flex">
+                          <a
+                            href={"/admin/assignment_details/" + data.id}
+                            target="_blank"
+                          >
+                            {data.id}
+                          </a>
+                          &nbsp;
+                          {data.chat.length !== 0 &&
+                            data.chat[data.chat.length - 1].newMessageCount !==
+                              0 && (
+                              <div
+                                className="text-center"
+                                style={{
+                                  width: "25px",
+                                  height: "25px",
+                                  borderRadius: "5px",
+                                  background: "#c96969",
+                                  cursor: "pointer",
+                                  margin: "2px 5px",
+                                  color: "#fff",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {data.chat[data.chat.length - 1]
+                                  .newMessageCount !== 0 &&
+                                  data.chat[data.chat.length - 1]
+                                    .newMessageCount}
+                              </div>
+                            )}
+                        </Box>
+                        <Box>
+                          <span>{data.date}</span>
+                        </Box>
                       </Box>
-                      <Box>
-                        <span>{data.date}</span>
-                      </Box>
-                    </Box>
-                    <Box
-                      display={"flex"}
-                      alignItems={"center"}
-                      justifyContent={"space-between"}
-                    >
-                      <strong>
-                        {data.chat.length !== 0 &&
-                          data.chat[data.chat.length - 1].msg}
-                      </strong>
-                      <Button
-                        onClick={async () => {
-                          await openMessageModal(data);
-                          readMessages(data.id);
-                        }}
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
                       >
-                        Reply
-                      </Button>
+                        <strong>
+                          Message:{" "}
+                          {data.chat.length !== 0 &&
+                            data.chat[data.chat.length - 1].msg}
+                        </strong>
+                        <Button
+                          onClick={async () => {
+                            await openMessageModal(data);
+                            readMessages(data.id.split("_")[0]);
+                          }}
+                        >
+                          Reply
+                        </Button>
+                      </Box>
                     </Box>
-                  </Box>
-                );
-              })
+                  );
+                })
             )}
           </VStack>
         </VStack>

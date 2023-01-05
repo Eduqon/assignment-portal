@@ -800,10 +800,6 @@ function FreshOrders({ incrementCounter }) {
     const [description, setDescription] = useState(" ");
     const [time, setTime] = useState("");
 
-    useEffect(() => {
-      console.log(quoteAssignmentData, "asignment data  705");
-      console.log(cp1, "cp1 check");
-    }, []);
     return (
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
@@ -1181,7 +1177,6 @@ function FreshOrders({ incrementCounter }) {
     );
   }
   async function DeleteRecords(id) {
-    console.log(id);
     try {
       let userToken = localStorage.getItem("userToken");
       let userEmail = localStorage.getItem("userEmail");

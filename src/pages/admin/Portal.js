@@ -8,6 +8,7 @@ import {
   Heading,
   useDisclosure,
   Select,
+  Spinner,
 } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import AdminOrders from "./Orders";
@@ -37,12 +38,14 @@ import ProofReadOrders from "./ProofReadOrders";
 import CP2DoneOrders from "./CP2DoneOrders";
 import ClientReworkOrders from "./ClientReworkOrders";
 import { mobTab } from "../../components/sidebar/Sidebar";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ChatIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import Messages from "./Messages";
 // import Assignmentsmob from '../../components/sidebar/accodian-assignment'
 function PortalLayout() {
   const [userRole, setUserRole] = useState("");
   const { onClose } = useDisclosure();
+  const [messageCount, setMessageCount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const dropOrder = () => {
     var hideShow =
@@ -61,8 +64,25 @@ function PortalLayout() {
 
   return (
     <>
-      <Box padding={"10px"}>
+      <Box padding={"10px"} position={"relative"}>
+        {loading && (
+          <Box
+            width={"100%"}
+            height={"100vh"}
+            display="flex"
+            alignItems={"center"}
+            justifyContent={"center"}
+            position={"absolute"}
+            left={0}
+            top={0}
+            zIndex={1}
+            background={"#0000003b"}
+          >
+            <Spinner size={"xl"} />
+          </Box>
+        )}
         <Tabs
+          position={"absolute"}
           orientation="vertical"
           variant="solid-rounded"
           display={{ base: "none", sm: "inline-flex", md: "inline-flex " }}
@@ -100,7 +120,35 @@ function PortalLayout() {
                   <Heading fontSize={"md"}>Raw Submission</Heading>
                 </Tab>
                 <Tab>
-                  <Heading fontSize={"md"}>Messages</Heading>
+                  <Box display={"flex"} alignItems={"center"}>
+                    <Heading fontSize={"md"}>Messages</Heading>
+                    <Box
+                      display="flex"
+                      alignItems={"center"}
+                      position="relative"
+                      marginLeft={2}
+                    >
+                      <ChatIcon width={"1.5em"} height={"1.5em"} />
+                      {messageCount !== 0 ? (
+                        <Box
+                          display={"flex"}
+                          alignItems={"center"}
+                          justifyContent={"center"}
+                          borderRadius={15}
+                          backgroundColor={"rgb(201, 105, 105)"}
+                          marginLeft={2}
+                          width={5}
+                          height={5}
+                          color={"white"}
+                          position={"absolute"}
+                          right={"-10px"}
+                          top={"-5px"}
+                        >
+                          {messageCount}
+                        </Box>
+                      ) : null}
+                    </Box>
+                  </Box>
                 </Tab>
               </TabList>
 
@@ -115,7 +163,10 @@ function PortalLayout() {
                   <RawSubmissionOrders />
                 </TabPanel>
                 <TabPanel>
-                  <Messages />
+                  <Messages
+                    setMessageCount={setMessageCount}
+                    setSpinnerLoading={setLoading}
+                  />
                 </TabPanel>
               </TabPanels>
             </>

@@ -79,7 +79,7 @@ export function FooterHome() {
         {/* <div className="second_footer"> */}
         <div className="row second-fo">
           <div className="col p-3">
-            © 2022 Assignment Santa. All rights reserved
+            © 2023 Assignment Santa. All rights reserved
           </div>
 
           {/* </div> */}
