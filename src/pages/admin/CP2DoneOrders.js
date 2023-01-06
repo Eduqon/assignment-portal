@@ -488,6 +488,8 @@ function CP2DoneOrders({
     );
   }
 
+  console.log({ confirmOrderAssignedExpertMessages });
+
   return (
     <>
       <MessageModal />
@@ -531,6 +533,7 @@ function CP2DoneOrders({
                       if (data.id === assignment.id) {
                         if (
                           data.chat &&
+                          data.chat.length !== 0 &&
                           data.chat[data.chat.length - 1].newMessageCount !== 0
                         ) {
                           return (
