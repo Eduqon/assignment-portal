@@ -242,6 +242,9 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
         .flat()
         .filter((data) => {
           return !uniqueIds.some((id) => id == data);
+        })
+        .filter((data) => {
+          return data.experts.some((val) => val.expertChat.length !== 0);
         });
       if (data.length !== 0) {
         setInProcessOrderData(data);
@@ -305,8 +308,12 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
       confirmOrderAssignedExpertMessages.filter(
         (data) => data.chat.length !== 0
       );
+    const processOrderAssignedExpertChat =
+      inProcessOrderAssignedExpertMessages.filter(
+        (data) => data.chat.length !== 0
+      );
     let totalMessageCount = confirmOrderAssignedExpertChat
-      .concat(inProcessOrderAssignedExpertMessages)
+      .concat(processOrderAssignedExpertChat)
       .reduce((acc, val) => {
         if (val && val.chat.length !== 0) {
           return acc + val.chat[val.chat.length - 1].newMessageCount;

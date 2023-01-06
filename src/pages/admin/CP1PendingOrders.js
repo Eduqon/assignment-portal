@@ -282,7 +282,7 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Add To CP Done</ModalHeader>
+          <ModalHeader>Add To CP1 Done</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormControl>

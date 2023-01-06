@@ -308,6 +308,9 @@ function AdminOrders() {
         .flat()
         .filter((data) => {
           return !uniqueIds.some((id) => id == data);
+        })
+        .filter((data) => {
+          return data.experts.some((val) => val.expertChat.length !== 0);
         });
       if (data.length !== 0) {
         setInProcessOrderData(data);

@@ -42,7 +42,7 @@ import { apiUrl } from "../../services/contants";
 import { RepeatIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
 
-function FreshOrders({ incrementCounter }) {
+function FreshOrders({ incrementCounter, decrementCounter }) {
   const [assignments, setAssignments] = useState([]);
   const [experts, setExperts] = useState([]);
   const [subjects, setSubjects] = useState([]);
@@ -1154,6 +1154,7 @@ function FreshOrders({ incrementCounter }) {
                         config
                       );
                       incrementCounter("CP1 Pending");
+                      decrementCounter("Fresh Order");
                       if (resdata.success) {
                         await _fetchAssignments();
                         window.alert("Quote Generated");
