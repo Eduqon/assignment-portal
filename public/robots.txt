@@ -1,3 +1,6 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow:/admin
+Disallow:/order_details
+Disallow:/assignments
+Disallow:/assignment_details
