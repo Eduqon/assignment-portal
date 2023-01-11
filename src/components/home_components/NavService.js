@@ -38,19 +38,19 @@ import AutoFakePopup from "./AutoFakePopup";
 import { useLocation } from "react-router-dom";
 import { FormHome } from "./form_home";
 
-const SERVICE = gql`
-  query GetServices($slug: String!) {
-    services(filters: { slug: { eq: $slug } }) {
-      data {
-        id
-        attributes {
-          title
-          body
-        }
-      }
-    }
-  }
-`;
+// const SERVICE = gql`
+//   query GetServices($slug: String!) {
+//     services(filters: { slug: { eq: $slug } }) {
+//       data {
+//         id
+//         attributes {
+//           title
+//           body
+//         }
+//       }
+//     }
+//   }
+// `;
 
 export default function NavService(props) {
   const location = useLocation();
@@ -63,12 +63,12 @@ export default function NavService(props) {
   const setDeadline = AssignmentFormStore((state) => state.setDeadline);
   const setStorePages = AssignmentFormStore((state) => state.setPages);
 
-  const { slug } = useParams();
+  // const { slug } = useParams();
 
-  const { loading, error, data } = useQuery(SERVICE, {
-    variables: { slug: slug },
-  });
-  const { services } = !loading && data;
+  // const { loading, error, data } = useQuery(SERVICE, {
+  //   variables: { slug: slug },
+  // });
+  // const { services } = !loading && data;
 
   let navigate = useNavigate();
 
@@ -196,8 +196,8 @@ export default function NavService(props) {
 
   const bgColor = useColorModeValue("white", "gray.700");
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  // if (loading) return <p>Loading...</p>;
+  // if (error) return <p>{error}</p>;
 
   return (
     <>
@@ -307,14 +307,14 @@ export default function NavService(props) {
           </div>
         </div>
       </div>
-      <div className="section2">
+      {/* <div className="section2">
         <div className="headings d-flex justify-content-center align-items-center">
           <h1 className="">{services && services.data[0].attributes.title}</h1>
         </div>
         <p className="set_text">
           {services && services.data[0].attributes.body}
         </p>
-      </div>
+      </div> */}
       <FooterHome className="w-100" />
     </>
   );
