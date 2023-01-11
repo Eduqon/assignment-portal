@@ -83,8 +83,8 @@ export default function MegaMenu() {
             <li class="nav-item dropdown " id="myHover" onClick={showMega}>
               <Link
                 to="/"
-                onMouseOver={showMega}
-                onClick={showMega}
+                // onMouseOver={showMega}
+                // onClick={showMega}
                 class="nav-link dropdown-toggle"
                 role="button"
                 data-toggle="dropdown"

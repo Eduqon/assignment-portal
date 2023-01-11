@@ -28,7 +28,7 @@ const propsData = {
 
 //Apollo client
 const client = new ApolloClient({
-  uri: "https://13cf-202-14-122-32.in.ngrok.io/graphql",
+  uri: "https://7ffb-202-14-122-32.in.ngrok.io/graphql",
   cache: new InMemoryCache(),
 });
 
