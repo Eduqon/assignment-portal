@@ -38,10 +38,10 @@ export default function MegaMenu() {
   const RowFiveData = services && services.data.slice(40, 50);
 
   const [Mega, setMega] = useState(RowOneData);
-  useEffect(() => {
-    setMega(RowOneData);
-    console.log(Mega, "data");
-  }, []);
+  //   useEffect(() => {
+  //     setMega(RowOneData);
+  //     console.log(Mega, "data");
+  //   }, []);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
