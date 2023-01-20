@@ -5,23 +5,23 @@ import { Link } from "react-router-dom";
 import { IoIosArrowForward } from "react-icons/io";
 import { useRef } from "react";
 
-// const SERVICES = gql`
-//   query GetServices {
-//     services(pagination: { limit: 100 }) {
-//       data {
-//         id
-//         attributes {
-//           title
-//           slug
-//         }
-//       }
-//     }
-//   }
-// `;
+const SERVICES = gql`
+  query {
+    services(pagination: { limit: 100 }) {
+      data {
+        id
+        attributes {
+          title
+          slug
+        }
+      }
+    }
+  }
+`;
 
 export default function MegaMenu() {
-  //   const { loading, error, data } = useQuery(SERVICES);
-  //   const { services } = !loading && data;
+  const { loading, error, data } = useQuery(SERVICES);
+  const { services } = !loading && data;
 
   const drop = useRef();
   const showMega = () => {
@@ -31,20 +31,20 @@ export default function MegaMenu() {
     drop.current.style.display = "none";
   };
 
-  //   const RowOneData = services && services.data.slice(0, 10);
-  //   const RowTwoData = services && services.data.slice(10, 20);
-  //   const RowThreeData = services && services.data.slice(20, 30);
-  //   const RowFourData = services && services.data.slice(30, 40);
-  //   const RowFiveData = services && services.data.slice(40, 50);
+  const RowOneData = services && services.data.slice(0, 10);
+  const RowTwoData = services && services.data.slice(10, 20);
+  const RowThreeData = services && services.data.slice(20, 30);
+  const RowFourData = services && services.data.slice(30, 40);
+  const RowFiveData = services && services.data.slice(40, 50);
 
-  //   const [Mega, setMega] = useState(RowOneData);
-  //     useEffect(() => {
-  //       setMega(RowOneData);
-  //       console.log(Mega, "data");
-  //     }, []);
+  const [Mega, setMega] = useState(RowOneData);
+  useEffect(() => {
+    setMega(RowOneData);
+    console.log(Mega, "data");
+  }, []);
 
-  //   if (loading) return <p>Loading...</p>;
-  //   if (error) return <p>{error}</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <>
@@ -83,8 +83,8 @@ export default function MegaMenu() {
             <li class="nav-item dropdown " id="myHover" onClick={showMega}>
               <Link
                 to="/"
-                // onMouseOver={showMega}
-                // onClick={showMega}
+                onMouseOver={showMega}
+                onClick={showMega}
                 class="nav-link dropdown-toggle"
                 role="button"
                 data-toggle="dropdown"
@@ -115,7 +115,7 @@ export default function MegaMenu() {
         </div>
       </nav>
       {/* mega menu */}
-      {/* <div className="main" id="drop-menu" ref={drop} onMouseLeave={hideMega}>
+      <div className="main" id="drop-menu" ref={drop} onMouseLeave={hideMega}>
         <div className="row set-font">
           <div className="col-md-2 col-12">
             <div className="row my-Div">
@@ -238,7 +238,7 @@ export default function MegaMenu() {
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
     </>
   );
 }

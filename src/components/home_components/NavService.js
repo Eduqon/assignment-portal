@@ -1,4 +1,5 @@
 import React from "react";
+import ReactMarkdown from "react-markdown";
 import { NavbarHome } from "./navbar_home";
 import {
   Flex,
@@ -37,20 +38,23 @@ import { FooterHome } from "./footer_home";
 import AutoFakePopup from "./AutoFakePopup";
 import { useLocation } from "react-router-dom";
 import { FormHome } from "./form_home";
+import Testomonial from "./Testomonial";
 
-// const SERVICE = gql`
-//   query GetServices($slug: String!) {
-//     services(filters: { slug: { eq: $slug } }) {
-//       data {
-//         id
-//         attributes {
-//           title
-//           body
-//         }
-//       }
-//     }
-//   }
-// `;
+const SERVICE = gql`
+  query GetServices($slug: String!) {
+    services(filters: { slug: { eq: $slug } }) {
+      data {
+        id
+        attributes {
+          title
+          body
+          Sub_Title
+          Sub_Title_2
+        }
+      }
+    }
+  }
+`;
 
 export default function NavService(props) {
   const location = useLocation();
@@ -63,12 +67,12 @@ export default function NavService(props) {
   const setDeadline = AssignmentFormStore((state) => state.setDeadline);
   const setStorePages = AssignmentFormStore((state) => state.setPages);
 
-  // const { slug } = useParams();
+  const { slug } = useParams();
 
-  // const { loading, error, data } = useQuery(SERVICE, {
-  //   variables: { slug: slug },
-  // });
-  // const { services } = !loading && data;
+  const { loading, error, data } = useQuery(SERVICE, {
+    variables: { slug: slug },
+  });
+  const { services } = !loading && data;
 
   let navigate = useNavigate();
 
@@ -196,22 +200,34 @@ export default function NavService(props) {
 
   const bgColor = useColorModeValue("white", "gray.700");
 
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>{error}</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <>
       <NavbarHome />
       <div className="contain position-relative">
-        <div className="bg-image" style={{ height: "60vh" }}></div>
+        <div
+          className="bg-image"
+          style={{ height: "60vh", filter: "blur(2px)" }}
+        ></div>
         <div className="row w-100 set-pos-blur">
-          <div className="col-md-6 col-12 d-flex align-items-center flex-column justify-content-center p-4"></div>
+          <div className="col-md-6 col-12 d-flex align-items-center flex-column justify-content-center p-4">
+            <Box color={"white"} width={"500px"}>
+              <Heading size={"xl"}>
+                {services && services.data[0].attributes.title}
+              </Heading>
+              <Heading size={"md"} lineHeight={"1.5"}>
+                {services && services.data[0].attributes.Sub_Title}
+              </Heading>
+              <p>{services && services.data[0].attributes.Sub_Title_2}</p>
+            </Box>
+          </div>
           <div className="col-md-6 col-12 p-0">
             <Stack
               spacing={8}
               mx={"auto"}
               maxW={"lg"}
-              py={12}
               px={6}
               className="set-pp"
             >
@@ -307,14 +323,118 @@ export default function NavService(props) {
           </div>
         </div>
       </div>
-      {/* <div className="section2">
-        <div className="headings d-flex justify-content-center align-items-center">
-          <h1 className="">{services && services.data[0].attributes.title}</h1>
+      <Box className="row w-100 d-flex" margin={"0"}>
+        <div className="col-md-8 col-12 d-flex align-items-center flex-column p-5">
+          <div className="headings d-flex justify-content-center align-items-center mb-4">
+            <Heading>{services && services.data[0].attributes.title}</Heading>
+          </div>
+          <ReactMarkdown>
+            {services && services.data[0].attributes.body}
+          </ReactMarkdown>
         </div>
-        <p className="set_text">
-          {services && services.data[0].attributes.body}
-        </p>
-      </div> */}
+        <Box className="col-md-3 col-12 d-flex align-items-center flex-column justify-content-center p-4">
+          <Box
+            className="bg-white p-30 mt-20"
+            marginTop={"20"}
+            borderRadius={"5px"}
+            border={"2px solid #eceeef"}
+            width={"100%"}
+          >
+            <Box
+              display={"flex"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              flexDirection={"column"}
+              padding={"5"}
+            >
+              <img
+                alt="Question Bank"
+                src="https://www.totalassignment.com/uploads/search-assignment03.png"
+                width="60px;"
+              />
+
+              <Heading
+                size={"md"}
+                className="lspacing"
+                paddingBottom={"5"}
+                paddingTop={"5"}
+              >
+                Looking for Your Assignment?
+              </Heading>
+
+              <a
+                href="https://www.totalassignment.com/questionbank"
+                className="btn btn-md btn-primary"
+              >
+                Search Assignment
+              </a>
+            </Box>
+          </Box>
+          <Box>
+            <img
+              class=""
+              alt=""
+              style={{ "padding-top": "20px", "padding-bottom": "20px" }}
+              src="https://www.totalassignment.com/assets/image/we_accept.png"
+            />
+          </Box>
+          <Box>
+            <img
+              className=""
+              style={{ "padding-top": "10px", "padding-bottom": "20px" }}
+              alt=""
+              src="https://www.totalassignment.com/assets/image/MONEY_BACK.png"
+            />
+          </Box>
+          <Box>
+            <img
+              className=""
+              style={{ "padding-top": "10px", "padding-bottom": "20px" }}
+              alt=""
+              src="https://www.totalassignment.com/assets/image/100p_QUALITY.png"
+            />
+          </Box>
+          <Box>
+            <img
+              className=""
+              style={{ "padding-top": "10px", "padding-bottom": "20px" }}
+              alt=""
+              src="https://www.totalassignment.com/assets/image/Lowest_Price_Guarantee.png"
+            />
+          </Box>
+          <Box>
+            <img
+              className=""
+              style={{ "padding-top": "10px", "padding-bottom": "20px" }}
+              alt=""
+              src="https://www.totalassignment.com/assets/image/Plagiarism_Free_Work.png"
+            />
+          </Box>
+          <Box width={"100%"} backgroundColor={"#f0f5f8"}>
+            <div
+              className="bg-grey p-20 mb-20"
+              style={{ "margin-top": "20px" }}
+            >
+              <Heading marginTop={"10"} marginLeft={"3"}>
+                Other Assignment Services
+              </Heading>
+              <ul className="list-group list-group-flush">
+                <li className="list-group-item" style={{ background: "#0000" }}>
+                  <a href="#">My Assignment Help</a>
+                </li>
+
+                <li className="list-group-item" style={{ background: "#0000" }}>
+                  <a href="#">SCM Assignment Help</a>
+                </li>
+                <li className="list-group-item" style={{ background: "#0000" }}>
+                  <a href="#">HRM Assignment Help</a>
+                </li>
+              </ul>
+            </div>
+          </Box>
+        </Box>
+      </Box>
+      <Testomonial />
       <FooterHome className="w-100" />
     </>
   );
