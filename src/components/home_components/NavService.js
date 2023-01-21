@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import ReactMarkdown from "react-markdown";
 import { NavbarHome } from "./navbar_home";
 import {
@@ -26,7 +27,7 @@ import validator from "validator";
 import { ClientStore } from "../../services/stores/client_store";
 import { AssignmentFormStore } from "../../services/stores/assignment_form_store";
 import axios from "axios";
-import { apiUrl } from "../../services/contants";
+import { apiUrl, mediaUrl } from "../../services/contants";
 import { useNavigate, useParams } from "react-router-dom";
 import home4 from "../../assets/home4.jpg";
 import hom1 from "../../assets/hom1.jpg";
@@ -39,6 +40,8 @@ import AutoFakePopup from "./AutoFakePopup";
 import { useLocation } from "react-router-dom";
 import { FormHome } from "./form_home";
 import Testomonial from "./Testomonial";
+import useFetch from "../../hooks/useFetch";
+import "./Navservice.css";
 
 const SERVICE = gql`
   query GetServices($slug: String!) {
@@ -47,9 +50,16 @@ const SERVICE = gql`
         id
         attributes {
           title
-          body
+          slug
+          body_1
+          body_2
           Sub_Title
           Sub_Title_2
+          Seodescription
+          Seokeyword
+          Formheading
+          Seotitle
+          Seocntag
         }
       }
     }
@@ -72,7 +82,12 @@ export default function NavService(props) {
   const { loading, error, data } = useQuery(SERVICE, {
     variables: { slug: slug },
   });
+
   const { services } = !loading && data;
+  const title = services && services.data[0].attributes.Seotitle;
+  const description = services && services.data[0].attributes.Seodescription;
+  const keyword = services && services.data[0].attributes.Seokeyword;
+  const canonicalURL = services && services.data[0].attributes.Seocntag;
 
   let navigate = useNavigate();
 
@@ -82,7 +97,7 @@ export default function NavService(props) {
       date.min = new Date().toLocaleDateString("en-ca");
       date.value = new Date().toLocaleDateString("en-ca");
     }
-  });
+  }, []);
 
   async function _submit() {
     let email = document.getElementById("email");
@@ -200,18 +215,32 @@ export default function NavService(props) {
 
   const bgColor = useColorModeValue("white", "gray.700");
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  const { apiLoading, apiError, apiData } = useFetch(
+    mediaUrl + "/upload/files"
+  );
+  const serviceImage =
+    apiData &&
+    services &&
+    apiData.filter((data) => data.name === services.data[0].attributes.slug);
+
+  if (loading || apiLoading) return <p>Loading...</p>;
+  if (error || apiError) return <p>{error}</p>;
 
   return (
     <>
+      <Helmet>
+        {title && <title>{title}</title>}
+        {description && <meta name="description" content={description} />}
+        {keyword && <meta name="keyword" content={keyword} />}
+        {canonicalURL && <link rel="canonical" href={canonicalURL} />}
+      </Helmet>
       <NavbarHome />
       <div className="contain position-relative">
         <div
           className="bg-image"
-          style={{ height: "60vh", filter: "blur(2px)" }}
+          style={{ height: "66vh", filter: "blur(2px)" }}
         ></div>
-        <div className="row w-100 set-pos-blur">
+        <div className="row w-100 h-100 set-pos-blur">
           <div className="col-md-6 col-12 d-flex align-items-center flex-column justify-content-center p-4">
             <Box color={"white"} width={"500px"}>
               <Heading size={"xl"}>
@@ -223,16 +252,18 @@ export default function NavService(props) {
               <p>{services && services.data[0].attributes.Sub_Title_2}</p>
             </Box>
           </div>
-          <div className="col-md-6 col-12 p-0">
+          <div className="col-md-6 col-12 p-4">
             <Stack
-              spacing={8}
+              spacing={4}
               mx={"auto"}
               maxW={"lg"}
               px={6}
               className="set-pp"
             >
               <Stack align={"center"}>
-                <h1 className="top_class">Assignment Santa</h1>
+                <Heading className="top_class" size={"xl"}>
+                  {services && services.data[0].attributes.Formheading}
+                </Heading>
                 <p className="top_class_sub text-capitalize">
                   Take help from best writing service !!
                 </p>
@@ -323,14 +354,43 @@ export default function NavService(props) {
           </div>
         </div>
       </div>
-      <Box className="row w-100 d-flex" margin={"0"}>
+      <Box className="row w-100 h-100 d-flex" margin={"0"}>
         <div className="col-md-8 col-12 d-flex align-items-center flex-column p-5">
           <div className="headings d-flex justify-content-center align-items-center mb-4">
-            <Heading>{services && services.data[0].attributes.title}</Heading>
+            <Heading size={"lg"}>
+              {services && services.data[0].attributes.title}
+            </Heading>
           </div>
-          <ReactMarkdown>
-            {services && services.data[0].attributes.body}
-          </ReactMarkdown>
+          <Box className="service-body">
+            <ReactMarkdown>
+              {services && services.data[0].attributes.body_1}
+            </ReactMarkdown>
+          </Box>
+          {serviceImage && serviceImage.length !== 0 && (
+            <Box
+              display={"flex"}
+              alignItems={"center"}
+              justifyContent={"space-around"}
+              width={"100%"}
+              height={"500px"}
+              marginTop={2}
+            >
+              <Box
+                width={"100%"}
+                height={"100%"}
+                backgroundImage={`url(https://assignmentsantastrapi.fly.dev${serviceImage[0].url})`}
+                backgroundSize={"cover"}
+                backgroundPosition={"center"}
+              />
+            </Box>
+          )}
+          {services && services.data[0].attributes.body_2 && (
+            <Box className="service-body">
+              <ReactMarkdown>
+                {services && services.data[0].attributes.body_2}
+              </ReactMarkdown>
+            </Box>
+          )}
         </div>
         <Box className="col-md-3 col-12 d-flex align-items-center flex-column justify-content-center p-4">
           <Box
@@ -362,10 +422,7 @@ export default function NavService(props) {
                 Looking for Your Assignment?
               </Heading>
 
-              <a
-                href="https://www.totalassignment.com/questionbank"
-                className="btn btn-md btn-primary"
-              >
+              <a href="#" className="btn btn-md btn-primary">
                 Search Assignment
               </a>
             </Box>

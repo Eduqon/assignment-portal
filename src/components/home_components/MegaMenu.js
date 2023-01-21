@@ -81,8 +81,7 @@ export default function MegaMenu() {
             </li>
 
             <li class="nav-item dropdown " id="myHover" onClick={showMega}>
-              <Link
-                to="/"
+              <span
                 onMouseOver={showMega}
                 onClick={showMega}
                 class="nav-link dropdown-toggle"
@@ -91,7 +90,7 @@ export default function MegaMenu() {
                 aria-expanded="false"
               >
                 Services
-              </Link>
+              </span>
             </li>
             <li class="nav-item">
               <Link to="/samples">
