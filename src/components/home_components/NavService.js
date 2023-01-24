@@ -51,6 +51,7 @@ const SERVICE = gql`
         attributes {
           title
           slug
+          body_title
           body_1
           body_2
           Sub_Title
@@ -238,11 +239,14 @@ export default function NavService(props) {
       <div className="contain position-relative">
         <div
           className="bg-image"
-          style={{ height: "66vh", filter: "blur(2px)" }}
+          style={{ height: "70vh", filter: "blur(2px)" }}
         ></div>
         <div className="row w-100 h-100 set-pos-blur">
-          <div className="col-md-6 col-12 d-flex align-items-center flex-column justify-content-center p-4">
-            <Box color={"white"} width={"500px"}>
+          <div
+            id="top-section"
+            className="col-md-6 col-12 d-flex align-items-center flex-column justify-content-center p-4"
+          >
+            <Box id="heading-section" color={"white"} width={"500px"}>
               <Heading size={"xl"}>
                 {services && services.data[0].attributes.title}
               </Heading>
@@ -252,7 +256,7 @@ export default function NavService(props) {
               <p>{services && services.data[0].attributes.Sub_Title_2}</p>
             </Box>
           </div>
-          <div className="col-md-6 col-12 p-4">
+          <div id="form-section" className="col-md-6 col-12 p-4">
             <Stack
               spacing={4}
               mx={"auto"}
@@ -355,13 +359,16 @@ export default function NavService(props) {
         </div>
       </div>
       <Box className="row w-100 h-100 d-flex" margin={"0"}>
-        <div className="col-md-8 col-12 d-flex align-items-center flex-column p-5">
+        <div
+          id="bottom-section"
+          className="col-md-8 col-12 d-flex align-items-center flex-column p-5"
+        >
           <div className="headings d-flex justify-content-center align-items-center mb-4">
             <Heading size={"lg"}>
-              {services && services.data[0].attributes.title}
+              {services && services.data[0].attributes.body_title}
             </Heading>
           </div>
-          <Box className="service-body">
+          <Box className="service-body p-4">
             <ReactMarkdown>
               {services && services.data[0].attributes.body_1}
             </ReactMarkdown>
@@ -385,14 +392,17 @@ export default function NavService(props) {
             </Box>
           )}
           {services && services.data[0].attributes.body_2 && (
-            <Box className="service-body">
+            <Box className="service-body p-4">
               <ReactMarkdown>
                 {services && services.data[0].attributes.body_2}
               </ReactMarkdown>
             </Box>
           )}
         </div>
-        <Box className="col-md-3 col-12 d-flex align-items-center flex-column justify-content-center p-4">
+        <Box
+          id="right-section"
+          className="col-md-3 col-12 d-flex align-items-center flex-column justify-content-top p-4"
+        >
           <Box
             className="bg-white p-30 mt-20"
             marginTop={"20"}

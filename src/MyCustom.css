@@ -1114,7 +1114,7 @@ h1.set-contact {
     /* background-image: url(http://localhost:3000/static/media/three.c7b43a1….webp); */
     filter: blur(5px);
     -webkit-filter: blur(5px);
-    height: 109vh;
+    height: 110vh !important;
     width: 100%;
     background-position: center;
     background-repeat: no-repeat;

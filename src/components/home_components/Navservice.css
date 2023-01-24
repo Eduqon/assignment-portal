@@ -2,10 +2,10 @@
   font-size: 2.5rem;
 }
 .service-body h2 {
-  font-size: 2rem;
+  font-size: 20px;
 }
 .service-body h3 {
-  font-size: 1.75rem;
+  font-size: 20px;
 }
 .service-body h4 {
   font-size: 1.5rem;
@@ -15,4 +15,25 @@
 }
 .service-body h6 {
   font-size: 1rem;
+}
+#bottom-section ul {
+  padding: 5px 25px !important;
+}
+@media (max-width: 767px) {
+  #heading-section {
+    width: 100% !important;
+  }
+  #top-section {
+    padding: 0px 2rem !important;
+  }
+  #form-section {
+    padding: 1rem !important;
+  }
+  #bottom-section {
+    padding: 0px 50px !important;
+  }
+  #right-section {
+    margin-top: 0px !important;
+    padding: 3rem !important;
+  }
 }
