@@ -368,9 +368,13 @@ export default function NavService(props) {
               {services && services.data[0].attributes.body_title}
             </Heading>
           </div>
-          <Box className="service-body p-4">
+          <Box
+            className="service-body p-4"
+            style={{ "white-space": "pre-line" }}
+          >
             <ReactMarkdown>
-              {services && services.data[0].attributes.body_1}
+              {services &&
+                services.data[0].attributes.body_1.split("<br/>").join("\n")}
             </ReactMarkdown>
           </Box>
           {serviceImage && serviceImage.length !== 0 && (
@@ -392,9 +396,13 @@ export default function NavService(props) {
             </Box>
           )}
           {services && services.data[0].attributes.body_2 && (
-            <Box className="service-body p-4">
+            <Box
+              className="service-body p-4"
+              style={{ "white-space": "pre-line" }}
+            >
               <ReactMarkdown>
-                {services && services.data[0].attributes.body_2}
+                {services &&
+                  services.data[0].attributes.body_2.split("<br/>").join("\n")}
               </ReactMarkdown>
             </Box>
           )}
