@@ -20,6 +20,18 @@
   padding: 5px 25px !important;
 }
 @media (max-width: 767px) {
+  #bottom-section ul {
+    padding: 0px 20px !important;
+  }
+  .service-body {
+    padding: 0 !important;
+  }
+  #assignment-section {
+    margin-top: 0 !important;
+  }
+  #schema-section {
+    padding: 0 !important;
+  }
   #heading-section {
     width: 100% !important;
   }

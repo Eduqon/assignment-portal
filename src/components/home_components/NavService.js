@@ -42,6 +42,7 @@ import { FormHome } from "./form_home";
 import Testomonial from "./Testomonial";
 import useFetch from "../../hooks/useFetch";
 import "./Navservice.css";
+import Faqschema from "./Faqschema";
 
 const SERVICE = gql`
   query GetServices($slug: String!) {
@@ -61,6 +62,7 @@ const SERVICE = gql`
           Formheading
           Seotitle
           Seocntag
+          SchemaTitle
         }
       }
     }
@@ -89,6 +91,7 @@ export default function NavService(props) {
   const description = services && services.data[0].attributes.Seodescription;
   const keyword = services && services.data[0].attributes.Seokeyword;
   const canonicalURL = services && services.data[0].attributes.Seocntag;
+  const SchemaTitle = services && services.data[0].attributes.SchemaTitle;
 
   let navigate = useNavigate();
 
@@ -369,8 +372,8 @@ export default function NavService(props) {
             </Heading>
           </div>
           <Box
-            className="service-body p-4"
-            style={{ "white-space": "pre-line" }}
+            className="service-body"
+            style={{ "white-space": "pre-line", padding: "0 2rem" }}
           >
             <ReactMarkdown>
               {services &&
@@ -397,8 +400,8 @@ export default function NavService(props) {
           )}
           {services && services.data[0].attributes.body_2 && (
             <Box
-              className="service-body p-4"
-              style={{ "white-space": "pre-line" }}
+              className="service-body"
+              style={{ "white-space": "pre-line", padding: "0 2rem" }}
             >
               <ReactMarkdown>
                 {services &&
@@ -406,12 +409,15 @@ export default function NavService(props) {
               </ReactMarkdown>
             </Box>
           )}
+          <br />
+          <Faqschema title={SchemaTitle} />
         </div>
         <Box
           id="right-section"
           className="col-md-3 col-12 d-flex align-items-center flex-column justify-content-top p-4"
         >
           <Box
+            id="assignment-section"
             className="bg-white p-30 mt-20"
             marginTop={"20"}
             borderRadius={"5px"}
