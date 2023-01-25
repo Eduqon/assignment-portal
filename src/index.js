@@ -6,7 +6,7 @@ import "./index.css";
 import Home from "./pages/Home";
 import reportWebVitals from "./reportWebVitals";
 import { Center, ChakraProvider, Heading } from "@chakra-ui/react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { OrderDetails } from "./pages/Order_Details";
 import { Assignments } from "./pages/Assignments";
 import AdminLogin from "./pages/admin/Login";
@@ -30,7 +30,7 @@ const propsData = {
 
 //Apollo client
 const client = new ApolloClient({
-  uri: `${strapiUrl}/graphql`,
+  uri: `http://localhost:1337/graphql`,
   cache: new InMemoryCache(),
 });
 
@@ -45,6 +45,7 @@ ReactDOM.render(
               <Route path="/contact" element={<Contact />} />
               <Route path="/reviews" element={<Review />} />
               <Route exact path="/samples" element={<Samples />} />
+              <Route exact path="/404.html" element={<Error />} />
               <Route path="assignment_details" element={<AssignmentsLayout />}>
                 <Route
                   path=":assignmentID"
@@ -63,8 +64,9 @@ ReactDOM.render(
                   <Route path=":assignmentID" element={<AssignmentDetails />} />
                 </Route>
               </Route>
-              <Route path="*" element={<Error />} />
+              <Route path="*" element={<Navigate to="/404.html" replace />} />
               <Route
+                exact
                 path="/service/:slug"
                 element={<NavService list={{ ...propsData }} />}
               />

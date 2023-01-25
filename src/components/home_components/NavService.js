@@ -69,6 +69,19 @@ const SERVICE = gql`
   }
 `;
 
+const SERVICES = gql`
+  query {
+    services(pagination: { limit: 100 }) {
+      data {
+        id
+        attributes {
+          slug
+        }
+      }
+    }
+  }
+`;
+
 export default function NavService(props) {
   const location = useLocation();
   const [pages, setPages] = useState(0);
@@ -79,21 +92,14 @@ export default function NavService(props) {
   const setSubject = AssignmentFormStore((state) => state.setSubject);
   const setDeadline = AssignmentFormStore((state) => state.setDeadline);
   const setStorePages = AssignmentFormStore((state) => state.setPages);
-
-  const { slug } = useParams();
-
-  const { loading, error, data } = useQuery(SERVICE, {
-    variables: { slug: slug },
-  });
-
-  const { services } = !loading && data;
-  const title = services && services.data[0].attributes.Seotitle;
-  const description = services && services.data[0].attributes.Seodescription;
-  const keyword = services && services.data[0].attributes.Seokeyword;
-  const canonicalURL = services && services.data[0].attributes.Seocntag;
-  const SchemaTitle = services && services.data[0].attributes.SchemaTitle;
-
   let navigate = useNavigate();
+  const { slug } = useParams();
+  const {
+    loading: serviceloading,
+    error: serviceError,
+    data: serviceData,
+  } = useQuery(SERVICES);
+  const { services: allServices } = !serviceloading && serviceData;
 
   useEffect(() => {
     let date = document.getElementById("date");
@@ -102,6 +108,24 @@ export default function NavService(props) {
       date.value = new Date().toLocaleDateString("en-ca");
     }
   }, []);
+
+  const getURL =
+    allServices && allServices.data.some((val) => val.attributes.slug === slug);
+
+  const { loading, error, data } = useQuery(SERVICE, {
+    variables: { slug: slug },
+  });
+
+  const { services } = !loading && data;
+
+  const title = services && getURL && services.data[0].attributes.Seotitle;
+  const description =
+    services && getURL && services.data[0].attributes.Seodescription;
+  const keyword = services && getURL && services.data[0].attributes.Seokeyword;
+  const canonicalURL =
+    services && getURL && services.data[0].attributes.Seocntag;
+  const SchemaTitle =
+    services && getURL && services.data[0].attributes.SchemaTitle;
 
   async function _submit() {
     let email = document.getElementById("email");
@@ -225,298 +249,320 @@ export default function NavService(props) {
   const serviceImage =
     apiData &&
     services &&
+    getURL &&
     apiData.filter((data) => data.name === services.data[0].attributes.slug);
 
-  if (loading || apiLoading) return <p>Loading...</p>;
-  if (error || apiError) return <p>{error}</p>;
+  if (loading || apiLoading || serviceloading) return <p>Loading...</p>;
+  if (error || apiError || serviceError) return <p>{error}</p>;
 
   return (
     <>
-      <Helmet>
-        {title && <title>{title}</title>}
-        {description && <meta name="description" content={description} />}
-        {keyword && <meta name="keyword" content={keyword} />}
-        {canonicalURL && <link rel="canonical" href={canonicalURL} />}
-      </Helmet>
-      <NavbarHome />
-      <div className="contain position-relative">
-        <div
-          className="bg-image"
-          style={{ height: "70vh", filter: "blur(2px)" }}
-        ></div>
-        <div className="row w-100 h-100 set-pos-blur">
-          <div
-            id="top-section"
-            className="col-md-6 col-12 d-flex align-items-center flex-column justify-content-center p-4"
-          >
-            <Box id="heading-section" color={"white"} width={"500px"}>
-              <Heading size={"xl"}>
-                {services && services.data[0].attributes.title}
-              </Heading>
-              <Heading size={"md"} lineHeight={"1.5"}>
-                {services && services.data[0].attributes.Sub_Title}
-              </Heading>
-              <p>{services && services.data[0].attributes.Sub_Title_2}</p>
-            </Box>
-          </div>
-          <div id="form-section" className="col-md-6 col-12 p-4">
-            <Stack
-              spacing={4}
-              mx={"auto"}
-              maxW={"lg"}
-              px={6}
-              className="set-pp"
-            >
-              <Stack align={"center"}>
-                <Heading className="top_class" size={"xl"}>
-                  {services && services.data[0].attributes.Formheading}
-                </Heading>
-                <p className="top_class_sub text-capitalize">
-                  Take help from best writing service !!
-                </p>
-              </Stack>
-              <Box rounded={"lg"} bg={bgColor} boxShadow={"lg"} p={8}>
-                <Stack spacing={4}>
-                  <div className="d-flex flex-column flex-md-row flex-sm-row flex-lg-row">
-                    <Box>
-                      <FormControl id="email" isRequired>
-                        <FormLabel>Email</FormLabel>
-                        <Input
-                          placeholder="Enter Your Email"
-                          type="email"
-                          onChange={async () => {
-                            let email = document.getElementById("email");
-                            setEmail(email.value);
-                          }}
-                        />
-                      </FormControl>
-                    </Box>
-                    <Box display={{ base: "none", sm: "block", md: "block" }}>
-                      &nbsp;&nbsp;&nbsp;&nbsp;
-                    </Box>
-                    <Box>
-                      <FormControl id="subject" isRequired>
-                        <FormLabel>Subject</FormLabel>
-                        <Input placeholder="Enter Subject" type="text" />
-                      </FormControl>
-                    </Box>
-                  </div>
-                  <FormControl id="words">
-                    <FormLabel>No. of Words/Pages</FormLabel>
-                    <InputGroup>
-                      <InputLeftElement h={"full"}>
-                        <Button
-                          variant={"outline"}
-                          onClick={() => {
-                            if (pages <= 0) {
-                              console.log("Already zero");
-                            } else {
-                              setPages(pages - 1);
-                            }
-                          }}
-                        >
-                          <MinusIcon />
-                        </Button>
-                      </InputLeftElement>
-                      <Input
-                        type="text"
-                        value={
-                          "   " + pages + " Pages/" + 250 * pages + " Words"
-                        }
-                        contentEditable={false}
-                        onChange={() => console.log(pages)}
-                      />
-                      <InputRightElement h={"full"}>
-                        <Button
-                          variant={"outline"}
-                          onClick={() => {
-                            setPages(pages + 1);
-                          }}
-                        >
-                          <AddIcon />
-                        </Button>
-                      </InputRightElement>
-                    </InputGroup>
-                  </FormControl>
-                  <FormControl id="deadline">
-                    <FormLabel>Deadline</FormLabel>
-                    <HStack>
-                      <Input type="date" id="date" />
-                      <Input type="time" id="time" />
-                    </HStack>
-                  </FormControl>
-                  <Stack spacing={10} pt={2}>
-                    <button
-                      className="btn btn-Set"
-                      onClick={() => {
-                        _submit();
-                      }}
-                    >
-                      Submit
-                    </button>
+      {getURL ? (
+        <>
+          <Helmet>
+            {title && <title>{title}</title>}
+            {description && <meta name="description" content={description} />}
+            {keyword && <meta name="keyword" content={keyword} />}
+            {canonicalURL && <link rel="canonical" href={canonicalURL} />}
+          </Helmet>
+          <NavbarHome />
+          <div className="contain position-relative">
+            <div
+              className="bg-image"
+              style={{ height: "70vh", filter: "blur(2px)" }}
+            ></div>
+            <div className="row w-100 h-100 set-pos-blur">
+              <div
+                id="top-section"
+                className="col-md-6 col-12 d-flex align-items-center flex-column justify-content-center p-4"
+              >
+                <Box id="heading-section" color={"white"} width={"500px"}>
+                  <Heading size={"xl"}>
+                    {services && services.data[0].attributes.title}
+                  </Heading>
+                  <Heading size={"md"} lineHeight={"1.5"}>
+                    {services && services.data[0].attributes.Sub_Title}
+                  </Heading>
+                  <p>{services && services.data[0].attributes.Sub_Title_2}</p>
+                </Box>
+              </div>
+              <div id="form-section" className="col-md-6 col-12 p-4">
+                <Stack
+                  spacing={4}
+                  mx={"auto"}
+                  maxW={"lg"}
+                  px={6}
+                  className="set-pp"
+                >
+                  <Stack align={"center"}>
+                    <Heading className="top_class" size={"xl"}>
+                      {services && services.data[0].attributes.Formheading}
+                    </Heading>
+                    <p className="top_class_sub text-capitalize">
+                      Take help from best writing service !!
+                    </p>
                   </Stack>
+                  <Box rounded={"lg"} bg={bgColor} boxShadow={"lg"} p={8}>
+                    <Stack spacing={4}>
+                      <div className="d-flex flex-column flex-md-row flex-sm-row flex-lg-row">
+                        <Box>
+                          <FormControl id="email" isRequired>
+                            <FormLabel>Email</FormLabel>
+                            <Input
+                              placeholder="Enter Your Email"
+                              type="email"
+                              onChange={async () => {
+                                let email = document.getElementById("email");
+                                setEmail(email.value);
+                              }}
+                            />
+                          </FormControl>
+                        </Box>
+                        <Box
+                          display={{ base: "none", sm: "block", md: "block" }}
+                        >
+                          &nbsp;&nbsp;&nbsp;&nbsp;
+                        </Box>
+                        <Box>
+                          <FormControl id="subject" isRequired>
+                            <FormLabel>Subject</FormLabel>
+                            <Input placeholder="Enter Subject" type="text" />
+                          </FormControl>
+                        </Box>
+                      </div>
+                      <FormControl id="words">
+                        <FormLabel>No. of Words/Pages</FormLabel>
+                        <InputGroup>
+                          <InputLeftElement h={"full"}>
+                            <Button
+                              variant={"outline"}
+                              onClick={() => {
+                                if (pages <= 0) {
+                                  console.log("Already zero");
+                                } else {
+                                  setPages(pages - 1);
+                                }
+                              }}
+                            >
+                              <MinusIcon />
+                            </Button>
+                          </InputLeftElement>
+                          <Input
+                            type="text"
+                            value={
+                              "   " + pages + " Pages/" + 250 * pages + " Words"
+                            }
+                            contentEditable={false}
+                            onChange={() => console.log(pages)}
+                          />
+                          <InputRightElement h={"full"}>
+                            <Button
+                              variant={"outline"}
+                              onClick={() => {
+                                setPages(pages + 1);
+                              }}
+                            >
+                              <AddIcon />
+                            </Button>
+                          </InputRightElement>
+                        </InputGroup>
+                      </FormControl>
+                      <FormControl id="deadline">
+                        <FormLabel>Deadline</FormLabel>
+                        <HStack>
+                          <Input type="date" id="date" />
+                          <Input type="time" id="time" />
+                        </HStack>
+                      </FormControl>
+                      <Stack spacing={10} pt={2}>
+                        <button
+                          className="btn btn-Set"
+                          onClick={() => {
+                            _submit();
+                          }}
+                        >
+                          Submit
+                        </button>
+                      </Stack>
+                    </Stack>
+                  </Box>
                 </Stack>
+              </div>
+            </div>
+          </div>
+          <Box className="row w-100 h-100 d-flex" margin={"0"}>
+            <div
+              id="bottom-section"
+              className="col-md-8 col-12 d-flex align-items-center flex-column p-5"
+            >
+              <div className="headings d-flex justify-content-center align-items-center mb-4">
+                <Heading size={"lg"}>
+                  {services && services.data[0].attributes.body_title}
+                </Heading>
+              </div>
+              <Box
+                className="service-body"
+                style={{ "white-space": "pre-line", padding: "0 2rem" }}
+              >
+                <ReactMarkdown>
+                  {services &&
+                    services.data[0].attributes.body_1
+                      .split("<br/>")
+                      .join("\n")}
+                </ReactMarkdown>
               </Box>
-            </Stack>
-          </div>
-        </div>
-      </div>
-      <Box className="row w-100 h-100 d-flex" margin={"0"}>
-        <div
-          id="bottom-section"
-          className="col-md-8 col-12 d-flex align-items-center flex-column p-5"
-        >
-          <div className="headings d-flex justify-content-center align-items-center mb-4">
-            <Heading size={"lg"}>
-              {services && services.data[0].attributes.body_title}
-            </Heading>
-          </div>
-          <Box
-            className="service-body"
-            style={{ "white-space": "pre-line", padding: "0 2rem" }}
-          >
-            <ReactMarkdown>
-              {services &&
-                services.data[0].attributes.body_1.split("<br/>").join("\n")}
-            </ReactMarkdown>
-          </Box>
-          {serviceImage && serviceImage.length !== 0 && (
+              {serviceImage && serviceImage.length !== 0 && (
+                <Box
+                  display={"flex"}
+                  alignItems={"center"}
+                  justifyContent={"space-around"}
+                  width={"100%"}
+                  height={"500px"}
+                  marginTop={2}
+                >
+                  <Box
+                    width={"100%"}
+                    height={"100%"}
+                    backgroundImage={`url(https://assignmentsantastrapi.fly.dev${serviceImage[0].url})`}
+                    backgroundSize={"cover"}
+                    backgroundPosition={"center"}
+                  />
+                </Box>
+              )}
+              {services && services.data[0].attributes.body_2 && (
+                <Box
+                  className="service-body"
+                  style={{ "white-space": "pre-line", padding: "0 2rem" }}
+                >
+                  <ReactMarkdown>
+                    {services &&
+                      services.data[0].attributes.body_2
+                        .split("<br/>")
+                        .join("\n")}
+                  </ReactMarkdown>
+                </Box>
+              )}
+              <br />
+              <Faqschema title={SchemaTitle} slug={slug} />
+            </div>
             <Box
-              display={"flex"}
-              alignItems={"center"}
-              justifyContent={"space-around"}
-              width={"100%"}
-              height={"500px"}
-              marginTop={2}
+              id="right-section"
+              className="col-md-3 col-12 d-flex align-items-center flex-column justify-content-top p-4"
             >
               <Box
+                id="assignment-section"
+                className="bg-white p-30 mt-20"
+                marginTop={"20"}
+                borderRadius={"5px"}
+                border={"2px solid #eceeef"}
                 width={"100%"}
-                height={"100%"}
-                backgroundImage={`url(https://assignmentsantastrapi.fly.dev${serviceImage[0].url})`}
-                backgroundSize={"cover"}
-                backgroundPosition={"center"}
-              />
-            </Box>
-          )}
-          {services && services.data[0].attributes.body_2 && (
-            <Box
-              className="service-body"
-              style={{ "white-space": "pre-line", padding: "0 2rem" }}
-            >
-              <ReactMarkdown>
-                {services &&
-                  services.data[0].attributes.body_2.split("<br/>").join("\n")}
-              </ReactMarkdown>
-            </Box>
-          )}
-          <br />
-          <Faqschema title={SchemaTitle} slug={slug} />
-        </div>
-        <Box
-          id="right-section"
-          className="col-md-3 col-12 d-flex align-items-center flex-column justify-content-top p-4"
-        >
-          <Box
-            id="assignment-section"
-            className="bg-white p-30 mt-20"
-            marginTop={"20"}
-            borderRadius={"5px"}
-            border={"2px solid #eceeef"}
-            width={"100%"}
-          >
-            <Box
-              display={"flex"}
-              alignItems={"center"}
-              justifyContent={"center"}
-              flexDirection={"column"}
-              padding={"5"}
-            >
-              <img
-                alt="Question Bank"
-                src="https://www.totalassignment.com/uploads/search-assignment03.png"
-                width="60px;"
-              />
-
-              <Heading
-                size={"md"}
-                className="lspacing"
-                paddingBottom={"5"}
-                paddingTop={"5"}
               >
-                Looking for Your Assignment?
-              </Heading>
+                <Box
+                  display={"flex"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  flexDirection={"column"}
+                  padding={"5"}
+                >
+                  <img
+                    alt="Question Bank"
+                    src="https://www.totalassignment.com/uploads/search-assignment03.png"
+                    width="60px;"
+                  />
 
-              <a href="#" className="btn btn-md btn-primary">
-                Search Assignment
-              </a>
+                  <Heading
+                    size={"md"}
+                    className="lspacing"
+                    paddingBottom={"5"}
+                    paddingTop={"5"}
+                  >
+                    Looking for Your Assignment?
+                  </Heading>
+
+                  <a href="#" className="btn btn-md btn-primary">
+                    Search Assignment
+                  </a>
+                </Box>
+              </Box>
+              <Box>
+                <img
+                  class=""
+                  alt=""
+                  style={{ "padding-top": "20px", "padding-bottom": "20px" }}
+                  src="https://www.totalassignment.com/assets/image/we_accept.png"
+                />
+              </Box>
+              <Box>
+                <img
+                  className=""
+                  style={{ "padding-top": "10px", "padding-bottom": "20px" }}
+                  alt=""
+                  src="https://www.totalassignment.com/assets/image/MONEY_BACK.png"
+                />
+              </Box>
+              <Box>
+                <img
+                  className=""
+                  style={{ "padding-top": "10px", "padding-bottom": "20px" }}
+                  alt=""
+                  src="https://www.totalassignment.com/assets/image/100p_QUALITY.png"
+                />
+              </Box>
+              <Box>
+                <img
+                  className=""
+                  style={{ "padding-top": "10px", "padding-bottom": "20px" }}
+                  alt=""
+                  src="https://www.totalassignment.com/assets/image/Lowest_Price_Guarantee.png"
+                />
+              </Box>
+              <Box>
+                <img
+                  className=""
+                  style={{ "padding-top": "10px", "padding-bottom": "20px" }}
+                  alt=""
+                  src="https://www.totalassignment.com/assets/image/Plagiarism_Free_Work.png"
+                />
+              </Box>
+              <Box width={"100%"} backgroundColor={"#f0f5f8"}>
+                <div
+                  className="bg-grey p-20 mb-20"
+                  style={{ "margin-top": "20px" }}
+                >
+                  <Heading marginTop={"10"} marginLeft={"3"}>
+                    Other Assignment Services
+                  </Heading>
+                  <ul className="list-group list-group-flush">
+                    <li
+                      className="list-group-item"
+                      style={{ background: "#0000" }}
+                    >
+                      <a href="#">My Assignment Help</a>
+                    </li>
+
+                    <li
+                      className="list-group-item"
+                      style={{ background: "#0000" }}
+                    >
+                      <a href="#">SCM Assignment Help</a>
+                    </li>
+                    <li
+                      className="list-group-item"
+                      style={{ background: "#0000" }}
+                    >
+                      <a href="#">HRM Assignment Help</a>
+                    </li>
+                  </ul>
+                </div>
+              </Box>
             </Box>
           </Box>
-          <Box>
-            <img
-              class=""
-              alt=""
-              style={{ "padding-top": "20px", "padding-bottom": "20px" }}
-              src="https://www.totalassignment.com/assets/image/we_accept.png"
-            />
-          </Box>
-          <Box>
-            <img
-              className=""
-              style={{ "padding-top": "10px", "padding-bottom": "20px" }}
-              alt=""
-              src="https://www.totalassignment.com/assets/image/MONEY_BACK.png"
-            />
-          </Box>
-          <Box>
-            <img
-              className=""
-              style={{ "padding-top": "10px", "padding-bottom": "20px" }}
-              alt=""
-              src="https://www.totalassignment.com/assets/image/100p_QUALITY.png"
-            />
-          </Box>
-          <Box>
-            <img
-              className=""
-              style={{ "padding-top": "10px", "padding-bottom": "20px" }}
-              alt=""
-              src="https://www.totalassignment.com/assets/image/Lowest_Price_Guarantee.png"
-            />
-          </Box>
-          <Box>
-            <img
-              className=""
-              style={{ "padding-top": "10px", "padding-bottom": "20px" }}
-              alt=""
-              src="https://www.totalassignment.com/assets/image/Plagiarism_Free_Work.png"
-            />
-          </Box>
-          <Box width={"100%"} backgroundColor={"#f0f5f8"}>
-            <div
-              className="bg-grey p-20 mb-20"
-              style={{ "margin-top": "20px" }}
-            >
-              <Heading marginTop={"10"} marginLeft={"3"}>
-                Other Assignment Services
-              </Heading>
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item" style={{ background: "#0000" }}>
-                  <a href="#">My Assignment Help</a>
-                </li>
-
-                <li className="list-group-item" style={{ background: "#0000" }}>
-                  <a href="#">SCM Assignment Help</a>
-                </li>
-                <li className="list-group-item" style={{ background: "#0000" }}>
-                  <a href="#">HRM Assignment Help</a>
-                </li>
-              </ul>
-            </div>
-          </Box>
-        </Box>
-      </Box>
-      <Testomonial />
-      <FooterHome className="w-100" />
+          <Testomonial />
+          <FooterHome className="w-100" />
+        </>
+      ) : (
+        navigate("/404.html")
+      )}
     </>
   );
 }
