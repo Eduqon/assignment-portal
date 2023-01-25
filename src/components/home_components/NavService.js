@@ -410,7 +410,7 @@ export default function NavService(props) {
             </Box>
           )}
           <br />
-          <Faqschema title={SchemaTitle} />
+          <Faqschema title={SchemaTitle} slug={slug} />
         </div>
         <Box
           id="right-section"
