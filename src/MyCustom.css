@@ -1022,6 +1022,10 @@ h1.set-contact {
   margin-top: 10px;
 }
 @media (max-width: 868px) {
+  #number-section {
+    margin-right: 0px !important;
+    font-size: 15px !important;
+  }
   .edit-testo {
     background: #fdfdfd;
     border-radius: 5px;

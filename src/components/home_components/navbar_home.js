@@ -151,6 +151,16 @@ export function NavbarHome() {
             </button>
           </div>
           <div>
+            <span
+              id="number-section"
+              style={{
+                marginRight: "20px",
+                fontSize: "20px",
+                fontFamily: "monospace",
+              }}
+            >
+              +61-48889-3287
+            </span>
             <button
               id="clr"
               onClick={async () => {
@@ -179,15 +189,6 @@ export function NavbarHome() {
             >
               Check Orders
             </button>
-            <span
-              style={{
-                marginLeft: "10px",
-                fontSize: "20px",
-                fontFamily: "monospace",
-              }}
-            >
-              +61-48889-3287
-            </span>
           </div>
 
           {/* </div> */}
