@@ -16,15 +16,17 @@ import {
   Textarea,
   Center,
 } from "@chakra-ui/react";
-
+import validator from "validator";
+import axios from "axios";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import ErrorImage from "../assets/404.jpeg";
 import { NavbarHome } from "../components/home_components/navbar_home";
 import { AssignmentFormStore } from "../services/stores/assignment_form_store";
 import { ClientStore } from "../services/stores/client_store";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../services/contants";
 
 const Error = () => {
   const [pages, setPages] = useState(0);
@@ -37,6 +39,126 @@ const Error = () => {
   const setStorePages = AssignmentFormStore((state) => state.setPages);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let date = document.getElementById("date");
+    if (date) {
+      date.min = new Date().toLocaleDateString("en-ca");
+      date.value = new Date().toLocaleDateString("en-ca");
+    }
+  }, []);
+
+  async function _submit() {
+    let email = document.getElementById("email");
+    let subject = document.getElementById("subject");
+    let clientToken = localStorage.getItem("clientToken");
+
+    let emailVal = false;
+    let subjectVal = false;
+    let pagesVal = false;
+
+    if (validator.isEmail(email.value)) {
+      await setEmail(email.value);
+      emailVal = true;
+    } else {
+      window.alert("Enter Valid Email");
+      emailVal = false;
+    }
+
+    if (subject.value == "") {
+      window.alert("Enter a Subject");
+      subjectVal = false;
+    } else {
+      await setSubject(subject.value);
+      subjectVal = true;
+    }
+
+    if (pages == 0) {
+      window.alert("Specify No. Of Pages");
+      pagesVal = false;
+    } else {
+      await setStorePages(pages);
+      pagesVal = true;
+    }
+
+    // if (time.value == "") {
+    //   window.alert("Select Deadline Time");
+    //   deadlineVal = false;
+    // } else {
+    //   let splitDate = await date.value.split("-");
+    //   let year = splitDate[0];
+    //   let month = splitDate[1];
+    //   let day = splitDate[2];
+
+    //   let splitTime = await time.value.split(":");
+    //   let hour = splitTime[0];
+    //   let min = splitTime[1];
+    //   let deadline = new Date(year, month - 1, day, hour, min, 0);
+    //   await setDeadline(deadline.toISOString());
+    //   deadlineVal = true;
+    // }
+
+    if (
+      emailVal === true &&
+      subjectVal === true &&
+      pagesVal === true
+      // deadlineVal === true
+    ) {
+      try {
+        let config = {
+          headers: { Authorization: `Bearer ${clientToken}` },
+        };
+        const response = await axios.post(
+          apiUrl + "/client/verify",
+          {
+            _id: email.value,
+          },
+          config
+        );
+        if (response.data.success === true) {
+          await setExistingUser(true);
+          localStorage.setItem("clientEmail", email.value);
+          navigate("/order_details");
+        } else if (response.status == 203) {
+          localStorage.setItem("clientToken", response.data.token);
+          clientToken = response.data.token;
+
+          try {
+            let config = {
+              headers: { Authorization: `Bearer ${clientToken}` },
+            };
+            const response = await axios.post(
+              apiUrl + "/client/verify",
+              {
+                _id: email.value,
+              },
+              config
+            );
+            if (response.data.success === true) {
+              await setExistingUser(true);
+              localStorage.setItem("clientEmail", email.value);
+              navigate("/order_details");
+            }
+          } catch (error) {
+            if (error.response.status == 401) {
+              await setExistingUser(false);
+              navigate("/order_details");
+            } else {
+              window.alert(error.response.message);
+            }
+          }
+        }
+      } catch (error) {
+        if (error.response.status == 401) {
+          await setExistingUser(false);
+          navigate("/order_details");
+        } else {
+          window.alert(error.response.message);
+        }
+      }
+    }
+  }
+
   return (
     <>
       <Helmet>
@@ -152,7 +274,7 @@ const Error = () => {
                     <button
                       className="btn btn-Set w-50"
                       onClick={() => {
-                        // _submit();
+                        _submit();
                       }}
                     >
                       Free Assistance

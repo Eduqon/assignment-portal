@@ -16,11 +16,16 @@
 .service-body h6 {
   font-size: 1rem;
 }
-#bottom-section ul {
-  padding: 5px 25px !important;
+.service-body a {
+  color: #dc3545;
+}
+#bottom-section ul,
+#bottom-section ol {
+  padding: 0px 25px !important;
 }
 @media (max-width: 767px) {
-  #bottom-section ul {
+  #bottom-section ul,
+  #bottom-section ol {
     padding: 0px 20px !important;
   }
   .service-body {

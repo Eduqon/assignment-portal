@@ -7,7 +7,7 @@ import { FcContacts } from "react-icons/fc";
 import { BiMailSend, BiPhoneCall } from "react-icons/bi";
 import { RiWhatsappFill } from "react-icons/ri";
 import { FcCallback } from "react-icons/fc";
-import { FaRegAddressCard } from "react-icons/fa";
+import { FaRegAddressCard, FaPhoneAlt } from "react-icons/fa";
 import contact from "../../assets/contact.png";
 import { Link } from "react-router-dom";
 import View from "../../assets/foter/View.png";
@@ -54,8 +54,12 @@ export default function Contact() {
                                         </li> */}
                     <li>
                       <div className="d-flex align-items-center">
-                        <FaRegAddressCard className="whst" /> &nbsp;&nbsp; 627 ,
-                        Sector-62 , Noida , India
+                        <FaRegAddressCard className="whst" /> &nbsp;&nbsp; 301
+                        Hostorical dr, Aintree, Melbourne, Australia
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <FaPhoneAlt className="whst" /> &nbsp;&nbsp; +61
+                        48889-3287
                       </div>
                     </li>
                     {/* <li>    <div className="mail d-flex align-items-center">

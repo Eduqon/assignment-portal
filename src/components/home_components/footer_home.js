@@ -22,7 +22,9 @@ export function FooterHome() {
           <div className="col-md-4 col-12">
             <div className="details">
               <h2 className="Fs-4 font-weight-bolder mb-3">Contact Details</h2>
-              <div className="address">627 , Sector-62 , Noida , India</div>
+              <div className="address">
+                301 Hostorical dr, Aintree, Melbourne, Australia
+              </div>
               {/* <div className="mail d-flex align-items-baseline">
                                 <BiMailSend /> &nbsp;&nbsp;&nbsp; assignmentsanta88@gmail.com
                             </div> */}

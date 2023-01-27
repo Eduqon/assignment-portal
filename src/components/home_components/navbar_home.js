@@ -1,142 +1,142 @@
 import {
-    Box,
-    Flex,
-    Text,
-    IconButton,
-    Button,
-    Stack,
-    Collapse,
-    Icon,
-    Link,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    useColorModeValue,
-    useDisclosure,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-    HStack,
-    Image,
-    FormControl,
-    FormLabel,
-    Input,
-} from '@chakra-ui/react';
+  Box,
+  Flex,
+  Text,
+  IconButton,
+  Button,
+  Stack,
+  Collapse,
+  Icon,
+  Link,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  useColorModeValue,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  HStack,
+  Image,
+  FormControl,
+  FormLabel,
+  Input,
+} from "@chakra-ui/react";
 
 import {
-    HamburgerIcon,
-    CloseIcon,
-    ChevronDownIcon,
-    ChevronRightIcon,
-    PhoneIcon,
-} from '@chakra-ui/icons';
-import { ClientStore } from '../../services/stores/client_store';
-import validator from 'validator';
-import axios from 'axios';
-import { apiUrl } from '../../services/contants';
-import { useNavigate } from 'react-router-dom';
+  HamburgerIcon,
+  CloseIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  PhoneIcon,
+} from "@chakra-ui/icons";
+import { ClientStore } from "../../services/stores/client_store";
+import validator from "validator";
+import axios from "axios";
+import { apiUrl } from "../../services/contants";
+import { useNavigate } from "react-router-dom";
 
-import '../../MyCustom.css'
-import MegaMenu from './MegaMenu';
-
+import "../../MyCustom.css";
+import MegaMenu from "./MegaMenu";
 
 // import Button from 'react-bootstrap/Button';
 export function NavbarHome() {
-    const { isOpen, onToggle } = useDisclosure();
-    const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure();
-    const email = ClientStore(state => state.id);
-    const setEmail = ClientStore(state => state.setId);
+  const { isOpen, onToggle } = useDisclosure();
+  const {
+    isOpen: isModalOpen,
+    onOpen: onModalOpen,
+    onClose: onModalClose,
+  } = useDisclosure();
+  const email = ClientStore((state) => state.id);
+  const setEmail = ClientStore((state) => state.setId);
 
-    let navigate = useNavigate();
+  let navigate = useNavigate();
 
-    function EmailModal() {
-        return (
-            <Modal
-                onClose={onModalClose}
-                isOpen={isModalOpen}
-                isCentered
-            >
-                <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Enter Email to continue</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <FormControl id="emailModalInput">
-                            <Input type="email" />
-                        </FormControl>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button onClick={async () => {
-                            let email = document.getElementById('emailModalInput');
-                            if (email.value === "") {
-                                window.alert("Enter Email")
-                            } else {
-                                let clientToken = localStorage.getItem("clientToken");
-                                let config = {
-                                    headers: { "Authorization": `Bearer ${clientToken}` },
-                                }
-                                try {
-                                    const response = await axios.post(apiUrl + '/client/verify',
-                                        {
-                                            "_id": email.value
-                                        }, config
-                                    )
-                                    if (response.data.success === true) {
-                                        setEmail(email.value);
-                                        localStorage.setItem('clientEmail', email.value);
-                                        navigate("/assignments");
-                                    }
-                                    else if (response.status == 203) {
-                                        localStorage.setItem("clientToken", response.data.token);
-                                        clientToken = response.data.token;
-
-                                        try {
-                                            let config = {
-                                                headers: { "Authorization": `Bearer ${clientToken}` },
-                                            }
-                                            const response = await axios.post(apiUrl + '/client/verify',
-                                                {
-                                                    "_id": email.value
-                                                },
-                                                config
-                                            )
-                                            if (response.data.success === true) {
-                                                localStorage.setItem('clientEmail', email.value);
-                                                navigate("/assignments");
-                                            }
-                                        } catch (error) {
-                                            console.log('err');
-
-                                        }
-                                    }
-                                }
-                                catch (err) {
-                                    window.alert(err.response.data['msg']);
-                                }
-                            }
-                        }}>Proceed</Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal >
-        );
-    }
-
+  function EmailModal() {
     return (
-        <>
-            <EmailModal />
-            <div className="row  pt-3 m-0" >
-                <div className="col-md-4 col-12 ">
-                    
+      <Modal onClose={onModalClose} isOpen={isModalOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Enter Email to continue</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl id="emailModalInput">
+              <Input type="email" />
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              onClick={async () => {
+                let email = document.getElementById("emailModalInput");
+                if (email.value === "") {
+                  window.alert("Enter Email");
+                } else {
+                  let clientToken = localStorage.getItem("clientToken");
+                  let config = {
+                    headers: { Authorization: `Bearer ${clientToken}` },
+                  };
+                  try {
+                    const response = await axios.post(
+                      apiUrl + "/client/verify",
+                      {
+                        _id: email.value,
+                      },
+                      config
+                    );
+                    if (response.data.success === true) {
+                      setEmail(email.value);
+                      localStorage.setItem("clientEmail", email.value);
+                      navigate("/assignments");
+                    } else if (response.status == 203) {
+                      localStorage.setItem("clientToken", response.data.token);
+                      clientToken = response.data.token;
 
-                </div>
-                {/* <Box display={{ base: 'none', sm: 'block', md: 'block' }}> */}
-                    <div className="col-md-8 col-12 d-flex justify-content-around flex-row align-items-center"  >
-                        {/* <div className='  d-flex justify-content-between align-items-center  mr-4'> */}
-                        {/* <HStack>
+                      try {
+                        let config = {
+                          headers: { Authorization: `Bearer ${clientToken}` },
+                        };
+                        const response = await axios.post(
+                          apiUrl + "/client/verify",
+                          {
+                            _id: email.value,
+                          },
+                          config
+                        );
+                        if (response.data.success === true) {
+                          localStorage.setItem("clientEmail", email.value);
+                          navigate("/assignments");
+                        }
+                      } catch (error) {
+                        console.log("err");
+                      }
+                    }
+                  } catch (err) {
+                    window.alert(err.response.data["msg"]);
+                  }
+                }
+              }}
+            >
+              Proceed
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
+  return (
+    <>
+      <EmailModal />
+      <div className="row  pt-3 m-0">
+        <div className="col-md-4 col-12 "></div>
+        {/* <Box display={{ base: 'none', sm: 'block', md: 'block' }}> */}
+        <div className="col-md-8 col-12 d-flex justify-content-between flex-row align-items-center">
+          {/* <div className='  d-flex justify-content-between align-items-center  mr-4'> */}
+          {/* <HStack>
                             <PhoneIcon display={{ base: "none", md: 'flex' }} />
                             <Link href="tel:+919999999999"
                                 fontWeight={'bold'}
@@ -145,46 +145,59 @@ export function NavbarHome() {
                             </Link>
                         </HStack> */}
 
-                        <div className="labelss">
-                            <button className='btn btn-mine '>Get 50% OFF On Your First Order</button>
-                        </div>
-                        <button id='clr'
+          <div className="labelss">
+            <button className="btn btn-mine ">
+              Get 50% OFF On Your First Order
+            </button>
+          </div>
+          <div>
+            <button
+              id="clr"
+              onClick={async () => {
+                console.log(email);
+                if (validator.isEmail(email)) {
+                  try {
+                    const response = await axios.post(
+                      apiUrl + "/client/verify",
+                      {
+                        client_id: email,
+                      }
+                    );
+                    if (response.data.success === true) {
+                      navigate("/assignments");
+                    } else {
+                      window.alert(response.data["msg"]);
+                    }
+                  } catch (err) {
+                    window.alert(err.response.data["msg"]);
+                  }
+                } else {
+                  console.log("Email Modal");
+                  onModalOpen();
+                }
+              }}
+            >
+              Check Orders
+            </button>
+            <span
+              style={{
+                marginLeft: "10px",
+                fontSize: "20px",
+                fontFamily: "monospace",
+              }}
+            >
+              +61-48889-3287
+            </span>
+          </div>
 
-                            onClick={async () => {
-                                console.log(email);
-                                if (validator.isEmail(email)) {
-                                    try {
-                                        const response = await axios.post(apiUrl + '/client/verify',
-                                            {
-                                                "client_id": email
-                                            }
-                                        )
-                                        if (response.data.success === true) {
-                                            navigate("/assignments");
-                                        }
-                                        else {
-                                            window.alert(response.data['msg']);
-                                        }
-                                    }
-                                    catch (err) {
-                                        window.alert(err.response.data['msg']);
-                                    }
-                                } else {
-                                    console.log("Email Modal");
-                                    onModalOpen();
-                                }
-                            }}
-                        >
-                            Check Orders
-                        </button>
-                        {/* </div> */}
+          {/* </div> */}
+        </div>
 
-                    </div>
-                {/* </Box> */}
-            </div>
-            <MegaMenu />
+        {/* </Box> */}
+      </div>
+      <MegaMenu />
 
-            {/* <Box>
+      {/* <Box>
                 <EmailModal />
                 <Flex
                     bg={useColorModeValue('white', 'gray.800')}
@@ -250,12 +263,12 @@ export function NavbarHome() {
                     </Stack>
                 </Flex> */}
 
-            {/* <Collapse in={isOpen} animateOpacity>
+      {/* <Collapse in={isOpen} animateOpacity>
                 <MobileNav />
             </Collapse> */}
-            {/* </Box> */}
-        </>
-    );
+      {/* </Box> */}
+    </>
+  );
 }
 
 // const DesktopNav = () => {

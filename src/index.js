@@ -30,7 +30,7 @@ const propsData = {
 
 //Apollo client
 const client = new ApolloClient({
-  uri: `${strapiUrl}/graphql`,
+  uri: `http://localhost:1337/graphql`,
   cache: new InMemoryCache(),
 });
 

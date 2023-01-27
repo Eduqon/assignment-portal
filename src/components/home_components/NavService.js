@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+import { isMobile } from "react-device-detect";
 import { useQuery, gql } from "@apollo/client";
 import home_image from "../../assets/home_bg.jpg";
 import validator from "validator";
@@ -294,14 +295,16 @@ export default function NavService(props) {
                   px={6}
                   className="set-pp"
                 >
-                  <Stack align={"center"}>
-                    <Heading className="top_class" size={"xl"}>
-                      {services && services.data[0].attributes.Formheading}
-                    </Heading>
-                    <p className="top_class_sub text-capitalize">
-                      Take help from best writing service !!
-                    </p>
-                  </Stack>
+                  {!isMobile && (
+                    <Stack align={"center"}>
+                      <Heading className="top_class" size={"xl"}>
+                        {services && services.data[0].attributes.Formheading}
+                      </Heading>
+                      <p className="top_class_sub text-capitalize">
+                        Take help from best writing service !!
+                      </p>
+                    </Stack>
+                  )}
                   <Box rounded={"lg"} bg={bgColor} boxShadow={"lg"} p={8}>
                     <Stack spacing={4}>
                       <div className="d-flex flex-column flex-md-row flex-sm-row flex-lg-row">
@@ -411,23 +414,27 @@ export default function NavService(props) {
                       .join("\n")}
                 </ReactMarkdown>
               </Box>
+              <br />
               {serviceImage && serviceImage.length !== 0 && (
-                <Box
-                  display={"flex"}
-                  alignItems={"center"}
-                  justifyContent={"space-around"}
-                  width={"100%"}
-                  height={"500px"}
-                  marginTop={2}
-                >
+                <>
                   <Box
+                    display={"flex"}
+                    alignItems={"center"}
+                    justifyContent={"space-around"}
                     width={"100%"}
-                    height={"100%"}
-                    backgroundImage={`url(https://assignmentsantastrapi.fly.dev${serviceImage[0].url})`}
-                    backgroundSize={"cover"}
-                    backgroundPosition={"center"}
-                  />
-                </Box>
+                    height={"500px"}
+                    marginTop={2}
+                  >
+                    <Box
+                      width={"100%"}
+                      height={"100%"}
+                      backgroundImage={`url(https://assignmentsantastrapi.fly.dev${serviceImage[0].url})`}
+                      backgroundSize={"cover"}
+                      backgroundPosition={"center"}
+                    />
+                  </Box>
+                  <br />
+                </>
               )}
               {services && services.data[0].attributes.body_2 && (
                 <Box
