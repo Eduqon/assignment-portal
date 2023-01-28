@@ -63,10 +63,10 @@ function Faqschema({ title, slug }) {
                                 .join("\n")}
                           </ReactMarkdown>
                         </Box>
+                        <br />
                       </div>
                     </div>
                   )}
-                  <br />
                 </>
               );
             })}
