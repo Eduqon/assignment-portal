@@ -1021,6 +1021,9 @@ h1.set-contact {
   /* padding: 10px 40px; */
   margin-top: 10px;
 }
+#schema-section h2 {
+  font-size: 20px !important;
+}
 @media (max-width: 868px) {
   #number-section {
     margin-right: 0px !important;

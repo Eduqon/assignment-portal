@@ -26,17 +26,17 @@ function Faqschema({ title, slug }) {
   return (
     <>
       <Box id="schema-section" style={{ padding: "0rem 2rem", width: "100%" }}>
-        {title && (
-          <Heading textAlign={"left"} width={"100%"}>
-            {title}
-          </Heading>
-        )}
         <Box itemScope itemType="https://schema.org/FAQPage">
+          {title && (
+            <Heading textAlign={"left"} width={"100%"}>
+              {title}
+            </Heading>
+          )}
+          <br />
           {faqschemas &&
             faqschemas.data.map((schema) => {
               return (
                 <>
-                  <br />
                   {slug === schema.attributes.Slug && (
                     <div
                       itemScope

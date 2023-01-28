@@ -134,7 +134,7 @@ export function NavbarHome() {
       <div className="row  pt-3 m-0">
         <div className="col-md-4 col-12 "></div>
         {/* <Box display={{ base: 'none', sm: 'block', md: 'block' }}> */}
-        <div className="col-md-8 col-12 d-flex justify-content-between flex-row align-items-center">
+        <div className="col-md-7 col-12 d-flex justify-content-around flex-row align-items-center">
           {/* <div className='  d-flex justify-content-between align-items-center  mr-4'> */}
           {/* <HStack>
                             <PhoneIcon display={{ base: "none", md: 'flex' }} />
