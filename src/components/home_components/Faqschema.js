@@ -66,6 +66,7 @@ function Faqschema({ title, slug }) {
                       </div>
                     </div>
                   )}
+                  <br />
                 </>
               );
             })}
