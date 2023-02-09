@@ -424,6 +424,7 @@ export default function NavService(props) {
                     width={"100%"}
                     height={"500px"}
                     marginTop={2}
+                    padding={"0px 2rem"}
                   >
                     <Box
                       width={"100%"}
