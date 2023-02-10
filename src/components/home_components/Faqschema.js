@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 
 const FAQSCHEMA = gql`
   query {
-    faqschemas(pagination: { limit: 100 }) {
+    faqschemas(pagination: { limit: 1000 }) {
       data {
         id
         attributes {
