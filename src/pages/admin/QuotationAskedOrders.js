@@ -29,7 +29,7 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { apiUrl } from "../../services/contants";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 
 function QuotationAskedOrders() {
   const [assignments, setAssignments] = useState([]);
@@ -41,7 +41,7 @@ function QuotationAskedOrders() {
   let assignmentList = [];
   let quotesList = [];
 
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   const QuotesModalDis = useDisclosure();
 
@@ -50,7 +50,7 @@ function QuotationAskedOrders() {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -157,7 +157,7 @@ function QuotationAskedOrders() {
                     let userName = localStorage.getItem("userName");
                     let userToken = localStorage.getItem("userToken");
                     if (userToken == null) {
-                      navigate("/admin/login");
+                      navigate.replace("/admin/login");
                     }
                     let config = {
                       headers: { Authorization: `Bearer ${userToken}` },
@@ -295,7 +295,7 @@ function QuotationAskedOrders() {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {

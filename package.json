@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.7.3",
+    "@azure/communication-common": "^2.2.0",
     "@chakra-ui/icons": "^1.1.1",
     "@chakra-ui/react": "^1.8.0",
     "@emotion/react": "^11.7.1",

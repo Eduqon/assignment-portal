@@ -17,7 +17,7 @@ import Calendars from "./Calendars";
 import AdminPanel from "./AdminPanel";
 import Assignments from "./assignments";
 import Subjects from "./Subjects";
-import Vendors from "./vendors";
+import Vendors from "./Vendors";
 import { NewUser } from "./NewUser";
 import Admins from "./Admins";
 import Operators from "./Operators";
