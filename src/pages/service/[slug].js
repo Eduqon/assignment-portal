@@ -587,17 +587,16 @@ export async function getStaticPaths() {
   }));
   return {
     paths,
-    fallback: true,
+    fallback: false,
   };
 }
 
 export async function getStaticProps({ params }) {
   const { slug } = params;
-  const { data, loading } = await client.query({
+  const { data } = await client.query({
     query: SERVICE,
     variables: { slug: slug },
   });
-  console.log({ loading });
   const { data: serviceData } = await client.query({
     query: SERVICES,
   });
