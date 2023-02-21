@@ -22,7 +22,7 @@ const NewUSe = () => {
   document.getElementsById("hhh")[0].style.display = "block";
 };
 // end
-export const NewUser = () => {
+const NewUser = () => {
   const [subjects, setSubjects] = useState([]);
   const [subjectcheck, setsubjectcheck] = useState([
     "Mathematics",
@@ -510,6 +510,7 @@ export const NewUser = () => {
     </>
   );
 };
+export default NewUser;
 export { NewUSe };
 const FlexDiv = styled.div`
   display: flex;

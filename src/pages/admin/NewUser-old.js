@@ -20,7 +20,7 @@ const NewUSe = () => {
   document.getElementsById("hhh")[0].style.display = "block";
 };
 // end
-export const NewUser = () => {
+const NewUser = () => {
   const [subjects, setSubjects] = useState([]);
   let navigate = useRouter();
 
@@ -452,4 +452,5 @@ export const NewUser = () => {
     </>
   );
 };
+export default NewUser;
 export { NewUSe };

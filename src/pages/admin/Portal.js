@@ -18,7 +18,7 @@ import AdminPanel from "./AdminPanel";
 import Assignments from "./Assignments";
 import Subjects from "./Subjects";
 import Vendors from "./Vendors";
-import { NewUser } from "./NewUser";
+import NewUser from "./NewUser";
 import Admins from "./Admins";
 import Operators from "./Operators";
 import QC from "./QC";
