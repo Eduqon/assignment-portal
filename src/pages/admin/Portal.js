@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import Calendars from "./Calendars";
 import AdminPanel from "./AdminPanel";
 import Assignments from "./assignments";
-import Subjects from "./subjects";
+import Subjects from "./Subjects";
 import Vendors from "./vendors";
 import { NewUser } from "./NewUser";
 import Admins from "./Admins";

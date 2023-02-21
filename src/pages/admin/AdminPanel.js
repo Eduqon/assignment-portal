@@ -7,7 +7,7 @@ import {
   TabPanel,
   Heading,
 } from "@chakra-ui/react";
-import Admins from "./admins";
+import Admins from "./Admins";
 import Assignments from "./assignments";
 import Experts from "./Experts";
 import { NewUser } from "./NewUser";
@@ -15,7 +15,7 @@ import Operators from "./Operators";
 import QC from "./QC";
 import Sales from "./Sales";
 import Subjects from "./Subjects";
-import Vendors from "./vendors";
+import Vendors from "./Vendors";
 
 function AdminPanel() {
   return (
