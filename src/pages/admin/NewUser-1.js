@@ -11,7 +11,7 @@ import {
   useColorModeValue,
   Select,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { apiUrl } from "../../services/contants";
 import axios from "axios";
@@ -22,7 +22,7 @@ const NewUSe = () => {
 // end
 export const NewUser = () => {
   const [subjects, setSubjects] = useState([]);
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   async function _fetchSubjects() {
     try {

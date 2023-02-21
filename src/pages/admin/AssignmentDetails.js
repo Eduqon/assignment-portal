@@ -2,8 +2,7 @@ import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import * as qs from "qs";
 import { apiUrl } from "../../services/contants";
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import { db } from "../../services/firebase";
 import {
@@ -77,8 +76,7 @@ function AssignmentDetails() {
   const [id, setId] = useState("");
   const [clientId, setChatClientId] = useState("");
 
-  let params = useParams();
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   let stickyNotesList = [];
   let actionsList = [];
@@ -125,7 +123,7 @@ function AssignmentDetails() {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -390,7 +388,7 @@ function AssignmentDetails() {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -924,7 +922,7 @@ function AssignmentDetails() {
           <HStack>
             <Button
               onClick={async () => {
-                navigate("/admin/portal");
+                navigate.replace("/admin/portal");
               }}
             >
               Back to Orders

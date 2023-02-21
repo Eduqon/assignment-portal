@@ -27,23 +27,13 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-import {
-  HamburgerIcon,
-  CloseIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  PhoneIcon,
-} from "@chakra-ui/icons";
+import { useRouter } from "next/Router";
 import { ClientStore } from "../../services/stores/client_store";
 import validator from "validator";
 import axios from "axios";
 import { apiUrl } from "../../services/contants";
-import { useRouter } from "next/Router";
-
-// import "../../styles/globals.css";
 import MegaMenu from "./MegaMenu";
 
-// import Button from 'react-bootstrap/Button';
 export function NavbarHome() {
   const { isOpen, onToggle } = useDisclosure();
   const {
