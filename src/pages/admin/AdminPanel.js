@@ -10,7 +10,7 @@ import {
 import Admins from "./Admins";
 import Assignments from "./Assignments";
 import Experts from "./Experts";
-import { NewUser } from "./NewUser";
+import NewUser from "./NewUser";
 import Operators from "./Operators";
 import QC from "./QC";
 import Sales from "./Sales";
