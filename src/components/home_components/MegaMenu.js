@@ -1,28 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useQuery, gql } from "@apollo/client";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { IoIosArrowForward } from "react-icons/io";
-import { useRef } from "react";
 import { isMobile } from "react-device-detect";
 
-const SERVICES = gql`
-  query {
-    services(pagination: { limit: 100 }) {
-      data {
-        id
-        attributes {
-          title
-          slug
-        }
-      }
-    }
-  }
-`;
-
-export default function MegaMenu() {
-  const { loading, error, data } = useQuery(SERVICES);
-  const { services } = !loading && data;
-
+export default function MegaMenu({ services }) {
   const drop = useRef();
   const showMega = () => {
     drop.current.style.display = "block";
@@ -42,22 +23,19 @@ export default function MegaMenu() {
     setMega(RowOneData);
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-
   return (
     <>
       <nav
-        class="navbar navbar-expand-lg navbar-light bg-white pt-0"
+        className="navbar navbar-expand-lg navbar-light bg-white pt-0"
         id="set-mob"
       >
-        <a class="navbar-brand" href="#">
+        <a className="navbar-brand" href="#">
           <Link href="/">
             <img className="ml-4 set_width" src="/assets/Logo.png" />
           </Link>
         </a>
         <button
-          class="navbar-toggler"
+          className="navbar-toggler"
           id="collap"
           type="button"
           data-toggle="collapse"
@@ -67,23 +45,23 @@ export default function MegaMenu() {
           aria-label="Toggle navigation"
           onClick={hideMega}
         >
-          <span class="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon"></span>
         </button>
 
         <div
-          class="collapse navbar-collapse d-flex align-items-center "
+          className="collapse navbar-collapse d-flex align-items-center "
           id="navbarSupportedContent"
         >
-          <ul class="navbar-nav font-weight-bolder ul-pading">
-            <li class="nav-item active" onClick={hideMega}>
+          <ul className="navbar-nav font-weight-bolder ul-pading">
+            <li className="nav-item active" onClick={hideMega}>
               <Link href="/">Home</Link>
             </li>
 
-            <li class="nav-item dropdown " id="myHover" onClick={showMega}>
+            <li className="nav-item dropdown " id="myHover" onClick={showMega}>
               <span
                 onMouseOver={showMega}
                 onClick={showMega}
-                class="nav-link dropdown-toggle"
+                className="nav-link dropdown-toggle"
                 role="button"
                 data-toggle="dropdown"
                 aria-expanded="false"
@@ -100,144 +78,149 @@ export default function MegaMenu() {
                   <div className="row set-font">
                     <div className="col-md-2 col-12">
                       <div className="row my-Div">
-                        {RowOneData.map((value, ind) => {
-                          return (
-                            <>
-                              <div
-                                onClick={hideMega}
-                                key={ind}
-                                className="col-12 border-set d-flex align-items-center p-3 ml-3"
-                              >
-                                <IoIosArrowForward className="mr-2" />
-                                <Link
-                                  href={{
-                                    pathname: "/service/[slug]",
-                                    query: { slug: value.attributes.slug },
-                                  }}
-                                  state={value.attributes.title}
+                        {RowOneData &&
+                          RowOneData.map((value, ind) => {
+                            return (
+                              <>
+                                <div
+                                  onClick={hideMega}
+                                  key={ind}
+                                  className="col-12 border-set d-flex align-items-center p-3 ml-3"
                                 >
-                                  {value.attributes.title}
-                                </Link>
-                              </div>
-                              <hr className="sethr" />
-                            </>
-                          );
-                        })}
+                                  <IoIosArrowForward className="mr-2" />
+                                  <Link
+                                    href={{
+                                      pathname: "/service/[slug]",
+                                      query: { slug: value.attributes.slug },
+                                    }}
+                                    state={value.attributes.title}
+                                  >
+                                    {value.attributes.title}
+                                  </Link>
+                                </div>
+                                <hr className="sethr" />
+                              </>
+                            );
+                          })}
                       </div>
                     </div>
                     <div className="col-md-2 col-12">
                       <div className="row my-Div">
-                        {RowTwoData.map((value, ind) => {
-                          return (
-                            <>
-                              <div
-                                onClick={hideMega}
-                                key={ind}
-                                className="col-12 border-set d-flex align-items-center p-3 ml-3"
-                              >
-                                <IoIosArrowForward className="mr-2" />
-                                <Link
-                                  href={`/service/${value.attributes.slug}`}
-                                  state={value.attributes.title}
+                        {RowTwoData &&
+                          RowTwoData.map((value, ind) => {
+                            return (
+                              <>
+                                <div
+                                  onClick={hideMega}
+                                  key={ind}
+                                  className="col-12 border-set d-flex align-items-center p-3 ml-3"
                                 >
-                                  {value.attributes.title}
-                                </Link>
-                              </div>
-                              <hr className="sethr" />
-                            </>
-                          );
-                        })}
+                                  <IoIosArrowForward className="mr-2" />
+                                  <Link
+                                    href={`/service/${value.attributes.slug}`}
+                                    state={value.attributes.title}
+                                  >
+                                    {value.attributes.title}
+                                  </Link>
+                                </div>
+                                <hr className="sethr" />
+                              </>
+                            );
+                          })}
                       </div>
                     </div>
                     <div className="col-md-3 col-12">
                       <div className="row my-Div">
-                        {RowThreeData.map((value, ind) => {
-                          return (
-                            <>
-                              <div
-                                onClick={hideMega}
-                                key={ind}
-                                className="col-12 border-set d-flex align-items-center p-3 ml-3"
-                              >
-                                <IoIosArrowForward className="mr-2" />
-                                <Link
-                                  href={`/service/${value.attributes.slug}`}
-                                  state={value.attributes.title}
+                        {RowThreeData &&
+                          RowThreeData.map((value, ind) => {
+                            return (
+                              <>
+                                <div
+                                  onClick={hideMega}
+                                  key={ind}
+                                  className="col-12 border-set d-flex align-items-center p-3 ml-3"
                                 >
-                                  {value.attributes.title}
-                                </Link>
-                              </div>
-                              <hr className="sethr" />
-                            </>
-                          );
-                        })}
+                                  <IoIosArrowForward className="mr-2" />
+                                  <Link
+                                    href={`/service/${value.attributes.slug}`}
+                                    state={value.attributes.title}
+                                  >
+                                    {value.attributes.title}
+                                  </Link>
+                                </div>
+                                <hr className="sethr" />
+                              </>
+                            );
+                          })}
                       </div>
                     </div>
                     <div className="col-md-2 col-12">
                       <div className="row  my-Div">
-                        {RowFourData.map((value, ind) => {
-                          return (
-                            <>
-                              <div
-                                onClick={hideMega}
-                                key={ind}
-                                className="col-12 border-set d-flex align-items-center p-3 ml-3"
-                              >
-                                <IoIosArrowForward className="mr-2" />
-                                <Link
-                                  href={`/service/${value.attributes.slug}`}
-                                  state={value.attributes.title}
+                        {RowFourData &&
+                          RowFourData.map((value, ind) => {
+                            return (
+                              <>
+                                <div
+                                  onClick={hideMega}
+                                  key={ind}
+                                  className="col-12 border-set d-flex align-items-center p-3 ml-3"
                                 >
-                                  {value.attributes.title}
-                                </Link>
-                              </div>
-                              <hr className="sethr" />
-                            </>
-                          );
-                        })}
+                                  <IoIosArrowForward className="mr-2" />
+                                  <Link
+                                    href={`/service/${value.attributes.slug}`}
+                                    state={value.attributes.title}
+                                  >
+                                    {value.attributes.title}
+                                  </Link>
+                                </div>
+                                <hr className="sethr" />
+                              </>
+                            );
+                          })}
                       </div>
                     </div>
                     <div className="col-md-2 col-12">
                       <div className="row my-Div">
-                        {RowFiveData.map((value, ind) => {
-                          return (
-                            <>
-                              <div
-                                onClick={hideMega}
-                                key={ind}
-                                className="col-12 border-set d-flex align-items-center p-3 ml-3"
-                              >
-                                <IoIosArrowForward className="mr-2" />
-                                <Link
-                                  href={`/service/${value.attributes.slug}`}
-                                  state={value.attributes.title}
+                        {RowFiveData &&
+                          RowFiveData.map((value, ind) => {
+                            return (
+                              <>
+                                <div
+                                  onClick={hideMega}
+                                  key={ind}
+                                  className="col-12 border-set d-flex align-items-center p-3 ml-3"
                                 >
-                                  {value.attributes.title}
-                                </Link>
-                              </div>
-                              <hr className="sethr" />
-                            </>
-                          );
-                        })}
+                                  <IoIosArrowForward className="mr-2" />
+                                  <Link
+                                    href={`/service/${value.attributes.slug}`}
+                                    state={value.attributes.title}
+                                  >
+                                    {value.attributes.title}
+                                  </Link>
+                                </div>
+                                <hr className="sethr" />
+                              </>
+                            );
+                          })}
                       </div>
                     </div>
                   </div>
                 </div>
               )}
             </li>
-            <li class="nav-item">
-              <Link class="nav-link" href="/samples">
-                <a class="nav-link ">Samples</a>
+            <li className="nav-item">
+              <Link href="/samples">
+                <a className="nav-link">Samples</a>
               </Link>
             </li>
-            <li class="nav-item">
+            <li className="nav-item">
               <Link href="/reviews">
-                <a class="nav-link ">Reviews</a>
+                <a className="nav-link">Reviews</a>
               </Link>
             </li>
-            <li class="nav-item">
+            <li className="nav-item">
               <Link href="/contact">
-                <a class="nav-link ">Contact Us</a>
+                <a className="nav-link">Contact Us</a>
               </Link>
             </li>
           </ul>
@@ -249,122 +232,112 @@ export default function MegaMenu() {
           <div className="row set-font">
             <div className="col-md-2 col-12">
               <div className="row my-Div">
-                {RowOneData.map((value, ind) => {
-                  return (
-                    <>
-                      <div
-                        onClick={hideMega}
-                        key={ind}
-                        className="col-12 border-set d-flex align-items-center p-3 ml-3"
-                      >
-                        <IoIosArrowForward className="mr-2" />
-                        <Link
-                          href={`/service/${value.attributes.slug}`}
-                          state={value.attributes.title}
+                {RowOneData &&
+                  RowOneData.map((value, ind) => {
+                    return (
+                      <>
+                        <div
+                          onClick={hideMega}
+                          key={ind}
+                          className="col-12 border-set d-flex align-items-center p-3 ml-3"
                         >
-                          {value.attributes.title}
-                        </Link>
-                      </div>
-                      <hr className="sethr" />
-                    </>
-                  );
-                })}
+                          <IoIosArrowForward className="mr-2" />
+                          <Link href={`/service/${value.attributes.slug}`}>
+                            <a>{value.attributes.slug}</a>
+                          </Link>
+                        </div>
+                        <hr className="sethr" />
+                      </>
+                    );
+                  })}
               </div>
             </div>
             <div className="col-md-2 col-12">
               <div className="row my-Div">
-                {RowTwoData.map((value, ind) => {
-                  return (
-                    <>
-                      <div
-                        onClick={hideMega}
-                        key={ind}
-                        className="col-12 border-set d-flex align-items-center p-3 ml-3"
-                      >
-                        <IoIosArrowForward className="mr-2" />
-                        <Link
-                          href={`/service/${value.attributes.slug}`}
-                          state={value.attributes.title}
+                {RowTwoData &&
+                  RowTwoData.map((value, ind) => {
+                    return (
+                      <>
+                        <div
+                          onClick={hideMega}
+                          key={ind}
+                          className="col-12 border-set d-flex align-items-center p-3 ml-3"
                         >
-                          {value.attributes.title}
-                        </Link>
-                      </div>
-                      <hr className="sethr" />
-                    </>
-                  );
-                })}
+                          <IoIosArrowForward className="mr-2" />
+                          <Link href={`/service/${value.attributes.slug}`}>
+                            <a>{value.attributes.slug}</a>
+                          </Link>
+                        </div>
+                        <hr className="sethr" />
+                      </>
+                    );
+                  })}
               </div>
             </div>
             <div className="col-md-3 col-12">
               <div className="row my-Div">
-                {RowThreeData.map((value, ind) => {
-                  return (
-                    <>
-                      <div
-                        onClick={hideMega}
-                        key={ind}
-                        className="col-12 border-set d-flex align-items-center p-3 ml-3"
-                      >
-                        <IoIosArrowForward className="mr-2" />
-                        <Link
-                          href={`/service/${value.attributes.slug}`}
-                          state={value.attributes.title}
+                {RowThreeData &&
+                  RowThreeData.map((value, ind) => {
+                    return (
+                      <>
+                        <div
+                          onClick={hideMega}
+                          key={ind}
+                          className="col-12 border-set d-flex align-items-center p-3 ml-3"
                         >
-                          {value.attributes.title}
-                        </Link>
-                      </div>
-                      <hr className="sethr" />
-                    </>
-                  );
-                })}
+                          <IoIosArrowForward className="mr-2" />
+                          <Link href={`/service/${value.attributes.slug}`}>
+                            <a>{value.attributes.slug}</a>
+                          </Link>
+                        </div>
+                        <hr className="sethr" />
+                      </>
+                    );
+                  })}
               </div>
             </div>
             <div className="col-md-2 col-12">
               <div className="row  my-Div">
-                {RowFourData.map((value, ind) => {
-                  return (
-                    <>
-                      <div
-                        onClick={hideMega}
-                        key={ind}
-                        className="col-12 border-set d-flex align-items-center p-3 ml-3"
-                      >
-                        <IoIosArrowForward className="mr-2" />
-                        <Link
-                          href={`/service/${value.attributes.slug}`}
-                          state={value.attributes.title}
+                {RowFourData &&
+                  RowFourData.map((value, ind) => {
+                    return (
+                      <>
+                        <div
+                          onClick={hideMega}
+                          key={ind}
+                          className="col-12 border-set d-flex align-items-center p-3 ml-3"
                         >
-                          {value.attributes.title}
-                        </Link>
-                      </div>
-                      <hr className="sethr" />
-                    </>
-                  );
-                })}
+                          <IoIosArrowForward className="mr-2" />
+                          <Link href={`/service/${value.attributes.slug}`}>
+                            <a>{value.attributes.slug}</a>
+                          </Link>
+                        </div>
+                        <hr className="sethr" />
+                      </>
+                    );
+                  })}
               </div>
             </div>
             <div className="col-md-2 col-12">
               <div className="row my-Div">
-                {RowFiveData.map((value, ind) => {
-                  return (
-                    <>
-                      <div
-                        onClick={hideMega}
-                        key={ind}
-                        className="col-12 border-set d-flex align-items-center p-3 ml-3"
-                      >
-                        <IoIosArrowForward className="mr-2" />
-                        <Link
-                          href={`/service/${value.attributes.slug}`}
-                          state={value.attributes.title}
+                {RowFiveData &&
+                  RowFiveData.map((value, ind) => {
+                    return (
+                      <>
+                        <div
+                          onClick={hideMega}
+                          key={ind}
+                          className="col-12 border-set d-flex align-items-center p-3 ml-3"
                         >
-                          {value.attributes.title}
-                        </Link>
-                      </div>
-                      <hr className="sethr" />
-                    </>
-                  );
-                })}
+                          <IoIosArrowForward className="mr-2" />
+                          <Link href={`/service/${value.attributes.slug}`}>
+                            <a>{value.attributes.slug}</a>
+                          </Link>
+                        </div>
+                        <hr className="sethr" />
+                      </>
+                    );
+                  })}
               </div>
             </div>
           </div>

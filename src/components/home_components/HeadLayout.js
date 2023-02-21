@@ -1,27 +1,7 @@
 import React from "react";
 import Head from "next/head";
-import { useQuery, gql } from "@apollo/client";
 
-const SEOTAGS = gql`
-  query {
-    seotags(pagination: { limit: 100 }) {
-      data {
-        id
-        attributes {
-          title
-          Slug
-          description
-          keyword
-          cntag
-        }
-      }
-    }
-  }
-`;
-
-const HeadLayout = ({ slug }) => {
-  const { loading, error, data } = useQuery(SEOTAGS);
-  const { seotags } = !loading && data;
+const HeadLayout = ({ slug, seotags }) => {
   const homeTags =
     seotags && seotags.data.filter((val) => val.attributes.Slug === slug);
   const title = homeTags && homeTags[0].attributes.title;
@@ -29,8 +9,6 @@ const HeadLayout = ({ slug }) => {
   const keyword = homeTags && homeTags[0].attributes.keyword;
   const canonicalURL = homeTags && homeTags[0].attributes.cntag;
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
   return (
     <>
       <Head>

@@ -2,7 +2,6 @@ import React from "react";
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 import {
-  Flex,
   Box,
   FormControl,
   FormLabel,
@@ -18,12 +17,10 @@ import {
   InputLeftElement,
   Center,
 } from "@chakra-ui/react";
-import { ApolloClient, InMemoryCache } from "@apollo/client";
-import { strapiUrl } from "../../services/contants";
 import { useEffect, useState } from "react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { isMobile } from "react-device-detect";
-import { useQuery, gql } from "@apollo/client";
+import { gql } from "@apollo/client";
 import validator from "validator";
 import { ClientStore } from "../../services/stores/client_store";
 import { AssignmentFormStore } from "../../services/stores/assignment_form_store";
@@ -37,6 +34,7 @@ import Testomonial from "../../components/home_components/Testomonial";
 import Faqschema from "../../components/home_components/Faqschema";
 import Link from "next/link";
 import { client } from "../_app";
+import Custom404 from "../404";
 
 const SERVICE = gql`
   query GetServices($slug: String!) {
@@ -76,12 +74,22 @@ const SERVICES = gql`
   }
 `;
 
-export default function NavService({
-  servicesdata,
-  serviceloading,
-  services,
-  loading,
-}) {
+const FAQSCHEMA = gql`
+  query {
+    faqschemas(pagination: { limit: 1000 }) {
+      data {
+        id
+        attributes {
+          Slug
+          questionName
+          questionAnswer
+        }
+      }
+    }
+  }
+`;
+
+export default function NavService({ servicesdata, services, faqschemas }) {
   const [pages, setPages] = useState(0);
 
   const setEmail = ClientStore((state) => state.setId);
@@ -240,8 +248,6 @@ export default function NavService({
       (data) => data.name === servicesdata.data[0].attributes.slug
     );
 
-  if (loading || serviceloading) return <p>Loading...</p>;
-
   return (
     <>
       {getURL ? (
@@ -255,7 +261,7 @@ export default function NavService({
           <Link href="/samples">
             <img src="/assets/foter/View.png" alt="" className="view" />
           </Link>
-          <NavbarHome />
+          <NavbarHome services={services} />
           <div className="contain position-relative">
             <div
               className="bg-image"
@@ -443,7 +449,11 @@ export default function NavService({
                 </Box>
               )}
               <br />
-              <Faqschema title={SchemaTitle} slug={slug} />
+              <Faqschema
+                title={SchemaTitle}
+                slug={slug}
+                faqschemas={faqschemas}
+              />
             </div>
             <Box
               id="right-section"
@@ -561,7 +571,7 @@ export default function NavService({
           <FooterHome className="w-100" />
         </>
       ) : (
-        navigate.replace("/404.html")
+        <Custom404 />
       )}
     </>
   );
@@ -587,15 +597,19 @@ export async function getStaticProps({ params }) {
     query: SERVICE,
     variables: { slug: slug },
   });
-  const { loading: serviceloading, data: serviceData } = await client.query({
+  console.log({ loading });
+  const { data: serviceData } = await client.query({
     query: SERVICES,
   });
+  const { data: faqschemasData } = await client.query({
+    query: FAQSCHEMA,
+  });
+
   return {
     props: {
       servicesdata: data.services,
       services: serviceData.services,
-      serviceloading: serviceloading,
-      loading,
+      faqschemas: faqschemasData.faqschemas,
     },
   };
 }

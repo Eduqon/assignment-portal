@@ -9,14 +9,31 @@ import { AiOutlineWhatsApp } from "react-icons/ai";
 import { IoMdArrowDropright } from "react-icons/io";
 import Link from "next/link";
 import HeadLayout from "../components/home_components/HeadLayout";
-export default function Samples() {
+import { gql } from "@apollo/client";
+import { client } from "./_app";
+
+const SERVICES = gql`
+  query {
+    services(pagination: { limit: 100 }) {
+      data {
+        id
+        attributes {
+          title
+          slug
+        }
+      }
+    }
+  }
+`;
+
+export default function Samples({ services }) {
   return (
     <>
       <HeadLayout slug="samples" />
       <Link href="/samples">
         <img src="/assets/foter/View.png" alt="" className="view" />
       </Link>
-      <NavbarHome />
+      <NavbarHome services={services} />
 
       <div className="wrap">
         <div className="row m-0 p-0">
@@ -380,4 +397,16 @@ export default function Samples() {
       <FooterHome />
     </>
   );
+}
+
+export async function getStaticProps() {
+  const { data: serviceData } = await client.query({
+    query: SERVICES,
+  });
+
+  return {
+    props: {
+      services: serviceData.services,
+    },
+  };
 }

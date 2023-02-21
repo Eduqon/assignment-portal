@@ -1,28 +1,8 @@
 import React from "react";
-import { useQuery, gql } from "@apollo/client";
 import { Box, Heading } from "@chakra-ui/react";
 import ReactMarkdown from "react-markdown";
 
-const FAQSCHEMA = gql`
-  query {
-    faqschemas(pagination: { limit: 1000 }) {
-      data {
-        id
-        attributes {
-          Slug
-          questionName
-          questionAnswer
-        }
-      }
-    }
-  }
-`;
-
-function Faqschema({ title, slug }) {
-  const { loading, error, data } = useQuery(FAQSCHEMA);
-  const { faqschemas } = !loading && data;
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+function Faqschema({ title, slug, faqschemas }) {
   return (
     <>
       <Box id="schema-section" style={{ padding: "0rem 2rem", width: "100%" }}>

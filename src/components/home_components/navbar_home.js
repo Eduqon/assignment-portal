@@ -34,7 +34,7 @@ import axios from "axios";
 import { apiUrl } from "../../services/contants";
 import MegaMenu from "./MegaMenu";
 
-export function NavbarHome() {
+export function NavbarHome({ services }) {
   const { isOpen, onToggle } = useDisclosure();
   const {
     isOpen: isModalOpen,
@@ -184,7 +184,7 @@ export function NavbarHome() {
 
         {/* </Box> */}
       </div>
-      <MegaMenu />
+      <MegaMenu services={services} />
 
       {/* <Box>
                 <EmailModal />

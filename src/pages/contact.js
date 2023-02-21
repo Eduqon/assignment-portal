@@ -5,14 +5,29 @@ import { FooterHome } from "../components/home_components/footer_home";
 import { FcContacts } from "react-icons/fc";
 import { FaRegAddressCard, FaPhoneAlt } from "react-icons/fa";
 import HeadLayout from "../components/home_components/HeadLayout";
-export default function Contact() {
+import { gql } from "@apollo/client";
+import { client } from "./_app";
+const SERVICES = gql`
+  query {
+    services(pagination: { limit: 100 }) {
+      data {
+        id
+        attributes {
+          title
+          slug
+        }
+      }
+    }
+  }
+`;
+export default function Contact({ services }) {
   return (
     <>
       <HeadLayout slug="contact" />
       <Link href="/samples">
         <img src="/assets/foter/View.png" alt="" className="view" />
       </Link>
-      <NavbarHome />
+      <NavbarHome services={services} />
       <div className="row p-0 m-0">
         <div className="col set-Back">
           <h1 className="set-contact">Contact Us</h1>
@@ -97,4 +112,16 @@ export default function Contact() {
       <FooterHome />
     </>
   );
+}
+
+export async function getStaticProps() {
+  const { data: serviceData } = await client.query({
+    query: SERVICES,
+  });
+
+  return {
+    props: {
+      services: serviceData.services,
+    },
+  };
 }
