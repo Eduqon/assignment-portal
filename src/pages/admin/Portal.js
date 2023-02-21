@@ -10,8 +10,7 @@ import {
   Select,
   Spinner,
 } from "@chakra-ui/react";
-import dynamic from "next/dynamic";
-import AdminOrders from "./orders";
+import AdminOrders from "./Orders";
 import AdminHome from "./Home";
 import { useEffect, useState } from "react";
 import Calendars from "./Calendars";
@@ -21,7 +20,7 @@ import Subjects from "./subjects";
 import Vendors from "./vendors";
 import { NewUser } from "./NewUser";
 import Admins from "./Admins";
-import Operators from "./operators";
+import Operators from "./Operators";
 import QC from "./QC";
 import Sales from "./Sales";
 import Experts from "./Experts";

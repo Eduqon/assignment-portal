@@ -27,7 +27,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-import { useRouter } from "next/Router";
+import { useRouter } from "next/router";
 import { ClientStore } from "../../services/stores/client_store";
 import validator from "validator";
 import axios from "axios";
