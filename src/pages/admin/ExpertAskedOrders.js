@@ -33,7 +33,7 @@ import {
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { apiUrl } from "../../services/contants";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import {
   Accordion,
   AccordionItem,
@@ -63,7 +63,7 @@ function ExpertAskedOrders({
 
   let assignmentList = [];
 
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   useEffect(() => {
     (async () => {
@@ -95,7 +95,7 @@ function ExpertAskedOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -146,7 +146,7 @@ function ExpertAskedOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
     } catch (err) {
       console.log(err);
@@ -386,7 +386,7 @@ function ExpertAskedOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {

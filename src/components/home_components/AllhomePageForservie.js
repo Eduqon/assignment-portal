@@ -2,164 +2,166 @@ import React, { useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
-import { FaListUl } from 'react-icons/fa';
+import { FaListUl } from "react-icons/fa";
 import "swiper/css/navigation";
 // import one from './client-img/one.webp'
 import { Navigation, Autoplay } from "swiper";
-import { IoIosArrowForward } from 'react-icons/io';
-import { AiFillProject } from 'react-icons/ai';
-import { GiProgression } from 'react-icons/gi';
-import { MdLiveHelp } from 'react-icons/md';
-import { BsJournalBookmarkFill, BsPencilFill } from 'react-icons/bs';
-import { ImSearch } from 'react-icons/im';
-import LoadForm from './LoadForm';
-import AutoFakePopup from './AutoFakePopup';
-import Dissertation from './featuresImages/Dissertation.png'
-import time from './featuresImages/time.png'
-import Online from './featuresImages/Online.png'
-import Casestudy from './img/Casestudy.png'
-import Completecoursework from './img/Completecoursework.png'
-import DissertationHead from './img/DissertationHead.png'
-import EssayWritingHelp from './img/EssayWritingHelp.png'
-import Researchpaperhelp from './img/Researchpaperhelp.png'
-import Thesis from './img/Thesis.png'
-import Whychooseourhelp from './img/Whychooseourhelp.png'
+import { IoIosArrowForward } from "react-icons/io";
+import { AiFillProject } from "react-icons/ai";
+import { GiProgression } from "react-icons/gi";
+import { MdLiveHelp } from "react-icons/md";
+import { BsJournalBookmarkFill, BsPencilFill } from "react-icons/bs";
+import { ImSearch } from "react-icons/im";
+import LoadForm from "./LoadForm";
+import AutoFakePopup from "./AutoFakePopup";
+import Dissertation from "./featuresImages/Dissertation.png";
+import time from "./featuresImages/time.png";
+import Online from "./featuresImages/Online.png";
+import Casestudy from "./img/Casestudy.png";
+import Completecoursework from "./img/Completecoursework.png";
+import DissertationHead from "./img/DissertationHead.png";
+import EssayWritingHelp from "./img/EssayWritingHelp.png";
+import Researchpaperhelp from "./img/Researchpaperhelp.png";
+import Thesis from "./img/Thesis.png";
+import Whychooseourhelp from "./img/Whychooseourhelp.png";
 import { FooterHome } from "./footer_home";
-import one from './sliders/one.webp'
-import newzland from './sliders/newzland.gif'
-import UK from './sliders/UK.webp'
-import Germany from './sliders/Germany.webp'
-import { Link } from 'react-router-dom'
-import egipt from './sliders/egipt.jpg'
-import canada from './sliders/canada.webp'
-import australia from './sliders/australia.webp'
-import CountUp from 'react-countup';
-import { HiOutlineClipboardList } from 'react-icons/hi';
+import one from "./sliders/one.webp";
+import newzland from "./sliders/newzland.gif";
+import UK from "./sliders/UK.webp";
+import Germany from "./sliders/Germany.webp";
+import { Link } from "react-router-dom";
+import egipt from "./sliders/egipt.jpg";
+import canada from "./sliders/canada.webp";
+import australia from "./sliders/australia.webp";
+import CountUp from "react-countup";
+import { HiOutlineClipboardList } from "react-icons/hi";
 import { useHref } from "react-router-dom";
-import View from '../../assets/foter/View.png'
-import educon from './img/educon.mp4';
-import {
-  Box
-} from '@chakra-ui/react';
+import View from "../../assets/foter/View.png";
+// import educon from './img/educon.mp4';
+import { Box } from "@chakra-ui/react";
 import AnonymousChat from "../chat_components/anonymous_chat";
 import Allfeatures from "./Allfeatures";
 // main list
 const Subject1 = [
   "Accounting Assignment Help",
-  , "Business Assignment Help"
-  , "Business Environment Assignment Help"
-  , "Business Law Assignment Help"
-  , "Business Plan Assignment Help"
-  , "Case Study Assignment Help"
-  , "Childcare Assignment Help"
-  , "Commerce Assignment Help"
-  , "Communication Assignment Help"
-  , "Construction Assignment Help"
-  , "Criminology Assignment Help"
-  , "Cultural Studies Assignment Help"
-  , "English Literature Assignment Help"
-  , "Entrepreneurship Assignment Help"
-  , "Environmental Studies Assignment Help"
-  , "Estate Management Assignment Help"
-  , "Economics Assignment Help"
-  , "Education Assignment Help"
-  , "Engineering Assignment Help"
-]
-const Subject2 = [
-  , "Finance Assignment Help"
-  , "Food Assignment Help"
-  , "General Studies Assignment Help"
-  , "Health Assignment Help"
-  , "Health & Social Care Assignment Help"
-  , "Hospitality Assignment Help"
-  , "Human Resource Management Assignment Help"
-  , "Information Systems Assignment Help"
-  , "Information Technology Assignment Help"
-  , "International Studies Assignment Help"
-  , "Law Assignment Help"
-  , "Leadership Assignment Help"
-  , "Management Assignment Help"
-  , " Marketing Assignment Help"
-  , " Marketing Essentials Assignment Help"
-
-]
-const Subject3 = [
-  , " Media Assignment Help"
-  , " Medical Assignment Help"
-  , "Nursing Assignment Help"
   ,
-  "Physical Education Assignment Help"
-  , "Physiology Assignment Help"
-  , "Planning Assignment Help"
-  , "Politics Assignment Help"
-  , "Poster Assignment Help"
-  , "PowerPoint Assignment Help"
-  , "Project Management Assignment Help"
-  , "Psychology Assignment Help"
-  , "Religion Assignment Help"
-  , "Research Methodology Assignment Help"
-  , "Sciences Assignment Help"
-  , "Social Policy Assignment Help"
-  , "Social Work Assignment Help"
-  , "Sociology Assignment Help"
-  , "Tourism Assignment Help"
-]
+  "Business Assignment Help",
+  "Business Environment Assignment Help",
+  "Business Law Assignment Help",
+  "Business Plan Assignment Help",
+  "Case Study Assignment Help",
+  "Childcare Assignment Help",
+  "Commerce Assignment Help",
+  "Communication Assignment Help",
+  "Construction Assignment Help",
+  "Criminology Assignment Help",
+  "Cultural Studies Assignment Help",
+  "English Literature Assignment Help",
+  "Entrepreneurship Assignment Help",
+  "Environmental Studies Assignment Help",
+  "Estate Management Assignment Help",
+  "Economics Assignment Help",
+  "Education Assignment Help",
+  "Engineering Assignment Help",
+];
+const Subject2 = [
+  ,
+  "Finance Assignment Help",
+  "Food Assignment Help",
+  "General Studies Assignment Help",
+  "Health Assignment Help",
+  "Health & Social Care Assignment Help",
+  "Hospitality Assignment Help",
+  "Human Resource Management Assignment Help",
+  "Information Systems Assignment Help",
+  "Information Technology Assignment Help",
+  "International Studies Assignment Help",
+  "Law Assignment Help",
+  "Leadership Assignment Help",
+  "Management Assignment Help",
+  " Marketing Assignment Help",
+  " Marketing Essentials Assignment Help",
+];
+const Subject3 = [
+  ,
+  " Media Assignment Help",
+  " Medical Assignment Help",
+  "Nursing Assignment Help",
+  "Physical Education Assignment Help",
+  "Physiology Assignment Help",
+  "Planning Assignment Help",
+  "Politics Assignment Help",
+  "Poster Assignment Help",
+  "PowerPoint Assignment Help",
+  "Project Management Assignment Help",
+  "Psychology Assignment Help",
+  "Religion Assignment Help",
+  "Research Methodology Assignment Help",
+  "Sciences Assignment Help",
+  "Social Policy Assignment Help",
+  "Social Work Assignment Help",
+  "Sociology Assignment Help",
+  "Tourism Assignment Help",
+];
 const listthird = [
-  "In-depth Topic Coverage"
-  , "Well Curated and Coherent Essay"
-  , "Authentic and Quality Essay"
-  , "Accurate Essay Structure"
-  , "100% Plagiarism Free Essay"
-  , "Effective Expression Delivery"
-]
+  "In-depth Topic Coverage",
+  "Well Curated and Coherent Essay",
+  "Authentic and Quality Essay",
+  "Accurate Essay Structure",
+  "100% Plagiarism Free Essay",
+  "Effective Expression Delivery",
+];
 const listfour = [
-  "Accurate Dessertation Outline"
-  , "Careful Compliance of guidelines"
-  , "In-depth Topic Coverage"
-  , "Well-researched Quality Content"
-  , "100% Plagiarism Free Dessertation"
-  , "Original and Distinct Content"
-]
+  "Accurate Dessertation Outline",
+  "Careful Compliance of guidelines",
+  "In-depth Topic Coverage",
+  "Well-researched Quality Content",
+  "100% Plagiarism Free Dessertation",
+  "Original and Distinct Content",
+];
 const listfive = [
-  "Well-Organized Data"
-  , "Unique Cases"
-  , "Careful Compliance of guidelines"
-  , "In-depth Topic Coverage"
-  , "Well-researched Quality Content"
-  , "100% Plagiarism Free Content"
-]
+  "Well-Organized Data",
+  "Unique Cases",
+  "Careful Compliance of guidelines",
+  "In-depth Topic Coverage",
+  "Well-researched Quality Content",
+  "100% Plagiarism Free Content",
+];
 const listsix = [
-  "360-degree data coverage"
-  , "In-depth and Comprehensive Research"
-  , "Careful Compliance of guidelines"
-  , "Best Quality Research Assurance"
-  , "Authentic and Distinct Content"
-  , "100% Plagiarism Free Content"
-]
+  "360-degree data coverage",
+  "In-depth and Comprehensive Research",
+  "Careful Compliance of guidelines",
+  "Best Quality Research Assurance",
+  "Authentic and Distinct Content",
+  "100% Plagiarism Free Content",
+];
 const listseven = [
-  "360-degree data coverage"
-  , "Coherent Presentation and Organization"
-  , "In-depth and Comprehensive Research"
-  , "Careful Compliance of guidelines"
-  , "Authentic and Distinct Content"
-  , "100% Plagiarism Free Content"
-]
+  "360-degree data coverage",
+  "Coherent Presentation and Organization",
+  "In-depth and Comprehensive Research",
+  "Careful Compliance of guidelines",
+  "Authentic and Distinct Content",
+  "100% Plagiarism Free Content",
+];
 const listeight = [
-  "On-Time Submissions"
-  , "Precise and Accurate Content"
-  , "Original and Quality Content"
-  , "100% Plagiarism Free Content"
-  , "Well-Researched and Accurate Work"
-]
+  "On-Time Submissions",
+  "Precise and Accurate Content",
+  "Original and Quality Content",
+  "100% Plagiarism Free Content",
+  "Well-Researched and Accurate Work",
+];
 export default function AllhomePageForservie() {
-
-
-  const [poploop, setpoploop] = useState(['18937792', '8638622', '383872']);
-  const listone = ["Well-Researched Assignments", "100% Plagiarism Free Work", "Best Grades for you", "On time delivery"
-    , "Foolproof Double Quality Checks",
+  const [poploop, setpoploop] = useState(["18937792", "8638622", "383872"]);
+  const listone = [
+    "Well-Researched Assignments",
+    "100% Plagiarism Free Work",
+    "Best Grades for you",
+    "On time delivery",
+    "Foolproof Double Quality Checks",
     "24*7 Assistance and help",
     "Unlimited Revisions as per your requirements.",
-    "Well-written, authentic, coherent and distinct content."]
+    "Well-written, authentic, coherent and distinct content.",
+  ];
 
   const [lists, setlists] = useState(listone);
   const [secondList1, setsecondList1] = useState(Subject1);
@@ -179,139 +181,129 @@ export default function AllhomePageForservie() {
   const Research = useRef();
   const thesis = useRef();
   const cousreWork = useRef();
-  const subject = useRef()
-  
-  const [counterTrue, setcounterTrue] = useState(0)
+  const subject = useRef();
+
+  const [counterTrue, setcounterTrue] = useState(0);
   const firstCount = () => {
-      if (window.scrollY >= 500) {
-          // start()
-          console.log(window.scrollY);
-          setcounterTrue(true)
-      } else {
-          console.log('false')
+    if (window.scrollY >= 500) {
+      // start()
+      setcounterTrue(true);
+    } else {
+      console.log("false");
+    }
+  };
 
-      }
-  }
-
-  window.addEventListener('scroll', firstCount)
+  window.addEventListener("scroll", firstCount);
   return (
     <>
       <br />
       <AnonymousChat />
-      <Link to="/"><img src={View} alt="" className='view' /></Link>
+      <Link to="/">
+        <img src={View} alt="" className="view" />
+      </Link>
       <div className="Mycont m-0">
-                <Box display={{ base: 'block', md: 'none', sm: 'none' }}>
-
-                    <div className="row p-0 m-0">
-                        <div className="col">
-                            <video className='w-100 brdr' loop="true" autoplay="autoplay" controls="controls" id="vid" muted >
-                                <source src={educon} type="video/mp4" />
-
-                            </video>
-                        </div>
-                    </div>
-                </Box>
-                <br />
-
-                <div className="row p-0 m-0">
-                    <div className="col-12 headings1 my-4 d-flex justify-content-center align-items-center">
-                        <HiOutlineClipboardList className='mt-0 mr-2 Fs' /><h2> Assignment Santa</h2>
-                    </div>
-                    <div className='col-12 d-flex justify-content-center client_heading'>
-                        Take help from best MBA writing service in Australia
-                    </div>
-                </div>
-                <br />
-                <br />
-                <div className="row p-0 m-0">
-                    <div className="col-md-4 col-12">
-                        <div className='boxx'>
-                            <div className='counter_'>
-
-                                {(counterTrue) ?
-                                    <CountUp start={0} end={157} delay={0}>
-
-                                        {({ countUpRef }) => (
-                                            <>
-                                                <div className="d-flex flex-column justify-content-center ">
-
-                                                    <div className='d-flex justify-content-center'>
-                                                        <span ref={countUpRef} />+
-                                                    </div>
-                                                    <div className='Fs-3'>
-                                                        Subjects
-                                                    </div>
-                                                </div>
-                                            </>
-                                        )}
-                                    </CountUp>
-                                    : 0}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-4 col-12">
-                        <div className='counter_'>
-
-                            {
-                                (counterTrue) ?
-                                    <CountUp start={0} end={2014} delay={0}>
-                                        {({ countUpRef }) => (
-                                            <>
-                                                <div className="d-flex flex-column justify-content-center ">
-
-                                                    <div className='d-flex justify-content-center'>
-
-
-                                                        <span ref={countUpRef} />+
-                                                    </div>
-                                                    <div className='Fs-3'>
-                                                        PHD Experts
-                                                    </div>
-                                                </div>
-                                            </>
-                                        )}
-                                    </CountUp> : 0}
-                        </div>
-                    </div>
-                    <div className="col-md-4 col-12">
-                        <div className='counter_'>
-
-
-                            {
-                                (counterTrue) ?
-                                    <CountUp start={0} end={157} delay={0}>
-                                        {({ countUpRef }) => (
-                                            <>
-                                                <div className="d-flex flex-column justify-content-center ">
-
-                                                    <div className='d-flex justify-content-center'>
-
-
-                                                        <span ref={countUpRef} />+
-                                                    </div>
-                                                    <div className='Fs-3'>
-                                                        Subjects
-                                                    </div>
-                                                </div>
-                                            </>
-                                        )}
-                                    </CountUp>
-                                    : 0
-                            }
-
-                        </div>
-                    </div>
-                </div>
+        <Box display={{ base: "block", md: "none", sm: "none" }}>
+          <div className="row p-0 m-0">
+            <div className="col">
+              <video
+                className="w-100 brdr"
+                loop="true"
+                autoplay="autoplay"
+                controls="controls"
+                id="vid"
+                muted
+              >
+                {/* <source src={educon} type="video/mp4" /> */}
+              </video>
             </div>
+          </div>
+        </Box>
+        <br />
+
+        <div className="row p-0 m-0">
+          <div className="col-12 headings1 my-4 d-flex justify-content-center align-items-center">
+            <HiOutlineClipboardList className="mt-0 mr-2 Fs" />
+            <h2> Assignment Santa</h2>
+          </div>
+          <div className="col-12 d-flex justify-content-center client_heading">
+            Take help from best MBA writing service in Australia
+          </div>
+        </div>
+        <br />
+        <br />
+        <div className="row p-0 m-0">
+          <div className="col-md-4 col-12">
+            <div className="boxx">
+              <div className="counter_">
+                {counterTrue ? (
+                  <CountUp start={0} end={157} delay={0}>
+                    {({ countUpRef }) => (
+                      <>
+                        <div className="d-flex flex-column justify-content-center ">
+                          <div className="d-flex justify-content-center">
+                            <span ref={countUpRef} />+
+                          </div>
+                          <div className="Fs-3">Subjects</div>
+                        </div>
+                      </>
+                    )}
+                  </CountUp>
+                ) : (
+                  0
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="col-md-4 col-12">
+            <div className="counter_">
+              {counterTrue ? (
+                <CountUp start={0} end={2014} delay={0}>
+                  {({ countUpRef }) => (
+                    <>
+                      <div className="d-flex flex-column justify-content-center ">
+                        <div className="d-flex justify-content-center">
+                          <span ref={countUpRef} />+
+                        </div>
+                        <div className="Fs-3">PHD Experts</div>
+                      </div>
+                    </>
+                  )}
+                </CountUp>
+              ) : (
+                0
+              )}
+            </div>
+          </div>
+          <div className="col-md-4 col-12">
+            <div className="counter_">
+              {counterTrue ? (
+                <CountUp start={0} end={157} delay={0}>
+                  {({ countUpRef }) => (
+                    <>
+                      <div className="d-flex flex-column justify-content-center ">
+                        <div className="d-flex justify-content-center">
+                          <span ref={countUpRef} />+
+                        </div>
+                        <div className="Fs-3">Subjects</div>
+                      </div>
+                    </>
+                  )}
+                </CountUp>
+              ) : (
+                0
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
 
       <br />
       <div className="adjust">
         <div className="row m-0 p-0">
           <div className="col set-m">
             <div className="headings d-flex justify-content-center align-items-center">
-              <FaListUl className="mr-2" /><h1>Providing Services In</h1>
-
-
+              <FaListUl className="mr-2" />
+              <h1>Providing Services In</h1>
             </div>
           </div>
         </div>
@@ -347,17 +339,31 @@ export default function AllhomePageForservie() {
           modules={[Navigation, Autoplay]}
           className="mySwiper"
         >
-          <SwiperSlide style={{ display: 'flex', justifyContent: 'center' }}><img src={one} className="img-sizw" /></SwiperSlide>
-          <SwiperSlide style={{ display: 'flex', justifyContent: 'center' }}><img src={UK} className="img-sizw" /></SwiperSlide>
-          <SwiperSlide style={{ display: 'flex', justifyContent: 'center' }}><img src={Germany} className="img-sizw" /></SwiperSlide>
-          <SwiperSlide style={{ display: 'flex', justifyContent: 'center' }}><img src={newzland} className="img-sizw" /></SwiperSlide>
-          <SwiperSlide style={{ display: 'flex', justifyContent: 'center' }}><img src={egipt} className="img-sizw" /></SwiperSlide>
-          <SwiperSlide style={{ display: 'flex', justifyContent: 'center' }}><img src={australia} className="img-sizw" /></SwiperSlide>
-          <SwiperSlide style={{ display: 'flex', justifyContent: 'center' }}><img src={canada} className="img-sizw" /></SwiperSlide>
+          <SwiperSlide style={{ display: "flex", justifyContent: "center" }}>
+            <img src={one} className="img-sizw" />
+          </SwiperSlide>
+          <SwiperSlide style={{ display: "flex", justifyContent: "center" }}>
+            <img src={UK} className="img-sizw" />
+          </SwiperSlide>
+          <SwiperSlide style={{ display: "flex", justifyContent: "center" }}>
+            <img src={Germany} className="img-sizw" />
+          </SwiperSlide>
+          <SwiperSlide style={{ display: "flex", justifyContent: "center" }}>
+            <img src={newzland} className="img-sizw" />
+          </SwiperSlide>
+          <SwiperSlide style={{ display: "flex", justifyContent: "center" }}>
+            <img src={egipt} className="img-sizw" />
+          </SwiperSlide>
+          <SwiperSlide style={{ display: "flex", justifyContent: "center" }}>
+            <img src={australia} className="img-sizw" />
+          </SwiperSlide>
+          <SwiperSlide style={{ display: "flex", justifyContent: "center" }}>
+            <img src={canada} className="img-sizw" />
+          </SwiperSlide>
         </Swiper>
       </div>
       {/* text content */}
-      <Allfeatures/>
+      <Allfeatures />
       {/* <div className='Mycontainer'>
         <div className="section"></div>
         <h2 className='headings'>Why Choose Our Help?</h2>
@@ -393,7 +399,7 @@ export default function AllhomePageForservie() {
           <div className="col">
             <div className="row m-0 p-0">
               // {/* <div className="Mycontainer"> */}
-              {/* <div className="d-lg-flex">
+      {/* <div className="d-lg-flex">
 
 
                 <div className="col-md-6 col-12 p-0" ref={timee}>
@@ -440,13 +446,11 @@ export default function AllhomePageForservie() {
                   attaching the most authentic testimonial from our students across the world. We motivate you to ask us as many questions as you want, seek all the information to be sure and we guarantee you that
                   you will get the best grades.
                 </p>
-              </div> */} 
+              </div> */}
 
-              {/* </div> */}
+      {/* </div> */}
 
-
-
-              {/* <div className="">
+      {/* <div className="">
                 <div className="headings d-flex justify-content-center align-items-center ">
                   <GiProgression className='mt-0 mr-2 Fs' /><h1 className=''>Subject Help that we offer:</h1>
                 </div>

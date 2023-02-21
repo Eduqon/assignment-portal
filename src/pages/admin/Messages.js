@@ -14,7 +14,7 @@ import { apiUrl } from "../../services/contants";
 import { db } from "../../services/firebase";
 import ConfirmedOrderMessage from "./ConfirmedOrderMessage";
 import InProcessOrderMessage from "./InProcessOrderMessage";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 
 function Messages({ setMessageCount, setSpinnerLoading }) {
   const [messageData, setMessageData] = useState([]);
@@ -29,7 +29,7 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
   const [inProcessOrders, setInProcessOrders] = useState([]);
 
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const navigate = useRouter();
   let confirmOrderAssignedExpertMessages,
     inProcessOrderAssignedExpertMessages,
     confirmedMessageData,
@@ -46,7 +46,7 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
     try {
       let clientToken = localStorage.getItem("userToken");
       if (clientToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -81,7 +81,7 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
     try {
       let clientToken = localStorage.getItem("userToken");
       if (clientToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -152,7 +152,6 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
       const chatName = expertEmail + "_" + userEmail + "_" + assignment_id;
 
       const chatDoc = await getDoc(doc(db, "chat", chatName));
-      console.log({ chatName, chatDoc });
 
       if (!chatDoc.exists()) {
         await setDoc(doc(db, "chat", chatName), {

@@ -36,7 +36,7 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { apiUrl } from "../../services/contants";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { updateAssignment } from "../../services/functions/assignmentFun";
 import DeadlinePopup from "./DeadlinePopup";
 
@@ -48,7 +48,7 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
 
   let assignmentList = [];
 
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   useEffect(() => {
     _fetchAssignments();
@@ -58,7 +58,7 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -78,9 +78,7 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
         config
       );
       let data = response.data.assignmentData;
-      console.log(data, "check data");
       assignmentList = [];
-      console.log("fetching");
       if (data.length !== 0) {
         for (let index = 0; index < data.length; index++) {
           assignmentList.push({
@@ -110,7 +108,6 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
         console.log("No CP1 Pending Orders");
       }
       setAssignments(assignmentList);
-      console.log(assignments);
     } catch (err) {
       console.log(err);
     }
@@ -139,7 +136,6 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
         config
       );
       incrementCounter("CP1 Done");
-      console.log(response, "res");
       if (response.success) {
         _fetchAssignments();
         onClose();

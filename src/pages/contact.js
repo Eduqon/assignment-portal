@@ -1,25 +1,16 @@
 import React from "react";
-import MegaMenu from "./MegaMenu";
-import { NavbarHome } from "./navbar_home";
-import { FormHome } from "./form_home";
-import { FooterHome } from "./footer_home";
+import Link from "next/link";
+import { NavbarHome } from "../components/home_components/navbar_home";
+import { FooterHome } from "../components/home_components/footer_home";
 import { FcContacts } from "react-icons/fc";
-import { BiMailSend, BiPhoneCall } from "react-icons/bi";
-import { RiWhatsappFill } from "react-icons/ri";
-import { FcCallback } from "react-icons/fc";
 import { FaRegAddressCard, FaPhoneAlt } from "react-icons/fa";
-import contact from "../../assets/contact.png";
-import { Link } from "react-router-dom";
-import View from "../../assets/foter/View.png";
-import email from "../../assets/email.png";
-import { ImPointDown } from "react-icons/im";
-import HeadLayout from "./HeadLayout";
+import HeadLayout from "../components/home_components/HeadLayout";
 export default function Contact() {
   return (
     <>
       <HeadLayout slug="contact" />
-      <Link to="/samples">
-        <img src={View} alt="" className="view" />
+      <Link href="/samples">
+        <img src="/assets/foter/View.png" alt="" className="view" />
       </Link>
       <NavbarHome />
       <div className="row p-0 m-0">
@@ -94,7 +85,7 @@ export default function Contact() {
                 </div>
                 <div className="col-md-6 col-12">
                   <div className="img-contact">
-                    <img src={contact} alt="" />
+                    <img src="/assets/contact.png" alt="" />
                   </div>
                 </div>
               </div>

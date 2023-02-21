@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import {
   RepeatIcon,
   AttachmentIcon,
@@ -77,7 +77,7 @@ function RawSubmissionOrders({
   let assignmentList = [];
   let submissionsList = [];
 
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   //---> ask remove expert
   async function removeExpert(index) {
@@ -294,7 +294,6 @@ function RawSubmissionOrders({
 
     axios(config)
       .then(function (response) {
-        console.log(response);
         setFileUrl(
           "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
             encodeURIComponent(blobName)
@@ -382,7 +381,7 @@ function RawSubmissionOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -497,7 +496,7 @@ function RawSubmissionOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -552,7 +551,7 @@ function RawSubmissionOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
     } catch (err) {
       console.log(err);
@@ -601,7 +600,6 @@ function RawSubmissionOrders({
                     operatorExpertChat &&
                     operatorExpertChat[messages.id] &&
                     operatorExpertChat[messages.id].map((msg, index) => {
-                      console.log({ msg });
                       return (
                         <Box
                           display={
@@ -753,7 +751,6 @@ function RawSubmissionOrders({
                                 }),
                               }
                             );
-                            console.log({ messages });
                             let config = {
                               headers: { Authorization: `Bearer ${userToken}` },
                             };
@@ -795,7 +792,7 @@ function RawSubmissionOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {

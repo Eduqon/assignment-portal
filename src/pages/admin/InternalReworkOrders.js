@@ -35,7 +35,7 @@ import {
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { apiUrl } from "../../services/contants";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 
 function InternalReworkOrders({ incrementCounter, decrementCounter }) {
   const [assignments, setAssignments] = useState([]);
@@ -52,7 +52,7 @@ function InternalReworkOrders({ incrementCounter, decrementCounter }) {
   let assignmentList = [];
   let submissionsList = [];
 
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   //---> ask remove expert
   async function removeExpert(index) {
@@ -263,7 +263,6 @@ function InternalReworkOrders({ incrementCounter, decrementCounter }) {
 
     axios(config)
       .then(function (response) {
-        console.log(response);
         setFileUrl(
           "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
             encodeURIComponent(blobName)
@@ -343,7 +342,7 @@ function InternalReworkOrders({ incrementCounter, decrementCounter }) {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -455,7 +454,7 @@ function InternalReworkOrders({ incrementCounter, decrementCounter }) {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -467,7 +466,6 @@ function InternalReworkOrders({ incrementCounter, decrementCounter }) {
       );
       let data = response.data.assignmentData;
       assignmentList = [];
-      console.log("fetching");
       if (data.length !== 0) {
         for (let index = 0; index < data.length; index++) {
           assignmentList.push({
@@ -501,7 +499,6 @@ function InternalReworkOrders({ incrementCounter, decrementCounter }) {
         console.log("No Raw Submission Orders");
       }
       setAssignments(assignmentList);
-      console.log(assignments);
     } catch (err) {
       console.log(err);
     }

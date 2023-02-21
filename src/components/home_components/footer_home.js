@@ -5,15 +5,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import facebook from "../../assets/foter/facebook.png";
-import insta from "../../assets/foter/insta.png";
-import twitter from "../../assets/foter/twitter.png";
-import youtube from "../../assets/foter/youtube.png";
-import payment from "../../assets/payment.png";
 import { BiMailSend, BiPhoneCall } from "react-icons/bi";
 import { AiOutlineWhatsApp } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { LinkIcon } from "@chakra-ui/icons";
+
 export function FooterHome() {
   return (
     <div className="row p-0 m-0  set-back">
@@ -25,18 +21,12 @@ export function FooterHome() {
               <div className="address">
                 301 Hostorical dr, Aintree, Melbourne, Australia
               </div>
-              {/* <div className="mail d-flex align-items-baseline">
-                                <BiMailSend /> &nbsp;&nbsp;&nbsp; assignmentsanta88@gmail.com
-                            </div> */}
-              {/* <div className="call d-flex align-items-center">
-                                <BiPhoneCall />  &nbsp; OR &nbsp; <AiOutlineWhatsApp /> &nbsp;&nbsp; <a href='http://api.whatsapp.com/send?phone=917986021317' target="_blank">7986021317</a>
-                            </div> */}
             </div>
           </div>
           <div className="col-md-4 col-12">
             <div className="payment d-flex flex-column flex-lg-row flex-sm-column align-items-center justify-content-around">
               <div className="set_">100% Secure Payment </div>
-              <img src={payment} alt="" />
+              <img src="/assets/payment.png" alt="" />
             </div>
           </div>
           <div className="col-md-4 col-12">
@@ -48,19 +38,19 @@ export function FooterHome() {
                 href="https://www.facebook.com/assignmentsanta/"
                 target="_blank"
               >
-                <img src={facebook} />
+                <img src="/assets/foter/facebook.png" />
               </a>
               <a
                 href="https://www.instagram.com/assignmentsanta04/"
                 target="_blank"
               >
-                <img src={insta} />
+                <img src="/assets/foter/insta.png" />
               </a>
               <a href="https://twitter.com/AssignmentSanta" target="_blank">
-                <img src={twitter} />
+                <img src="/assets/foter/twitter.png" />
               </a>
               <a href="#" target="_blank">
-                <img src={youtube} />
+                <img src="/assets/foter/youtube.png" />
               </a>
             </div>
           </div>

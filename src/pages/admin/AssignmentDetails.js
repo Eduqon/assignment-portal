@@ -611,7 +611,6 @@ function AssignmentDetails() {
 
     axios(config)
       .then(function (response) {
-        console.log(response);
         setAssignmentFileUrl(
           "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
             encodeURIComponent(blobName)
@@ -619,7 +618,6 @@ function AssignmentDetails() {
         setIsUploading(false);
       })
       .catch(function (error) {
-        console.log(error);
         setIsUploading(false);
       });
   }

@@ -37,7 +37,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { apiUrl } from "../../services/contants";
 import { db } from "../../services/firebase";
@@ -59,7 +59,7 @@ function ProofReadOrders({
 
   let assignmentList = [];
 
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   useEffect(() => {
     (async () => {
@@ -75,7 +75,7 @@ function ProofReadOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -117,7 +117,6 @@ function ProofReadOrders({
         console.log("No Proof Read Orders");
       }
       setAssignments(assignmentList);
-      console.log(assignments);
     } catch (err) {
       console.log(err);
     }
@@ -143,7 +142,7 @@ function ProofReadOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
     } catch (err) {
       console.log(err);
@@ -192,7 +191,6 @@ function ProofReadOrders({
                     operatorExpertChat &&
                     operatorExpertChat[messages.id] &&
                     operatorExpertChat[messages.id].map((msg, index) => {
-                      console.log({ msg });
                       return (
                         <Box
                           display={
@@ -385,7 +383,7 @@ function ProofReadOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {

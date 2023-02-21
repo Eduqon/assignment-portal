@@ -1,8 +1,7 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { apiUrl } from "../services/contants";
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useRouter } from "next/router";
 import { db } from "../services/firebase";
 import {
   arrayUnion,
@@ -49,8 +48,7 @@ function AssignmentDetailsClient() {
   const [operatorId, setChatOperatorId] = useState("");
   const [salesId, setChatSalesId] = useState("");
 
-  let params = useParams();
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const inputFileSalesClient = useRef(null);
@@ -72,7 +70,7 @@ function AssignmentDetailsClient() {
     try {
       let clientToken = localStorage.getItem("clientToken");
       if (clientToken == null) {
-        navigate("/");
+        navigate.replace("/");
       }
 
       const response = await axios.post(apiUrl + "/util/currency/fetch");
@@ -112,14 +110,14 @@ function AssignmentDetailsClient() {
     try {
       let clientToken = localStorage.getItem("clientToken");
       if (clientToken == null) {
-        navigate("/");
+        navigate.replace("/");
       }
 
       let config = {
         headers: { Authorization: `Bearer ${clientToken}` },
       };
       const response = await axios.get(
-        apiUrl + "/assignment/fetch?_id=" + params.assignmentID,
+        apiUrl + "/assignment/fetch?_id=" + navigate.query.assignmentID,
         config
       );
       let data = await response.data.assignmentData;
@@ -272,7 +270,6 @@ function AssignmentDetailsClient() {
         "Request Sent, Sales Will Respond Soon. Please Stay on this page."
       );
       const unsub = onSnapshot(doc(db, "sales_chat", assignment.id), (doc) => {
-        console.log(doc.data().sales);
         if (doc.data().sales !== "") {
           window.location.reload();
         }
@@ -325,7 +322,7 @@ function AssignmentDetailsClient() {
             </Select>
             <Button
               onClick={async () => {
-                navigate("/assignments");
+                navigate.replace("/assignments");
               }}
             >
               Back to Assignments
@@ -378,9 +375,6 @@ function AssignmentDetailsClient() {
                     width={"lg"}
                     contentEditable={false}
                     value={assignment.description}
-                    onChange={(e) => {
-                      console.log(e);
-                    }}
                   >
                     {assignment.description}
                   </Textarea>

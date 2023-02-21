@@ -1,7 +1,8 @@
 import { apiUrl } from "../contants";
 import axios from "axios";
-let userToken = localStorage.getItem("userToken");
-console.log(userToken , 'token')
+
+let userToken =
+  typeof window !== "undefined" && localStorage.getItem("userToken");
 let config = {
   headers: { Authorization: `Bearer ${userToken}` },
 };

@@ -19,7 +19,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { db } from "../../services/firebase";
@@ -32,7 +32,7 @@ function InProcessOrderMessage({
   loading,
   inProcessOrderData,
 }) {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const [id, setId] = useState("");
   const inputFileOperatorExpert = useRef(null);
   const [token, setToken] = useState("");
@@ -66,7 +66,7 @@ function InProcessOrderMessage({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
     } catch (err) {
       console.log(err);
@@ -317,7 +317,7 @@ function InProcessOrderMessage({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {

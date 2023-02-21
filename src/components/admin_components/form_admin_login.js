@@ -10,7 +10,7 @@ import {
   Heading,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { UserStore } from "../../services/stores/user_store";
 import validator from "validator";
 import { apiUrl } from "../../services/contants";
@@ -26,7 +26,7 @@ export const FormAdminLogin = () => {
   const setId = UserStore((state) => state.setId);
   const id = UserStore((state) => state.id);
 
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   async function _submit() {
     let password = document.getElementById("password");
@@ -64,7 +64,6 @@ export const FormAdminLogin = () => {
           },
           config
         );
-        console.log(response.status);
         if (response.data.success === true) {
           await setContactNo(response.data.user.contact_no);
           await setRole(response.data.user.role);
@@ -77,7 +76,7 @@ export const FormAdminLogin = () => {
             response.data.user.userCommission
           );
           //localStorage.setItem('userChatToken', JSON.stringify(response.data.tokenObj));
-          navigate("/admin/portal");
+          navigate.replace("/admin/portal");
         } else if (response.status == 203) {
           localStorage.setItem("userToken", response.data.token);
           userToken = response.data.token;
@@ -94,7 +93,6 @@ export const FormAdminLogin = () => {
               },
               config
             );
-            console.log(response.data);
             if (response.data.success === true) {
               await setContactNo(response.data.user.contact_no);
               await setRole(response.data.user.role);
@@ -102,7 +100,7 @@ export const FormAdminLogin = () => {
               localStorage.setItem("userEmail", id);
               localStorage.setItem("userRole", response.data.user.role);
               localStorage.setItem("userName", response.data.user.name);
-              navigate("/admin/portal");
+              navigate.replace("/admin/portal");
             }
           } catch (error) {
             console.log(JSON.stringify(error.response.data));

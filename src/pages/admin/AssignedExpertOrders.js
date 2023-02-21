@@ -37,7 +37,7 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import axios from "axios";
 import { db } from "../../services/firebase";
 import { apiUrl, localUrl } from "../../services/contants";
@@ -63,7 +63,7 @@ function AssignedExpertOrders({
   const ReplyMessageModalDis = useDisclosure();
   let assignmentList = [];
 
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   useEffect(() => {
     (async () => {
@@ -122,7 +122,7 @@ function AssignedExpertOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -134,7 +134,6 @@ function AssignedExpertOrders({
       );
       let data = response.data.assignmentData;
       assignmentList = [];
-      console.log("fetching");
       if (data.length !== 0) {
         for (let index = 0; index < data.length; index++) {
           assignmentList.push({
@@ -165,7 +164,6 @@ function AssignedExpertOrders({
         console.log("No Expert Asked Orders");
       }
       setAssignments(assignmentList);
-      console.log(assignments);
     } catch (err) {
       console.log(err);
     }
@@ -175,7 +173,7 @@ function AssignedExpertOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
     } catch (err) {
       console.log(err);
@@ -416,7 +414,7 @@ function AssignedExpertOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -641,7 +639,6 @@ function AssignedExpertOrders({
           assignments={assignments}
         />
       ) : null}
-      {console.log("expertdeadlinedate", expertdeadlineDate)}
       {/* accodion for mobile  */}
       <div className="ShowSideClick dummy">
         {assignments.map((assignment, index) => (

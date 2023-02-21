@@ -1,7 +1,6 @@
 import React from "react";
-import { Helmet } from "react-helmet-async";
+import Head from "next/head";
 import ReactMarkdown from "react-markdown";
-import { NavbarHome } from "./navbar_home";
 import {
   Flex,
   Box,
@@ -19,31 +18,25 @@ import {
   InputLeftElement,
   Center,
 } from "@chakra-ui/react";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { strapiUrl } from "../../services/contants";
 import { useEffect, useState } from "react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { isMobile } from "react-device-detect";
 import { useQuery, gql } from "@apollo/client";
-import home_image from "../../assets/home_bg.jpg";
 import validator from "validator";
 import { ClientStore } from "../../services/stores/client_store";
 import { AssignmentFormStore } from "../../services/stores/assignment_form_store";
 import axios from "axios";
 import { apiUrl, mediaUrl } from "../../services/contants";
-import { useNavigate, useParams } from "react-router-dom";
-import home4 from "../../assets/home4.jpg";
-import hom1 from "../../assets/hom1.jpg";
-import three from "../../assets/three.jpg";
-import imm from "./imm.png";
-import Slider from "./sliders/Slider";
-import AllhomePageForservie from "./AllhomePageForservie";
-import { FooterHome } from "./footer_home";
-import AutoFakePopup from "./AutoFakePopup";
-import { useLocation } from "react-router-dom";
-import { FormHome } from "./form_home";
-import Testomonial from "./Testomonial";
+import { useRouter } from "next/router";
 import useFetch from "../../hooks/useFetch";
-import "./Navservice.css";
-import Faqschema from "./Faqschema";
+import { NavbarHome } from "../../components/home_components/navbar_home";
+import { FooterHome } from "../../components/home_components/footer_home";
+import Testomonial from "../../components/home_components/Testomonial";
+import Faqschema from "../../components/home_components/Faqschema";
+import Link from "next/link";
+import { client } from "../_app";
 
 const SERVICE = gql`
   query GetServices($slug: String!) {
@@ -83,8 +76,12 @@ const SERVICES = gql`
   }
 `;
 
-export default function NavService(props) {
-  const location = useLocation();
+export default function NavService({
+  servicesdata,
+  serviceloading,
+  services,
+  loading,
+}) {
   const [pages, setPages] = useState(0);
 
   const setEmail = ClientStore((state) => state.setId);
@@ -93,14 +90,8 @@ export default function NavService(props) {
   const setSubject = AssignmentFormStore((state) => state.setSubject);
   const setDeadline = AssignmentFormStore((state) => state.setDeadline);
   const setStorePages = AssignmentFormStore((state) => state.setPages);
-  let navigate = useNavigate();
-  const { slug } = useParams();
-  const {
-    loading: serviceloading,
-    error: serviceError,
-    data: serviceData,
-  } = useQuery(SERVICES);
-  const { services: allServices } = !serviceloading && serviceData;
+  let navigate = useRouter();
+  const { slug } = navigate.query;
 
   useEffect(() => {
     let date = document.getElementById("date");
@@ -111,22 +102,18 @@ export default function NavService(props) {
   }, []);
 
   const getURL =
-    allServices && allServices.data.some((val) => val.attributes.slug === slug);
+    services && services.data.some((val) => val.attributes.slug === slug);
 
-  const { loading, error, data } = useQuery(SERVICE, {
-    variables: { slug: slug },
-  });
-
-  const { services } = !loading && data;
-
-  const title = services && getURL && services.data[0].attributes.Seotitle;
+  const title =
+    servicesdata && getURL && servicesdata.data[0].attributes.Seotitle;
   const description =
-    services && getURL && services.data[0].attributes.Seodescription;
-  const keyword = services && getURL && services.data[0].attributes.Seokeyword;
+    servicesdata && getURL && servicesdata.data[0].attributes.Seodescription;
+  const keyword =
+    servicesdata && getURL && servicesdata.data[0].attributes.Seokeyword;
   const canonicalURL =
-    services && getURL && services.data[0].attributes.Seocntag;
+    servicesdata && getURL && servicesdata.data[0].attributes.Seocntag;
   const SchemaTitle =
-    services && getURL && services.data[0].attributes.SchemaTitle;
+    servicesdata && getURL && servicesdata.data[0].attributes.SchemaTitle;
 
   async function _submit() {
     let email = document.getElementById("email");
@@ -201,7 +188,7 @@ export default function NavService(props) {
         if (response.data.success === true) {
           await setExistingUser(true);
           localStorage.setItem("clientEmail", email.value);
-          navigate("/order_details");
+          navigate.replace("/order_details");
         } else if (response.status == 203) {
           localStorage.setItem("clientToken", response.data.token);
           clientToken = response.data.token;
@@ -220,12 +207,12 @@ export default function NavService(props) {
             if (response.data.success === true) {
               await setExistingUser(true);
               localStorage.setItem("clientEmail", email.value);
-              navigate("/order_details");
+              navigate.replace("/order_details");
             }
           } catch (error) {
             if (error.response.status == 401) {
               await setExistingUser(false);
-              navigate("/order_details");
+              navigate.replace("/order_details");
             } else {
               window.alert(error.response.message);
             }
@@ -234,7 +221,7 @@ export default function NavService(props) {
       } catch (error) {
         if (error.response.status == 401) {
           await setExistingUser(false);
-          navigate("/order_details");
+          navigate.replace("/order_details");
         } else {
           window.alert(error.response.message);
         }
@@ -244,28 +231,30 @@ export default function NavService(props) {
 
   const bgColor = useColorModeValue("white", "gray.700");
 
-  const { apiLoading, apiError, apiData } = useFetch(
-    mediaUrl + "/upload/files"
-  );
+  const { apiData } = useFetch(mediaUrl + "/upload/files");
   const serviceImage =
     apiData &&
-    services &&
+    servicesdata &&
     getURL &&
-    apiData.filter((data) => data.name === services.data[0].attributes.slug);
+    apiData.filter(
+      (data) => data.name === servicesdata.data[0].attributes.slug
+    );
 
-  if (loading || apiLoading || serviceloading) return <p>Loading...</p>;
-  if (error || apiError || serviceError) return <p>{error}</p>;
+  if (loading || serviceloading) return <p>Loading...</p>;
 
   return (
     <>
       {getURL ? (
         <>
-          <Helmet>
+          <Head>
             {title && <title>{title}</title>}
             {description && <meta name="description" content={description} />}
             {keyword && <meta name="keyword" content={keyword} />}
             {canonicalURL && <link rel="canonical" href={canonicalURL} />}
-          </Helmet>
+          </Head>
+          <Link href="/samples">
+            <img src="/assets/foter/View.png" alt="" className="view" />
+          </Link>
           <NavbarHome />
           <div className="contain position-relative">
             <div
@@ -279,12 +268,15 @@ export default function NavService(props) {
               >
                 <Box id="heading-section" color={"white"} width={"500px"}>
                   <Heading size={"xl"}>
-                    {services && services.data[0].attributes.title}
+                    {servicesdata && servicesdata.data[0].attributes.title}
                   </Heading>
                   <Heading size={"md"} lineHeight={"1.5"}>
-                    {services && services.data[0].attributes.Sub_Title}
+                    {servicesdata && servicesdata.data[0].attributes.Sub_Title}
                   </Heading>
-                  <p>{services && services.data[0].attributes.Sub_Title_2}</p>
+                  <p>
+                    {servicesdata &&
+                      servicesdata.data[0].attributes.Sub_Title_2}
+                  </p>
                 </Box>
               </div>
               <div id="form-section" className="col-md-6 col-12 p-4">
@@ -298,7 +290,8 @@ export default function NavService(props) {
                   {!isMobile && (
                     <Stack align={"center"}>
                       <Heading className="top_class" size={"xl"}>
-                        {services && services.data[0].attributes.Formheading}
+                        {servicesdata &&
+                          servicesdata.data[0].attributes.Formheading}
                       </Heading>
                       <p className="top_class_sub text-capitalize">
                         Take help from best writing service !!
@@ -399,16 +392,16 @@ export default function NavService(props) {
             >
               <div className="headings d-flex justify-content-center align-items-center mb-4">
                 <Heading size={"lg"}>
-                  {services && services.data[0].attributes.body_title}
+                  {servicesdata && servicesdata.data[0].attributes.body_title}
                 </Heading>
               </div>
               <Box
                 className="service-body"
-                style={{ "white-space": "pre-line", padding: "0 2rem" }}
+                style={{ whiteSpace: "pre-line", padding: "0 2rem" }}
               >
                 <ReactMarkdown>
-                  {services &&
-                    services.data[0].attributes.body_1
+                  {servicesdata &&
+                    servicesdata.data[0].attributes.body_1
                       .split("<br/>")
                       .join("\n")}
                 </ReactMarkdown>
@@ -436,14 +429,14 @@ export default function NavService(props) {
                   <br />
                 </>
               )}
-              {services && services.data[0].attributes.body_2 && (
+              {servicesdata && servicesdata.data[0].attributes.body_2 && (
                 <Box
                   className="service-body"
                   style={{ "white-space": "pre-line", padding: "0 2rem" }}
                 >
                   <ReactMarkdown>
-                    {services &&
-                      services.data[0].attributes.body_2
+                    {servicesdata &&
+                      servicesdata.data[0].attributes.body_2
                         .split("<br/>")
                         .join("\n")}
                   </ReactMarkdown>
@@ -568,8 +561,41 @@ export default function NavService(props) {
           <FooterHome className="w-100" />
         </>
       ) : (
-        navigate("/404.html")
+        navigate.replace("/404.html")
       )}
     </>
   );
+}
+
+export async function getStaticPaths() {
+  const { data: serviceData } = await client.query({
+    query: SERVICES,
+  });
+  const allServices = serviceData.services.data;
+  const paths = allServices.map((path) => ({
+    params: { slug: path.attributes.slug },
+  }));
+  return {
+    paths,
+    fallback: true,
+  };
+}
+
+export async function getStaticProps({ params }) {
+  const { slug } = params;
+  const { data, loading } = await client.query({
+    query: SERVICE,
+    variables: { slug: slug },
+  });
+  const { loading: serviceloading, data: serviceData } = await client.query({
+    query: SERVICES,
+  });
+  return {
+    props: {
+      servicesdata: data.services,
+      services: serviceData.services,
+      serviceloading: serviceloading,
+      loading,
+    },
+  };
 }

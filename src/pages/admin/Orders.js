@@ -21,7 +21,7 @@ import {
   Td,
   Button,
 } from "@chakra-ui/react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import AssignedExpertOrders from "./AssignedExpertOrders";
 import CP1DoneOrders from "./CP1DoneOrders";
 import CP1PendingOrders from "./CP1PendingOrders";
@@ -59,7 +59,7 @@ function AdminOrders() {
   const [notifications, setNotifications] = useState([]);
   const [notificationCounter, setNotificationCounter] = useState({});
 
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const NotificationModalDis = useDisclosure();
 
   useEffect(async () => {
@@ -88,7 +88,7 @@ function AdminOrders() {
     try {
       let clientToken = localStorage.getItem("userToken");
       if (clientToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -123,7 +123,7 @@ function AdminOrders() {
     try {
       let clientToken = localStorage.getItem("userToken");
       if (clientToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -336,7 +336,7 @@ function AdminOrders() {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -366,7 +366,7 @@ function AdminOrders() {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -1135,7 +1135,6 @@ function AdminOrders() {
           )}
         </Tabs>
       </Box>
-      <Outlet />
 
       {/* mobile  */}
       <Box

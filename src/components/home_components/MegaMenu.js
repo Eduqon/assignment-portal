@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useQuery, gql } from "@apollo/client";
-import logo from "../../assets/Logo.png";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { IoIosArrowForward } from "react-icons/io";
 import { useRef } from "react";
 import { isMobile } from "react-device-detect";
@@ -41,7 +40,6 @@ export default function MegaMenu() {
   const [Mega, setMega] = useState(RowOneData);
   useEffect(() => {
     setMega(RowOneData);
-    console.log(Mega, "data");
   }, []);
 
   if (loading) return <p>Loading...</p>;
@@ -54,8 +52,8 @@ export default function MegaMenu() {
         id="set-mob"
       >
         <a class="navbar-brand" href="#">
-          <Link to="/">
-            <img className=" ml-4 set_width" src={logo} />
+          <Link href="/">
+            <img className="ml-4 set_width" src="/assets/Logo.png" />
           </Link>
         </a>
         <button
@@ -78,7 +76,7 @@ export default function MegaMenu() {
         >
           <ul class="navbar-nav font-weight-bolder ul-pading">
             <li class="nav-item active" onClick={hideMega}>
-              <Link to="/">Home</Link>
+              <Link href="/">Home</Link>
             </li>
 
             <li class="nav-item dropdown " id="myHover" onClick={showMega}>
@@ -112,7 +110,10 @@ export default function MegaMenu() {
                               >
                                 <IoIosArrowForward className="mr-2" />
                                 <Link
-                                  to={`/service/${value.attributes.slug}`}
+                                  href={{
+                                    pathname: "/service/[slug]",
+                                    query: { slug: value.attributes.slug },
+                                  }}
                                   state={value.attributes.title}
                                 >
                                   {value.attributes.title}
@@ -136,7 +137,7 @@ export default function MegaMenu() {
                               >
                                 <IoIosArrowForward className="mr-2" />
                                 <Link
-                                  to={`/service/${value.attributes.slug}`}
+                                  href={`/service/${value.attributes.slug}`}
                                   state={value.attributes.title}
                                 >
                                   {value.attributes.title}
@@ -160,7 +161,7 @@ export default function MegaMenu() {
                               >
                                 <IoIosArrowForward className="mr-2" />
                                 <Link
-                                  to={`/service/${value.attributes.slug}`}
+                                  href={`/service/${value.attributes.slug}`}
                                   state={value.attributes.title}
                                 >
                                   {value.attributes.title}
@@ -184,7 +185,7 @@ export default function MegaMenu() {
                               >
                                 <IoIosArrowForward className="mr-2" />
                                 <Link
-                                  to={`/service/${value.attributes.slug}`}
+                                  href={`/service/${value.attributes.slug}`}
                                   state={value.attributes.title}
                                 >
                                   {value.attributes.title}
@@ -208,7 +209,7 @@ export default function MegaMenu() {
                               >
                                 <IoIosArrowForward className="mr-2" />
                                 <Link
-                                  to={`/service/${value.attributes.slug}`}
+                                  href={`/service/${value.attributes.slug}`}
                                   state={value.attributes.title}
                                 >
                                   {value.attributes.title}
@@ -225,20 +226,17 @@ export default function MegaMenu() {
               )}
             </li>
             <li class="nav-item">
-              <Link to="/samples">
-                {" "}
-                <a class="nav-link" href="#">
-                  Samples
-                </a>
+              <Link class="nav-link" href="/samples">
+                <a class="nav-link ">Samples</a>
               </Link>
             </li>
             <li class="nav-item">
-              <Link to="/reviews">
+              <Link href="/reviews">
                 <a class="nav-link ">Reviews</a>
               </Link>
             </li>
             <li class="nav-item">
-              <Link to="/contact">
+              <Link href="/contact">
                 <a class="nav-link ">Contact Us</a>
               </Link>
             </li>
@@ -261,7 +259,7 @@ export default function MegaMenu() {
                       >
                         <IoIosArrowForward className="mr-2" />
                         <Link
-                          to={`/service/${value.attributes.slug}`}
+                          href={`/service/${value.attributes.slug}`}
                           state={value.attributes.title}
                         >
                           {value.attributes.title}
@@ -285,7 +283,7 @@ export default function MegaMenu() {
                       >
                         <IoIosArrowForward className="mr-2" />
                         <Link
-                          to={`/service/${value.attributes.slug}`}
+                          href={`/service/${value.attributes.slug}`}
                           state={value.attributes.title}
                         >
                           {value.attributes.title}
@@ -309,7 +307,7 @@ export default function MegaMenu() {
                       >
                         <IoIosArrowForward className="mr-2" />
                         <Link
-                          to={`/service/${value.attributes.slug}`}
+                          href={`/service/${value.attributes.slug}`}
                           state={value.attributes.title}
                         >
                           {value.attributes.title}
@@ -333,7 +331,7 @@ export default function MegaMenu() {
                       >
                         <IoIosArrowForward className="mr-2" />
                         <Link
-                          to={`/service/${value.attributes.slug}`}
+                          href={`/service/${value.attributes.slug}`}
                           state={value.attributes.title}
                         >
                           {value.attributes.title}
@@ -357,7 +355,7 @@ export default function MegaMenu() {
                       >
                         <IoIosArrowForward className="mr-2" />
                         <Link
-                          to={`/service/${value.attributes.slug}`}
+                          href={`/service/${value.attributes.slug}`}
                           state={value.attributes.title}
                         >
                           {value.attributes.title}

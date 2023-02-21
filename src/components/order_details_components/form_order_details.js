@@ -25,12 +25,11 @@ import {
 } from "@chakra-ui/react";
 import { AttachmentIcon } from "@chakra-ui/icons";
 import { useState, useRef, useEffect } from "react";
-import order_details_image from "../../assets/order_details_bg.jpg";
 import { ClientStore } from "../../services/stores/client_store";
 import { AssignmentFormStore } from "../../services/stores/assignment_form_store";
 import axios from "axios";
 import { apiUrl } from "../../services/contants";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 
 export function FormOrderDetails() {
   const [fileName, setFileName] = useState([]);
@@ -49,10 +48,12 @@ export function FormOrderDetails() {
     (state) => state.clearAssignmentStore
   );
 
-  let navigate = useNavigate();
+  let navigate = useRouter();
+  let clientToken;
 
   useEffect(async () => {
     await _fetchToken();
+    clientToken = localStorage.getItem("clientToken");
   });
 
   async function _fetchToken() {
@@ -90,7 +91,6 @@ export function FormOrderDetails() {
 
     axios(config)
       .then(function (response) {
-        console.log(response);
         setFileUrl((fileUrl) => [
           "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
             encodeURIComponent(blobName),
@@ -99,7 +99,6 @@ export function FormOrderDetails() {
         setIsUploading(false);
       })
       .catch(function (error) {
-        console.log(error);
         setIsUploading(false);
       });
     onClose();
@@ -142,7 +141,6 @@ export function FormOrderDetails() {
         let vendorId = "";
 
         if (levelVal === true && referenceVal === true) {
-          let clientToken = localStorage.getItem("clientToken");
           let config = {
             headers: { Authorization: `Bearer ${clientToken}` },
           };
@@ -154,7 +152,7 @@ export function FormOrderDetails() {
               vendorId = responseVendor.data.res[0]._id;
             }
           } catch (error) {
-            //console.log(error);
+            console.log(error);
           }
           try {
             if (taskCode.value === "") {
@@ -195,7 +193,7 @@ export function FormOrderDetails() {
               if (response.data.success === true) {
                 window.alert("Assignment Submitted");
                 clearAssignmentStore();
-                navigate("/assignments");
+                navigate.replace("/assignments");
               } else {
                 window.alert("response");
               }
@@ -238,7 +236,7 @@ export function FormOrderDetails() {
               if (response.data.success === true) {
                 window.alert("Assignment Submitted");
                 clearAssignmentStore();
-                navigate("/assignments");
+                navigate.replace("/assignments");
               } else {
                 window.alert("response");
               }
@@ -304,9 +302,10 @@ export function FormOrderDetails() {
               callback_time: callbacktime.value,
             });
             if (signupResponse.data.success === true) {
-              localStorage.setItem("clientToken", signupResponse.data.token);
-              localStorage.setItem("clientEmail", id);
-              let clientToken = localStorage.getItem("clientToken");
+              if (typeof window !== "undefined") {
+                localStorage.setItem("clientToken", signupResponse.data.token);
+                localStorage.setItem("clientEmail", id);
+              }
               let config = {
                 headers: { Authorization: `Bearer ${clientToken}` },
               };
@@ -363,7 +362,7 @@ export function FormOrderDetails() {
                 if (response.data.success === true) {
                   window.alert("Assignment Submitted");
                   clearAssignmentStore();
-                  navigate("/assignments");
+                  navigate.replace("/assignments");
                 } else {
                   window.alert(response.data);
                 }
@@ -407,7 +406,7 @@ export function FormOrderDetails() {
                 if (response.data.success === true) {
                   window.alert("Assignment Submitted");
                   clearAssignmentStore();
-                  navigate("/assignments");
+                  navigate.replace("/assignments");
                 } else {
                   window.alert(response.data);
                 }
@@ -416,11 +415,11 @@ export function FormOrderDetails() {
               window.alert("Signup Failed");
             }
           } catch (err) {
-            //console.log(err);
+            console.log(err);
           }
         }
       } else {
-        navigate("/");
+        navigate.replace("/");
       }
     }
   }
@@ -437,7 +436,7 @@ export function FormOrderDetails() {
       </Modal>
       <Flex
         minH={"80vh"}
-        backgroundImage={order_details_image}
+        backgroundImage="/assets/order_details_bg.jpg"
         backgroundSize={"cover"}
         backgroundPosition={"center center"}
         align={"center"}
@@ -459,6 +458,7 @@ export function FormOrderDetails() {
               <Box>
                 <FormControl
                   display={
+                    typeof window !== "undefined" &&
                     localStorage.getItem("userToken") === null
                       ? "none"
                       : "block"
@@ -1317,7 +1317,7 @@ export function FormOrderDetails() {
                   bg={"gray.400"}
                   color={"white"}
                   onClick={() => {
-                    navigate("/");
+                    navigate.replace("/");
                   }}
                   _hover={{
                     bg: "gray.500",

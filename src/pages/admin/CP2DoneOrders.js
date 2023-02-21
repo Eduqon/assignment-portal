@@ -37,7 +37,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { apiUrl } from "../../services/contants";
 import { db } from "../../services/firebase";
@@ -61,7 +61,7 @@ function CP2DoneOrders({
 
   let assignmentList = [];
 
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   useEffect(() => {
     (async () => {
@@ -77,7 +77,7 @@ function CP2DoneOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -89,7 +89,6 @@ function CP2DoneOrders({
       );
       let data = response.data.assignmentData;
       assignmentList = [];
-      console.log("fetching");
       if (data.length !== 0) {
         for (let index = 0; index < data.length; index++) {
           assignmentList.push({
@@ -121,7 +120,6 @@ function CP2DoneOrders({
         console.log("No CP1 Pending Orders");
       }
       setAssignments(assignmentList);
-      console.log(assignments);
     } catch (err) {
       console.log(err);
     }
@@ -147,7 +145,7 @@ function CP2DoneOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
     } catch (err) {
       console.log(err);
@@ -347,7 +345,6 @@ function CP2DoneOrders({
                                 }),
                               }
                             );
-                            console.log({ messages });
                             let config = {
                               headers: { Authorization: `Bearer ${userToken}` },
                             };
@@ -389,7 +386,7 @@ function CP2DoneOrders({
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -487,8 +484,6 @@ function CP2DoneOrders({
       </Modal>
     );
   }
-
-  console.log({ confirmOrderAssignedExpertMessages });
 
   return (
     <>

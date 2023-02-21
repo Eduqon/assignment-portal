@@ -20,15 +20,14 @@ import validator from "validator";
 import axios from "axios";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import React, { useState, useEffect } from "react";
-import { Helmet } from "react-helmet";
-import ErrorImage from "../assets/404.jpeg";
+import Head from "next/head";
 import { NavbarHome } from "../components/home_components/navbar_home";
 import { AssignmentFormStore } from "../services/stores/assignment_form_store";
 import { ClientStore } from "../services/stores/client_store";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 import { apiUrl } from "../services/contants";
 
-const Error = () => {
+const Custom404 = () => {
   const [pages, setPages] = useState(0);
 
   const setEmail = ClientStore((state) => state.setId);
@@ -38,7 +37,7 @@ const Error = () => {
   const setDeadline = AssignmentFormStore((state) => state.setDeadline);
   const setStorePages = AssignmentFormStore((state) => state.setPages);
 
-  const navigate = useNavigate();
+  const navigate = useRouter();
 
   useEffect(() => {
     let date = document.getElementById("date");
@@ -118,7 +117,7 @@ const Error = () => {
         if (response.data.success === true) {
           await setExistingUser(true);
           localStorage.setItem("clientEmail", email.value);
-          navigate("/order_details");
+          navigate.replace("/order_details");
         } else if (response.status == 203) {
           localStorage.setItem("clientToken", response.data.token);
           clientToken = response.data.token;
@@ -137,12 +136,12 @@ const Error = () => {
             if (response.data.success === true) {
               await setExistingUser(true);
               localStorage.setItem("clientEmail", email.value);
-              navigate("/order_details");
+              navigate.replace("/order_details");
             }
           } catch (error) {
             if (error.response.status == 401) {
               await setExistingUser(false);
-              navigate("/order_details");
+              navigate.replace("/order_details");
             } else {
               window.alert(error.response.message);
             }
@@ -151,7 +150,7 @@ const Error = () => {
       } catch (error) {
         if (error.response.status == 401) {
           await setExistingUser(false);
-          navigate("/order_details");
+          navigate.replace("/order_details");
         } else {
           window.alert(error.response.message);
         }
@@ -161,10 +160,10 @@ const Error = () => {
 
   return (
     <>
-      <Helmet>
+      <Head>
         <meta charSet="utf-8" />
         <title>OOPS! 404 Error</title>
-      </Helmet>
+      </Head>
       <NavbarHome />
       <div className="row w-100">
         <div className="col-md-6 col-12 d-flex align-items-end flex-column justify-content-center p-4">
@@ -173,7 +172,7 @@ const Error = () => {
               className="d-flex flex-column align-items-center"
               style={{ gap: "20px" }}
             >
-              <img src={ErrorImage} />
+              <img src="/assets/404.jpeg" />
               <Heading as="h3" size="md">
                 The Page You Are Looking For Does Not Exist!
               </Heading>
@@ -181,7 +180,9 @@ const Error = () => {
                 But while you are here, how about signing up for assignment
                 help?
               </p>
-              <Button onClick={() => navigate("/")}>Back to Home</Button>
+              <Button onClick={() => navigate.replace("/")}>
+                Back to Home
+              </Button>
             </div>
           </Box>
         </div>
@@ -246,7 +247,6 @@ const Error = () => {
                       type="text"
                       value={"   " + pages + " Pages/" + 250 * pages + " Words"}
                       contentEditable={false}
-                      onChange={() => console.log(pages)}
                     />
                     <InputRightElement h={"full"}>
                       <Button
@@ -290,4 +290,4 @@ const Error = () => {
   );
 };
 
-export default Error;
+export default Custom404;

@@ -7,7 +7,6 @@ import {
   TabPanel,
   Heading,
 } from "@chakra-ui/react";
-import { Outlet } from "react-router-dom";
 import AnnChatQueue from "./AnnChatQueue";
 import SalesChatQueue from "./SalesChatQueue";
 
@@ -43,7 +42,6 @@ function AdminHome() {
           }
         </Tabs>
       </Box>
-      <Outlet />
       {/* mobile */}
       <Box
         display={{ base: "block", sm: "none", md: "none " }}

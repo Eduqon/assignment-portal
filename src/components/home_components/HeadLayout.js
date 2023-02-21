@@ -1,5 +1,5 @@
 import React from "react";
-import { Helmet } from "react-helmet-async";
+import Head from "next/head";
 import { useQuery, gql } from "@apollo/client";
 
 const SEOTAGS = gql`
@@ -33,12 +33,12 @@ const HeadLayout = ({ slug }) => {
   if (error) return <p>{error}</p>;
   return (
     <>
-      <Helmet>
+      <Head>
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="keyword" content={keyword} />
         {canonicalURL && <link rel="canonical" href={canonicalURL} />}
-      </Helmet>
+      </Head>
     </>
   );
 };

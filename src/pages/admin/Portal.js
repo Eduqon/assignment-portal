@@ -10,18 +10,18 @@ import {
   Select,
   Spinner,
 } from "@chakra-ui/react";
-import { Outlet } from "react-router-dom";
-import AdminOrders from "./Orders";
+import dynamic from "next/dynamic";
+import AdminOrders from "./orders";
 import AdminHome from "./Home";
 import { useEffect, useState } from "react";
 import Calendars from "./Calendars";
 import AdminPanel from "./AdminPanel";
-import Assignments from "./Assignments";
-import Subjects from "./Subjects";
-import Vendors from "./Vendors";
+import Assignments from "./assignments";
+import Subjects from "./subjects";
+import Vendors from "./vendors";
 import { NewUser } from "./NewUser";
 import Admins from "./Admins";
-import Operators from "./Operators";
+import Operators from "./operators";
 import QC from "./QC";
 import Sales from "./Sales";
 import Experts from "./Experts";
@@ -40,7 +40,8 @@ import ClientReworkOrders from "./ClientReworkOrders";
 import { mobTab } from "../../components/sidebar/Sidebar";
 import { ChatIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import Messages from "./Messages";
-// import Assignmentsmob from '../../components/sidebar/accodian-assignment'
+import AdminLayout from ".";
+
 function PortalLayout() {
   const [userRole, setUserRole] = useState("");
   const { onClose } = useDisclosure();
@@ -64,23 +65,8 @@ function PortalLayout() {
 
   return (
     <>
+      <AdminLayout />
       <Box padding={"10px"} position={"relative"}>
-        {loading && (
-          <Box
-            width={"100%"}
-            height={"100vh"}
-            display="flex"
-            alignItems={"center"}
-            justifyContent={"center"}
-            position={"absolute"}
-            left={0}
-            top={0}
-            zIndex={1}
-            background={"#0000003b"}
-          >
-            <Spinner size={"xl"} />
-          </Box>
-        )}
         <Tabs
           position={"absolute"}
           orientation="vertical"
@@ -109,6 +95,21 @@ function PortalLayout() {
             </>
           ) : userRole === "Operator" ? (
             <>
+              {loading && (
+                <Box
+                  width={"100%"}
+                  height={"100vh"}
+                  display="flex"
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  position={"absolute"}
+                  left={0}
+                  top={0}
+                  zIndex={1}
+                >
+                  <Spinner size={"xl"} />
+                </Box>
+              )}
               <TabList>
                 <Tab>
                   <Heading fontSize={"md"}>Calendar</Heading>
@@ -219,7 +220,6 @@ function PortalLayout() {
           )}
         </Tabs>
       </Box>
-      <Outlet />
       <Box display={{ base: "block", sm: "none", md: "none " }} id="parent_tab">
         <Assignments />
         <Subjects />

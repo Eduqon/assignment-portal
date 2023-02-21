@@ -3,7 +3,7 @@ import { NavbarOrderDetails } from "../components/order_details_components/navba
 import { FooterOrderDetails } from "../components/order_details_components/footer_order_details";
 import HeadLayout from "../components/home_components/HeadLayout";
 
-export function OrderDetails() {
+export default function OrderDetails() {
   return (
     <>
       <HeadLayout slug="order_details" />

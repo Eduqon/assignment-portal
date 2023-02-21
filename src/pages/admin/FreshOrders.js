@@ -40,7 +40,7 @@ import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { apiUrl } from "../../services/contants";
 import { RepeatIcon } from "@chakra-ui/icons";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 
 function FreshOrders({ incrementCounter, decrementCounter }) {
   const [assignments, setAssignments] = useState([]);
@@ -49,7 +49,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
   const [selectDate, setSelectedDate] = useState();
   const [token, setToken] = useState("");
 
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   let assignmentList = [];
   let expertList = [];
@@ -96,7 +96,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -183,7 +183,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
 
   async function openExpertModal(index) {
     setSelectedIndex(index);
-    console.log(selectedIndex);
     await fetchExperts("");
     ExpertModalDis.onOpen();
   }
@@ -274,7 +273,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
               onClick={async () => {
                 let userToken = localStorage.getItem("userToken");
                 if (userToken == null) {
-                  navigate("/admin/login");
+                  navigate.replace("/admin/login");
                 }
 
                 let config = {
@@ -393,14 +392,13 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
               onClick={async () => {
                 let userToken = localStorage.getItem("userToken");
                 if (userToken == null) {
-                  navigate("/admin/login");
+                  navigate.replace("/admin/login");
                 }
 
                 let config = {
                   headers: { Authorization: `Bearer ${userToken}` },
                 };
                 try {
-                  console.log(config);
                   const response = await axios.post(
                     apiUrl + "/expert/assignment/ask/doable",
                     {
@@ -440,7 +438,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -545,13 +543,10 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                 onClick={async () => {
                   try {
                     let userEmail = localStorage.getItem("userEmail");
-                    console.log("userEmail", userEmail);
                     let userName = localStorage.getItem("userName");
-                    console.log("username", userName);
                     let userToken = localStorage.getItem("userToken");
-                    console.log("Token", userToken);
                     if (userToken == null) {
-                      navigate("/admin/login");
+                      navigate.replace("/admin/login");
                     }
                     let config = {
                       headers: { Authorization: `Bearer ${userToken}` },
@@ -602,7 +597,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                         config
                       );
                       let resdata = response.data;
-                      console.log("resdata", response.data);
                       if (resdata.success) {
                         await _fetchAssignments();
                         window.alert("Quote Generated");
@@ -692,7 +686,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -931,8 +925,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                   type="number"
                   value={cp1}
                   onChange={(e) => {
-                    // let cp1Element = document.getElementById('cp1');
-                    console.log(e.target.value, "element CP");
                     setCp1(e.target.value);
                   }}
                 />
@@ -1059,26 +1051,22 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                   let userToken = localStorage.getItem("userToken");
                   //alert(userToken);
                   if (userToken == null) {
-                    navigate("/admin/login");
+                    navigate.replace("/admin/login");
                   }
                   let config = {
                     headers: { Authorization: `Bearer ${userToken}` },
                   };
                   // alert("call...3")
                   let dateElement = document.getElementById("date");
-                  // console.log(dateElement, "date element");
                   let timeElement = document.getElementById("time");
-                  // alert("call...4")
-                  // let splitDate = await date.split("-");
+
                   let splitDate = date.split("-");
-                  console.log(splitDate, "splitDate");
                   let year = splitDate[0];
                   let month = splitDate[1];
                   let day = splitDate[2];
                   // alert("call...5")
                   // let splitTime = await Time.split(":");
                   let splitTime = time.split(":");
-                  console.log(splitTime, " split time");
                   let hour = splitTime[0];
                   let min = splitTime[1];
                   //let deadline = new Date(year, month - 1, day, hour, min, 0);
@@ -1111,13 +1099,10 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                         console.log(error);
                       }
                     } else {
-                      // window.alert('Please Wait..');
-                      console.log("Hereere");
                       const responseDeadline = await axios.post(
                         apiUrl + "/assignment/update",
                         {
                           _id: quoteAssignmentData._id,
-                          //   expertDeadline: iso,
                         },
                         config
                       );
@@ -1189,7 +1174,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
 
         config
       );
-      console.log("response", response.data);
       _fetchAssignments();
     } catch (error) {
       //console.log(error);
@@ -1290,7 +1274,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                     <HStack>
                       {assignment.status === "Fresh Order" ? (
                         <>
-                          {console.log(assignment.status)}
                           <Button
                             display={
                               localStorage.getItem("userRole") === "Operator" ||
@@ -1472,7 +1455,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                   <DoableResponsesModal />
                   <Table variant="simple" size="md">
                     <Tbody>
-                      {/* {console.log(assignments.length)} */}
                       <Tr key={assignment.id}>
                         {/* my table */}
                         <Table bgColor={"gray.200"}>

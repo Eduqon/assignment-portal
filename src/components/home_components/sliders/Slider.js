@@ -1,50 +1,50 @@
-import React from 'react'
-import five from '../slider/five.webp'
-import four from '../slider/four.jpg'
-import six from '../slider/six.jpg'
-import Appreciation from '../img/Appreciation.jpg'
-import educon from '../img/educon.mp4'
+import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/effect-creative";
 import { EffectCreative } from "swiper";
 // import six from '../slider/'
 export default function Slider() {
-    return (
-        <>
-
-            <Swiper
-                grabCursor={true}
-                effect={"creative"}
-                autoplay={{
-                    delay: 1500,
-                    disableOnInteraction: false,
-                }}
-                //   loop={true}
-                //   loopFillGroupWithBlank={true}
-                creativeEffect={{
-
-                    prev: {
-                        shadow: true,
-                        origin: "left center",
-                        translate: ["-5%", 0, -200],
-                        rotate: [0, 100, 0]
-                    },
-                    next: {
-                        origin: "right center",
-                        translate: ["5%", 0, -200],
-                        rotate: [0, -100, 0]
-                    }
-                }}
-                modules={[EffectCreative]}
-                className="mySwiper6"
-            >
-                <SwiperSlide> 
-                    <video  className='w-100 brdr' loop="true" autoplay="autoplay" controls="controls" id="vid" muted > 
-                        <source src={educon} type="video/mp4" /> 
-                          
-                    </video></SwiperSlide>
-                {/* <SwiperSlide><img src={Appreciation} class="d-block w-100" alt="..." /></SwiperSlide>
+  return (
+    <>
+      <Swiper
+        grabCursor={true}
+        effect={"creative"}
+        autoplay={{
+          delay: 1500,
+          disableOnInteraction: false,
+        }}
+        //   loop={true}
+        //   loopFillGroupWithBlank={true}
+        creativeEffect={{
+          prev: {
+            shadow: true,
+            origin: "left center",
+            translate: ["-5%", 0, -200],
+            rotate: [0, 100, 0],
+          },
+          next: {
+            origin: "right center",
+            translate: ["5%", 0, -200],
+            rotate: [0, -100, 0],
+          },
+        }}
+        modules={[EffectCreative]}
+        className="mySwiper6"
+      >
+        <SwiperSlide>
+          <video
+            className="w-100 brdr"
+            loop="true"
+            autoplay="autoplay"
+            controls="controls"
+            id="vid"
+            muted
+          >
+            <source src="/assets/educon.mp4" type="video/mp4" />
+          </video>
+        </SwiperSlide>
+        {/* <SwiperSlide><img src={Appreciation} class="d-block w-100" alt="..." /></SwiperSlide>
                 <SwiperSlide><img src={Appreciation} class="d-block w-100" alt="..." /></SwiperSlide>
                 <SwiperSlide><img src={Appreciation} class="d-block w-100" alt="..." /></SwiperSlide>
                 <SwiperSlide><img src={Appreciation} class="d-block w-100" alt="..." /></SwiperSlide>
@@ -52,8 +52,8 @@ export default function Slider() {
                 <SwiperSlide><img src={Appreciation} class="d-block w-100" alt="..." /></SwiperSlide>
                 <SwiperSlide><img src={Appreciation} class="d-block w-100" alt="..." /></SwiperSlide>
                 <SwiperSlide><img src={Appreciation} class="d-block w-100" alt="..." /></SwiperSlide>  */}
-            </Swiper>
-            {/* <div className="bord">
+      </Swiper>
+      {/* <div className="bord">
                 <div id="carouselExampleIndicators" class="carousel slide set-posi" data-ride="carousel" >
                     <ol class="carousel-indicators">
                         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -83,6 +83,6 @@ export default function Slider() {
                 </div>
                 <button className='btn add-clor w-100'>Get Help</button>
             </div> */}
-        </>
-    )
+    </>
+  );
 }

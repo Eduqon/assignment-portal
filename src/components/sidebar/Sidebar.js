@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { SideBarStore } from "../../services/stores/sidebar";
 // import { Link } from "react-router-dom";
 import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import "../../index.css";
 // import Assignments from '../../pages/admin/Assignments';
 import { clickk } from "../../pages/admin/Assignments";
 import { SubjectShow } from "../../pages/admin/Subjects";

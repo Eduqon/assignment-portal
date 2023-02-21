@@ -38,9 +38,9 @@ import { ClientStore } from "../../services/stores/client_store";
 import validator from "validator";
 import axios from "axios";
 import { apiUrl } from "../../services/contants";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/Router";
 
-import "../../MyCustom.css";
+// import "../../styles/globals.css";
 import MegaMenu from "./MegaMenu";
 
 // import Button from 'react-bootstrap/Button';
@@ -54,7 +54,7 @@ export function NavbarHome() {
   const email = ClientStore((state) => state.id);
   const setEmail = ClientStore((state) => state.setId);
 
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   function EmailModal() {
     return (
@@ -90,7 +90,7 @@ export function NavbarHome() {
                     if (response.data.success === true) {
                       setEmail(email.value);
                       localStorage.setItem("clientEmail", email.value);
-                      navigate("/assignments");
+                      navigate.replace("/assignments");
                     } else if (response.status == 203) {
                       localStorage.setItem("clientToken", response.data.token);
                       clientToken = response.data.token;
@@ -108,7 +108,7 @@ export function NavbarHome() {
                         );
                         if (response.data.success === true) {
                           localStorage.setItem("clientEmail", email.value);
-                          navigate("/assignments");
+                          navigate.replace("/assignments");
                         }
                       } catch (error) {
                         console.log("err");
@@ -164,7 +164,6 @@ export function NavbarHome() {
             <button
               id="clr"
               onClick={async () => {
-                console.log(email);
                 if (validator.isEmail(email)) {
                   try {
                     const response = await axios.post(
@@ -174,7 +173,7 @@ export function NavbarHome() {
                       }
                     );
                     if (response.data.success === true) {
-                      navigate("/assignments");
+                      navigate.replace("/assignments");
                     } else {
                       window.alert(response.data["msg"]);
                     }
@@ -182,7 +181,6 @@ export function NavbarHome() {
                     window.alert(err.response.data["msg"]);
                   }
                 } else {
-                  console.log("Email Modal");
                   onModalOpen();
                 }
               }}

@@ -38,22 +38,35 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { apiUrl } from "../../services/contants";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/router";
 
 function CP1DoneOrders({ incrementCounter }) {
   const [assignments, setAssignments] = useState([]);
   const [experts, setExperts] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [inputValue, setInputValue] = useState({
+    date: "",
+    time: "",
+  });
 
   let assignmentList = [];
   let expertList = [];
 
-  let navigate = useNavigate();
+  let navigate = useRouter();
 
   const ExpertModalDis = useDisclosure();
   const QcModalDis = useDisclosure();
 
   const [selectedIndex, setSelectedIndex] = useState();
+  const [sendRequest, setSendRequest] = useState([]);
+
+  useEffect(() => {
+    _fetchAssignments();
+    const requests =
+      typeof window !== "undefined" &&
+      JSON.parse(localStorage.getItem("sendRequest"));
+    setSendRequest(requests);
+  }, []);
 
   async function _fetchSubjects() {
     try {
@@ -82,7 +95,7 @@ function CP1DoneOrders({ incrementCounter }) {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -157,7 +170,7 @@ function CP1DoneOrders({ incrementCounter }) {
                           onClick={async () => {
                             let userToken = localStorage.getItem("userToken");
                             if (userToken == null) {
-                              navigate("/admin/login");
+                              navigate.replace("/admin/login");
                             }
 
                             let config = {
@@ -228,27 +241,21 @@ function CP1DoneOrders({ incrementCounter }) {
 
   async function openExpertModal(index) {
     setSelectedIndex(index);
+    setSendRequest("");
     await fetchExperts("");
     ExpertModalDis.onOpen();
   }
 
   function ExpertModal() {
-    let checkedListTemp = [];
     const [error, setError] = useState(false);
-    const [inputValue, setInputValue] = useState({
-      date: "",
-      time: "",
-    });
-    const [sendRequest, setSendRequest] = useState(
-      [] || JSON.parse(window.localStorage.getItem("sendRequest"))
-    );
 
     const sendRequestIcon = (info) => {
       setSendRequest([...sendRequest, info._id]);
-      window.localStorage.setItem(
-        "sendRequest",
-        JSON.stringify(Array.from(new Set([...sendRequest, info._id])))
-      );
+      typeof window !== "undefined" &&
+        window.localStorage.setItem(
+          "sendRequest",
+          JSON.stringify(Array.from(new Set([...sendRequest, info._id])))
+        );
     };
 
     const closeModal = () => {
@@ -259,7 +266,6 @@ function CP1DoneOrders({ incrementCounter }) {
       ExpertModalDis.onClose();
     };
 
-    let requestData = JSON.parse(window.localStorage.getItem("sendRequest"));
     return (
       <Modal
         size={"5xl"}
@@ -342,7 +348,7 @@ function CP1DoneOrders({ incrementCounter }) {
                       <Td>{expert.name}</Td>
                       <Td>{expert.subject}</Td>
                       <Td>
-                        {requestData && requestData.includes(expert._id) && (
+                        {sendRequest && sendRequest.includes(expert._id) && (
                           <span>✅</span>
                         )}
                       </Td>
@@ -377,14 +383,14 @@ function CP1DoneOrders({ incrementCounter }) {
                             let iso = deadline?.toISOString();
 
                             if (userToken == null) {
-                              navigate("/admin/login");
+                              navigate.replace("/admin/login");
                             }
 
                             let config = {
                               headers: { Authorization: `Bearer ${userToken}` },
                             };
                             try {
-                              await sendRequestIcon(expert);
+                              sendRequestIcon(expert);
                               const response = await axios.post(
                                 apiUrl + "/expert/assignment/ask",
                                 {
@@ -407,14 +413,15 @@ function CP1DoneOrders({ incrementCounter }) {
                               incrementCounter("Expert Asked");
                               let resdata = response.data;
                               if (resdata.success) {
-                                window.alert("Expert Asked for Confirmation");
+                                typeof window !== "undefined" &&
+                                  window.alert("Expert Asked for Confirmation");
                               }
                             } catch (err) {
                               console.log(err);
                             }
                           }}
                         >
-                          {requestData && requestData.includes(expert._id)
+                          {sendRequest && sendRequest.includes(expert._id)
                             ? "Re-Send Request"
                             : "Send Request"}
                         </Button>
@@ -441,7 +448,7 @@ function CP1DoneOrders({ incrementCounter }) {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -549,7 +556,7 @@ function CP1DoneOrders({ incrementCounter }) {
                     let userName = localStorage.getItem("userName");
                     let userToken = localStorage.getItem("userToken");
                     if (userToken == null) {
-                      navigate("/admin/login");
+                      navigate.replace("/admin/login");
                     }
                     let config = {
                       headers: { Authorization: `Bearer ${userToken}` },
@@ -663,7 +670,7 @@ function CP1DoneOrders({ incrementCounter }) {
                             onClick={async () => {
                               let userToken = localStorage.getItem("userToken");
                               if (userToken == null) {
-                                navigate("/admin/login");
+                                navigate.replace("/admin/login");
                               }
 
                               let config = {
@@ -705,15 +712,11 @@ function CP1DoneOrders({ incrementCounter }) {
     );
   }
 
-  useEffect(() => {
-    _fetchAssignments();
-  }, []);
-
   async function _fetchAssignments() {
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
-        navigate("/admin/login");
+        navigate.replace("/admin/login");
       }
 
       let config = {
@@ -758,8 +761,6 @@ function CP1DoneOrders({ incrementCounter }) {
         console.log("No CP1 Pending Orders");
       }
       setAssignments(assignmentList);
-      console.log(assignmentList, "cp1 done Data");
-      console.log(assignments);
     } catch (err) {
       console.log(err);
     }
@@ -868,7 +869,9 @@ function CP1DoneOrders({ incrementCounter }) {
                           ? "flex"
                           : "none"
                       }
-                      onClick={async () => openExpertModal(index)}
+                      onClick={async () =>
+                        openExpertModal(index, assignment.id)
+                      }
                     >
                       Assign Expert
                     </Button>
@@ -1029,7 +1032,7 @@ function CP1DoneOrders({ incrementCounter }) {
                                           : "none"
                                       }
                                       onClick={async () =>
-                                        openExpertModal(index)
+                                        openExpertModal(index, assignment.id)
                                       }
                                     >
                                       Assign Expert

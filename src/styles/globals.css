@@ -1,4 +1,4 @@
-*root {
+:root {
   --blue: #2e8beec4;
   --yellow: #febd58;
   --texxt: #454545;
@@ -10,6 +10,278 @@
   );
   --red: #eb174cea;
   --iconcolor: #5a9cd5;
+  --navred: #dc3545;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+/* dropdown */
+ul.drop {
+  display: none;
+  cursor: pointer;
+  /* transition: 3 ease-in-out; */
+}
+
+ul.dropSupport {
+  display: none;
+  cursor: pointer;
+}
+
+ul.dropSupport li {
+  list-style: none;
+  padding: 10px 10px 10px 15px;
+  /* border: 1px solid rgba(128, 128, 128, 0.493); */
+}
+
+ul.drop li {
+  list-style: none;
+  padding: 10px 10px 10px 15px;
+  /* border: 1px solid rgba(128, 128, 128, 0.493); */
+}
+
+ul.dropOrder li {
+  list-style: none;
+  padding: 10px 10px 10px 15px;
+  /* border: 1px solid rgba(128, 128, 128, 0.493); */
+}
+
+ul.dropOrder li {
+  list-style: none;
+  padding: 10px 10px 10px 15px;
+  /* border: 1px solid rgba(128, 128, 128, 0.493); */
+}
+
+.css-vcewj5:focus {
+  box-shadow: none !important;
+}
+
+.css-mcpu91 {
+  font-weight: 500;
+  padding-bottom: 20px;
+}
+
+.css-mcpu91 a {
+  font-weight: 500;
+}
+
+/* accodion */
+.clickShow {
+  display: block;
+}
+
+.sideBarNone {
+  display: none;
+}
+.fiKefb {
+  position: fixed !important;
+  top: 47% !important;
+  left: 85%;
+}
+.react-calendar {
+  width: 500px;
+  max-width: 100%;
+  background: white;
+  border: 1px solid #a0a096;
+  border-radius: 5px;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 5px;
+}
+.react-calendar--doubleView {
+  width: 700px;
+}
+.react-calendar--doubleView .react-calendar__viewContainer {
+  display: flex;
+  margin: -0.5em;
+}
+.react-calendar--doubleView .react-calendar__viewContainer > * {
+  width: 50%;
+  margin: 0.5em;
+}
+.react-calendar,
+.react-calendar *,
+.react-calendar *:before,
+.react-calendar *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.react-calendar button {
+  margin: 0;
+  border: 0;
+  outline: none;
+  height: 32px;
+}
+.react-calendar button:enabled:hover {
+  cursor: pointer;
+}
+.react-calendar__navigation {
+  align-items: center;
+  display: flex;
+  height: 50px;
+}
+.react-calendar__navigation button {
+  min-width: 44px;
+  background: none;
+}
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.75em;
+}
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5em;
+}
+.react-calendar__month-view__weekNumbers .react-calendar__tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75em;
+  font-weight: bold;
+}
+.react-calendar__month-view__days__day--weekend {
+  color: #d10000;
+}
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #757575;
+}
+.react-calendar__year-view .react-calendar__tile,
+.react-calendar__decade-view .react-calendar__tile,
+.react-calendar__century-view .react-calendar__tile {
+  padding: 2em 0.5em;
+}
+.react-calendar__tile {
+  max-width: 100%;
+  padding: 10px 6.6667px;
+  background: none;
+  text-align: center;
+  line-height: 16px;
+}
+.react-calendar__tile:disabled {
+  background-color: #f0f0f0;
+}
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #e6e6e6;
+}
+.react-calendar__tile--now {
+  background: #dcfafa;
+}
+.react-calendar__tile--now:enabled:hover,
+.react-calendar__tile--now:enabled:focus {
+  background: #dcfafa;
+}
+.react-calendar__tile--hasActive {
+  background: #76baff;
+}
+.react-calendar__tile--hasActive:enabled:hover,
+.react-calendar__tile--hasActive:enabled:focus {
+  background: #a9d4ff;
+}
+.react-calendar--selectRange .react-calendar__tile--hover {
+  background-color: #e6e6e6;
+}
+
+@media screen and (max-width: 480px) {
+  section#popover-content-11 {
+    position: relative !important;
+    top: -20px !important;
+  }
+  div#tabs-11--tabpanel-0 {
+    padding: 0px !important;
+  }
+
+  .css-sxyykg {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ShowSideClick {
+    display: none;
+  }
+
+  .ShowSideClick.active {
+    display: block;
+  }
+
+  td.css-1rzgi6j {
+    padding: 10;
+    font-size: 13px;
+  }
+
+  .sideBarNone {
+    display: block;
+  }
+
+  /* accordion  */
+  div#accordion-panel-505 {
+    padding: 0;
+  }
+
+  tbody.paddZero.css-0 td {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  table.chakra-table.pa-z.css-5605sr Th {
+    padding-left: 8px;
+    padding-right: 5px;
+  }
+  thead.pa-ze.css-1dpunnv Th {
+    padding: 10px 0px 10px 5px;
+  }
+  div#accordion-panel-166 {
+    padding: 0;
+  }
+
+  div#accordion-panel-418 {
+    padding: 0;
+  }
+
+  div#accordion-panel-422 {
+    padding: 0;
+  }
+  table.pa-zer th {
+    padding: 10px 0px 10px 15px !important;
+  }
+  table.pa-zer td {
+    padding: 10px 5px 10px 0px !important;
+  }
+  button.chakra-button.btn-Neww.css-taj3dd {
+    border: 1px solid gray;
+    box-shadow: 1px 0.2px 9px grey;
+    /* text-align: center; */
+    /* display: flex; */
+  }
+  table.pad-setting td {
+    padding: 10px 0px;
+  }
+  table.pad-setting button {
+    background-color: rgb(230, 227, 227);
+  }
+
+  table.select-td th {
+    padding: 10px 0px 10px 10px;
+  }
+  table.select-td td {
+    padding: 15px 0px 15px 0px;
+  }
+  .hyi {
+    background-color: none;
+  }
+  .hyi.active {
+    background-color: #00fbbd;
+  }
 }
 
 .Mycontainer {
@@ -203,7 +475,7 @@ button.btn.btn-mine::after {
 }
 
 .btn-Set {
-  background-color: var(--red);
+  background-color: var(--navred);
   /* opacity: 0.9; */
   color: white;
   font-weight: 600;
@@ -212,7 +484,7 @@ button.btn.btn-mine::after {
 }
 
 #clr {
-  background-color: var(--red);
+  background-color: var(--navred);
   /* opacity: 0.9; */
   color: white;
   padding: 10px 20px;
@@ -227,8 +499,8 @@ button.btn.btn-mine::after {
 }
 
 /* #myHover:hover{
-
-} */
+  
+  } */
 #set-left {
   position: relative !important;
   /* left: 20% !important; */
@@ -238,9 +510,9 @@ button.btn.btn-mine::after {
 }
 
 /* div#set-left {
-    osition: relative;
-    left: 10%;
-} */
+      osition: relative;
+      left: 10%;
+  } */
 #drop-menu {
   display: none;
   cursor: pointer;
@@ -255,7 +527,7 @@ button.btn.btn-mine::after {
 
 .set-font {
   font-size: 13px;
-  background-color: var(--red);
+  background-color: var(--navred);
   margin: 0;
   color: white;
 }
@@ -282,8 +554,8 @@ button.btn.btn-mine::after {
 }
 
 /* .set_h {
-    width: 10%;
-} */
+      width: 10%;
+  } */
 .set_h img {
   height: auto;
   width: auto !important;
@@ -303,7 +575,7 @@ button.btn.btn-mine::after {
   position: relative;
   border-radius: 10px;
   /* top: 10%;
-    width: 80%; */
+      width: 80%; */
   height: auto;
   overflow: hidden;
 }
@@ -331,7 +603,7 @@ button.btn.btn-mine::after {
   box-shadow: 1px 1px 10px rgba(128, 128, 128, 0.445);
   padding: 10px 20px;
   /* position: fixed;
-    top: 0; */
+      top: 0; */
 }
 
 .activee {
@@ -462,12 +734,12 @@ button.btn.btn-mine::after {
 }
 
 /* button#popover-trigger-11 {
-    color: white !important;
-    background: var(--red) !important;
-    opacity: 1;
-    z-index: 5;
-    border
-} */
+      color: white !important;
+      background: var(--red) !important;
+      opacity: 1;
+      z-index: 5;
+      border
+  } */
 
 .second_footer {
   text-align: center;
@@ -566,7 +838,7 @@ img.img-sizw {
 }
 
 .set-back {
-  background: var(--red);
+  background: var(--navred);
   /* height: 20vh; */
   margin-top: 20px;
   padding-top: 20px;
@@ -673,7 +945,7 @@ div#gb-widget-2171 {
 
 .bg-image {
   /* The image used */
-  background-image: url("./assets/three.webp");
+  background-image: url("/assets/three.webp");
 
   /* Add the blur effect */
 
@@ -690,13 +962,13 @@ div#gb-widget-2171 {
 }
 
 button.set-icon-design {
-  background: var(--red);
+  background: var(--navred);
   /* width: 5vw; */
   /* height: 5vh; */
   padding: 10px 25px;
   border-radius: 50px;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .set-chat {
@@ -950,7 +1222,7 @@ button.set-icon-design {
 }
 
 .set-Back {
-  background-image: url("./assets/three.webp");
+  background-image: url("/assets/three.webp");
   height: 50vh;
   background-position: center;
   background-repeat: no-repeat;
@@ -1024,6 +1296,100 @@ h1.set-contact {
 #schema-section h2 {
   font-size: 20px !important;
 }
+.whatsapp_float {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  /* bottom: 40px; */
+  top: 65%;
+  left: 0px;
+  background-color: #25d366;
+  color: #fff;
+  border-radius: 0px;
+  text-align: center;
+  font-size: 25px;
+  /* box-shadow: 2px 2px 3px #999; */
+  z-index: 100;
+}
+
+.whatsapp-icon {
+  margin-top: 10px;
+}
+
+/* Services CSS */
+.service-body h1 {
+  font-size: 2.5rem;
+}
+.service-body h2 {
+  font-size: 20px;
+}
+.service-body h3 {
+  font-size: 20px;
+}
+.service-body h4 {
+  font-size: 1.5rem;
+}
+.service-body h5 {
+  font-size: 1.25rem;
+}
+.service-body h6 {
+  font-size: 1rem;
+}
+.service-body a {
+  color: #dc3545;
+}
+.service-body img {
+  margin: 0 auto;
+}
+#bottom-section ul,
+#bottom-section ol {
+  padding: 0px 25px !important;
+}
+
+/* for mobile */
+@media screen and (max-width: 767px) {
+  .whatsapp-icon {
+    margin-top: 10px;
+  }
+
+  .whatsapp_float {
+    width: 40px;
+    height: 40px;
+    bottom: 20px;
+    right: 10px;
+    font-size: 22px;
+  }
+
+  #bottom-section ul,
+  #bottom-section ol {
+    padding: 0px 20px !important;
+  }
+  .service-body {
+    padding: 0 !important;
+  }
+  #assignment-section {
+    margin-top: 0 !important;
+  }
+  #schema-section {
+    padding: 0 !important;
+  }
+  #heading-section {
+    width: 100% !important;
+  }
+  #top-section {
+    padding: 0px 2rem !important;
+  }
+  #form-section {
+    padding: 1rem !important;
+  }
+  #bottom-section {
+    padding: 0px 50px !important;
+  }
+  #right-section {
+    margin-top: 0px !important;
+    padding: 3rem !important;
+  }
+}
 @media (max-width: 868px) {
   #number-section {
     margin-right: 0px !important;
@@ -1083,14 +1449,14 @@ h1.set-contact {
   }
 
   button.set-icon-design {
-    background: var(--red);
+    background: var(--navred);
     /* width: 5vw; */
     /* height: 5vh; */
     padding: 10px 20px;
     border-radius: 50px;
     display: flex;
     font-size: 10px;
-    justify-content: end;
+    justify-content: flex-end;
   }
 
   .set-pos-blur {
@@ -1105,7 +1471,7 @@ h1.set-contact {
 
   .bg-image {
     /* The image used */
-    background-image: url("./assets/three.webp");
+    background-image: url("/assets/three.webp");
 
     /* Add the blur effect */
     filter: blur(5px);
@@ -1158,14 +1524,14 @@ h1.set-contact {
     box-shadow: 1px 1px 10px rgba(128, 128, 128, 0.466);
   }
   /* .section1 {
-        background: #e0e0e03d;
-        border: 1px solid rgba(133, 133, 133, 0.521);
-        margin: 15px;
-        margin: 0 15px 0 15px;
-        padding: 30px 12px 0 12px;
-        margin-top: 6%;
-        box-shadow: 1px 1px 10px rgba(128, 128, 128, 0.466);
-    } */
+          background: #e0e0e03d;
+          border: 1px solid rgba(133, 133, 133, 0.521);
+          margin: 15px;
+          margin: 0 15px 0 15px;
+          padding: 30px 12px 0 12px;
+          margin-top: 6%;
+          box-shadow: 1px 1px 10px rgba(128, 128, 128, 0.466);
+      } */
   .section2 {
     background: #e0e0e03d;
     border: 1px solid rgba(133, 133, 133, 0.521);
@@ -1356,7 +1722,7 @@ h1.set-contact {
   }
 
   #clr {
-    background-color: var(--red);
+    background-color: var(--navred);
     /* opacity: 0.9; */
     color: white;
     padding: 10px 15px;
