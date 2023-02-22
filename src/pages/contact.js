@@ -7,6 +7,7 @@ import { FaRegAddressCard, FaPhoneAlt } from "react-icons/fa";
 import HeadLayout from "../components/home_components/HeadLayout";
 import { gql } from "@apollo/client";
 import { client } from "./_app";
+import AnonymousChat from "../components/chat_components/anonymous_chat";
 const SERVICES = gql`
   query {
     services(pagination: { limit: 100 }) {
@@ -20,10 +21,26 @@ const SERVICES = gql`
     }
   }
 `;
-export default function Contact({ services }) {
+const SEOTAGS = gql`
+  query {
+    seotags(pagination: { limit: 100 }) {
+      data {
+        id
+        attributes {
+          title
+          Slug
+          description
+          keyword
+          cntag
+        }
+      }
+    }
+  }
+`;
+export default function Contact({ services, seotags }) {
   return (
     <>
-      <HeadLayout slug="contact" />
+      <HeadLayout slug="contact" seotags={seotags} />
       <Link href="/samples">
         <img src="/assets/foter/View.png" alt="" className="view" />
       </Link>
@@ -110,6 +127,7 @@ export default function Contact({ services }) {
       </div>
 
       <FooterHome />
+      <AnonymousChat />
     </>
   );
 }
@@ -118,10 +136,14 @@ export async function getStaticProps() {
   const { data: serviceData } = await client.query({
     query: SERVICES,
   });
+  const { data } = await client.query({
+    query: SEOTAGS,
+  });
 
   return {
     props: {
       services: serviceData.services,
+      seotags: data.seotags,
     },
   };
 }

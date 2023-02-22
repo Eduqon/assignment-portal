@@ -7,6 +7,7 @@ import { NavbarHome } from "../components/home_components/navbar_home";
 import Testomonial from "../components/home_components/Testomonial";
 import { client } from "./_app";
 import { gql } from "@apollo/client";
+import AnonymousChat from "../components/chat_components/anonymous_chat";
 
 const SERVICES = gql`
   query {
@@ -21,11 +22,27 @@ const SERVICES = gql`
     }
   }
 `;
+const SEOTAGS = gql`
+  query {
+    seotags(pagination: { limit: 100 }) {
+      data {
+        id
+        attributes {
+          title
+          Slug
+          description
+          keyword
+          cntag
+        }
+      }
+    }
+  }
+`;
 
-export default function Review({ services }) {
+export default function Review({ services, seotags }) {
   return (
     <>
-      <HeadLayout slug="reviews" />
+      <HeadLayout slug="reviews" seotags={seotags} />
       <Link href="/samples">
         <img src="/assets/foter/View.png" alt="" className="view" />
       </Link>
@@ -37,6 +54,7 @@ export default function Review({ services }) {
       </div>
       <Testomonial />
       <FooterHome />
+      <AnonymousChat />
     </>
   );
 }
@@ -45,10 +63,14 @@ export async function getStaticProps() {
   const { data: serviceData } = await client.query({
     query: SERVICES,
   });
+  const { data } = await client.query({
+    query: SEOTAGS,
+  });
 
   return {
     props: {
       services: serviceData.services,
+      seotags: data.seotags,
     },
   };
 }

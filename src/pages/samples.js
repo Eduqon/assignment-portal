@@ -11,6 +11,7 @@ import Link from "next/link";
 import HeadLayout from "../components/home_components/HeadLayout";
 import { gql } from "@apollo/client";
 import { client } from "./_app";
+import AnonymousChat from "../components/chat_components/anonymous_chat";
 
 const SERVICES = gql`
   query {
@@ -25,11 +26,27 @@ const SERVICES = gql`
     }
   }
 `;
+const SEOTAGS = gql`
+  query {
+    seotags(pagination: { limit: 100 }) {
+      data {
+        id
+        attributes {
+          title
+          Slug
+          description
+          keyword
+          cntag
+        }
+      }
+    }
+  }
+`;
 
-export default function Samples({ services }) {
+export default function Samples({ services, seotags }) {
   return (
     <>
-      <HeadLayout slug="samples" />
+      <HeadLayout slug="samples" seotags={seotags} />
       <Link href="/samples">
         <img src="/assets/foter/View.png" alt="" className="view" />
       </Link>
@@ -395,6 +412,7 @@ export default function Samples({ services }) {
       </div>
 
       <FooterHome />
+      <AnonymousChat />
     </>
   );
 }
@@ -404,9 +422,14 @@ export async function getStaticProps() {
     query: SERVICES,
   });
 
+  const { data } = await client.query({
+    query: SEOTAGS,
+  });
+
   return {
     props: {
       services: serviceData.services,
+      seotags: data.seotags,
     },
   };
 }

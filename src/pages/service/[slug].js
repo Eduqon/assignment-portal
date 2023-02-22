@@ -35,6 +35,7 @@ import Faqschema from "../../components/home_components/Faqschema";
 import Link from "next/link";
 import { client } from "../_app";
 import Custom404 from "../404";
+import AnonymousChat from "../../components/chat_components/anonymous_chat";
 
 const SERVICE = gql`
   query GetServices($slug: String!) {
@@ -67,6 +68,7 @@ const SERVICES = gql`
       data {
         id
         attributes {
+          title
           slug
         }
       }
@@ -569,6 +571,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
           </Box>
           <Testomonial />
           <FooterHome className="w-100" />
+          <AnonymousChat />
         </>
       ) : (
         <Custom404 />

@@ -26,8 +26,27 @@ import { AssignmentFormStore } from "../services/stores/assignment_form_store";
 import { ClientStore } from "../services/stores/client_store";
 import { useRouter } from "next/router";
 import { apiUrl } from "../services/contants";
+import { gql } from "@apollo/client";
+import { client } from "./_app";
+import Link from "next/link";
+import { FooterHome } from "../components/home_components/footer_home";
+import AnonymousChat from "../components/chat_components/anonymous_chat";
 
-const Custom404 = () => {
+const SERVICES = gql`
+  query {
+    services(pagination: { limit: 100 }) {
+      data {
+        id
+        attributes {
+          title
+          slug
+        }
+      }
+    }
+  }
+`;
+
+const Custom404 = ({ services }) => {
   const [pages, setPages] = useState(0);
 
   const setEmail = ClientStore((state) => state.setId);
@@ -164,7 +183,10 @@ const Custom404 = () => {
         <meta charSet="utf-8" />
         <title>OOPS! 404 Error</title>
       </Head>
-      <NavbarHome />
+      <Link href="/samples">
+        <img src="/assets/foter/View.png" alt="" className="view" />
+      </Link>
+      <NavbarHome services={services} />
       <div className="row w-100">
         <div className="col-md-6 col-12 d-flex align-items-end flex-column justify-content-center p-4">
           <Box display={{ base: "none", sm: "block", md: "block" }}>
@@ -286,8 +308,22 @@ const Custom404 = () => {
           </Stack>
         </div>
       </div>
+      <FooterHome />
+      <AnonymousChat />
     </>
   );
 };
 
 export default Custom404;
+
+export async function getStaticProps() {
+  const { data: serviceData } = await client.query({
+    query: SERVICES,
+  });
+
+  return {
+    props: {
+      services: serviceData.services,
+    },
+  };
+}
