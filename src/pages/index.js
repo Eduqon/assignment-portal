@@ -38,6 +38,7 @@ const SEOTAGS = gql`
 `;
 
 function Home({ services, seotags }) {
+  console.log({ services });
   return (
     <>
       <HeadLayout slug="home" seotags={seotags} />
