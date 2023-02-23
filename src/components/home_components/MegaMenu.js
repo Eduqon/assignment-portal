@@ -3,7 +3,6 @@ import Link from "next/link";
 import { IoIosArrowForward } from "react-icons/io";
 
 export default function MegaMenu({ services }) {
-  console.log({ services });
   const drop = useRef();
   const mobileNavbar = useRef();
   const desktopNavbar = useRef();
