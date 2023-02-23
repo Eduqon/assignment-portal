@@ -3,24 +3,7 @@ import { NavbarOrderDetails } from "../components/order_details_components/navba
 import { FooterOrderDetails } from "../components/order_details_components/footer_order_details";
 import HeadLayout from "../components/home_components/HeadLayout";
 import { client } from "./_app";
-import { gql } from "@apollo/client";
-
-const SEOTAGS = gql`
-  query {
-    seotags(pagination: { limit: 100 }) {
-      data {
-        id
-        attributes {
-          title
-          Slug
-          description
-          keyword
-          cntag
-        }
-      }
-    }
-  }
-`;
+import { SEOTAGS } from "../services/contants";
 
 export default function OrderDetails({ seotags }) {
   return (

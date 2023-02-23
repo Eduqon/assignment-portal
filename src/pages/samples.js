@@ -9,39 +9,9 @@ import { AiOutlineWhatsApp } from "react-icons/ai";
 import { IoMdArrowDropright } from "react-icons/io";
 import Link from "next/link";
 import HeadLayout from "../components/home_components/HeadLayout";
-import { gql } from "@apollo/client";
 import { client } from "./_app";
 import AnonymousChat from "../components/chat_components/anonymous_chat";
-
-const SERVICES = gql`
-  query {
-    services(pagination: { limit: 100 }) {
-      data {
-        id
-        attributes {
-          title
-          slug
-        }
-      }
-    }
-  }
-`;
-const SEOTAGS = gql`
-  query {
-    seotags(pagination: { limit: 100 }) {
-      data {
-        id
-        attributes {
-          title
-          Slug
-          description
-          keyword
-          cntag
-        }
-      }
-    }
-  }
-`;
+import { SEOTAGS, SERVICES } from "../services/contants";
 
 export default function Samples({ services, seotags }) {
   return (

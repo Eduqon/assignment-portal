@@ -25,26 +25,12 @@ import { NavbarHome } from "../components/home_components/navbar_home";
 import { AssignmentFormStore } from "../services/stores/assignment_form_store";
 import { ClientStore } from "../services/stores/client_store";
 import { useRouter } from "next/router";
-import { apiUrl } from "../services/contants";
+import { apiUrl, SERVICES } from "../services/contants";
 import { gql } from "@apollo/client";
 import { client } from "./_app";
 import Link from "next/link";
 import { FooterHome } from "../components/home_components/footer_home";
 import AnonymousChat from "../components/chat_components/anonymous_chat";
-
-const SERVICES = gql`
-  query {
-    services(pagination: { limit: 100 }) {
-      data {
-        id
-        attributes {
-          title
-          slug
-        }
-      }
-    }
-  }
-`;
 
 const Custom404 = ({ services }) => {
   const [pages, setPages] = useState(0);

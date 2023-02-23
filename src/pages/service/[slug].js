@@ -20,12 +20,17 @@ import {
 import { useEffect, useState } from "react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { isMobile } from "react-device-detect";
-import { gql } from "@apollo/client";
 import validator from "validator";
 import { ClientStore } from "../../services/stores/client_store";
 import { AssignmentFormStore } from "../../services/stores/assignment_form_store";
 import axios from "axios";
-import { apiUrl, mediaUrl } from "../../services/contants";
+import {
+  apiUrl,
+  FAQSCHEMA,
+  mediaUrl,
+  SERVICE,
+  SERVICES,
+} from "../../services/contants";
 import { useRouter } from "next/router";
 import useFetch from "../../hooks/useFetch";
 import { NavbarHome } from "../../components/home_components/navbar_home";
@@ -36,60 +41,6 @@ import Link from "next/link";
 import { client } from "../_app";
 import Custom404 from "../404";
 import AnonymousChat from "../../components/chat_components/anonymous_chat";
-
-const SERVICE = gql`
-  query GetServices($slug: String!) {
-    services(filters: { slug: { eq: $slug } }) {
-      data {
-        id
-        attributes {
-          title
-          slug
-          body_title
-          body_1
-          body_2
-          Sub_Title
-          Sub_Title_2
-          Seodescription
-          Seokeyword
-          Formheading
-          Seotitle
-          Seocntag
-          SchemaTitle
-        }
-      }
-    }
-  }
-`;
-
-const SERVICES = gql`
-  query {
-    services(pagination: { limit: 100 }) {
-      data {
-        id
-        attributes {
-          title
-          slug
-        }
-      }
-    }
-  }
-`;
-
-const FAQSCHEMA = gql`
-  query {
-    faqschemas(pagination: { limit: 1000 }) {
-      data {
-        id
-        attributes {
-          Slug
-          questionName
-          questionAnswer
-        }
-      }
-    }
-  }
-`;
 
 export default function NavService({ servicesdata, services, faqschemas }) {
   const [pages, setPages] = useState(0);

@@ -6,38 +6,8 @@ import MegaMenu from "../components/home_components/MegaMenu";
 import { NavbarHome } from "../components/home_components/navbar_home";
 import Testomonial from "../components/home_components/Testomonial";
 import { client } from "./_app";
-import { gql } from "@apollo/client";
 import AnonymousChat from "../components/chat_components/anonymous_chat";
-
-const SERVICES = gql`
-  query {
-    services(pagination: { limit: 100 }) {
-      data {
-        id
-        attributes {
-          title
-          slug
-        }
-      }
-    }
-  }
-`;
-const SEOTAGS = gql`
-  query {
-    seotags(pagination: { limit: 100 }) {
-      data {
-        id
-        attributes {
-          title
-          Slug
-          description
-          keyword
-          cntag
-        }
-      }
-    }
-  }
-`;
+import { SEOTAGS, SERVICES } from "../services/contants";
 
 export default function Review({ services, seotags }) {
   return (

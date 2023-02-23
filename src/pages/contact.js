@@ -5,38 +5,10 @@ import { FooterHome } from "../components/home_components/footer_home";
 import { FcContacts } from "react-icons/fc";
 import { FaRegAddressCard, FaPhoneAlt } from "react-icons/fa";
 import HeadLayout from "../components/home_components/HeadLayout";
-import { gql } from "@apollo/client";
 import { client } from "./_app";
 import AnonymousChat from "../components/chat_components/anonymous_chat";
-const SERVICES = gql`
-  query {
-    services(pagination: { limit: 100 }) {
-      data {
-        id
-        attributes {
-          title
-          slug
-        }
-      }
-    }
-  }
-`;
-const SEOTAGS = gql`
-  query {
-    seotags(pagination: { limit: 100 }) {
-      data {
-        id
-        attributes {
-          title
-          Slug
-          description
-          keyword
-          cntag
-        }
-      }
-    }
-  }
-`;
+import { SEOTAGS, SERVICES } from "../services/contants";
+
 export default function Contact({ services, seotags }) {
   return (
     <>
