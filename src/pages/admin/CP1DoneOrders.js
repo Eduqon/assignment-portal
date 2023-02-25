@@ -44,10 +44,6 @@ function CP1DoneOrders({ incrementCounter }) {
   const [assignments, setAssignments] = useState([]);
   const [experts, setExperts] = useState([]);
   const [subjects, setSubjects] = useState([]);
-  const [inputValue, setInputValue] = useState({
-    date: "",
-    time: "",
-  });
 
   let assignmentList = [];
   let expertList = [];
@@ -58,14 +54,9 @@ function CP1DoneOrders({ incrementCounter }) {
   const QcModalDis = useDisclosure();
 
   const [selectedIndex, setSelectedIndex] = useState();
-  const [sendRequest, setSendRequest] = useState([]);
 
   useEffect(() => {
     _fetchAssignments();
-    const requests =
-      typeof window !== "undefined" &&
-      JSON.parse(localStorage.getItem("sendRequest"));
-    setSendRequest(requests);
   }, []);
 
   async function _fetchSubjects() {
@@ -241,21 +232,20 @@ function CP1DoneOrders({ incrementCounter }) {
 
   async function openExpertModal(index) {
     setSelectedIndex(index);
-    setSendRequest("");
     await fetchExperts("");
     ExpertModalDis.onOpen();
   }
 
   function ExpertModal() {
     const [error, setError] = useState(false);
+    const [inputValue, setInputValue] = useState({
+      date: "",
+      time: "",
+    });
+    const [items, setItems] = useState([]);
 
     const sendRequestIcon = (info) => {
-      setSendRequest([...sendRequest, info._id]);
-      typeof window !== "undefined" &&
-        window.localStorage.setItem(
-          "sendRequest",
-          JSON.stringify(Array.from(new Set([...sendRequest, info._id])))
-        );
+      setItems([...items, info._id]);
     };
 
     const closeModal = () => {
@@ -265,7 +255,6 @@ function CP1DoneOrders({ incrementCounter }) {
       });
       ExpertModalDis.onClose();
     };
-
     return (
       <Modal
         size={"5xl"}
@@ -348,9 +337,7 @@ function CP1DoneOrders({ incrementCounter }) {
                       <Td>{expert.name}</Td>
                       <Td>{expert.subject}</Td>
                       <Td>
-                        {sendRequest && sendRequest.includes(expert._id) && (
-                          <span>✅</span>
-                        )}
+                        {items && items.includes(expert._id) && <span>✅</span>}
                       </Td>
                       <Td>
                         <Button
@@ -359,7 +346,7 @@ function CP1DoneOrders({ incrementCounter }) {
 
                             !inputValue.date || !inputValue.time
                               ? setError(true)
-                              : setError(false);
+                              : null;
 
                             let splitDate = inputValue.date.split("-");
 
@@ -400,7 +387,6 @@ function CP1DoneOrders({ incrementCounter }) {
                                 },
                                 config
                               );
-
                               const createNotification = await axios.post(
                                 apiUrl + "/notifications",
                                 {
@@ -410,7 +396,7 @@ function CP1DoneOrders({ incrementCounter }) {
                                 },
                                 config
                               );
-                              incrementCounter("Expert Asked");
+                              // incrementCounter("Expert Asked");
                               let resdata = response.data;
                               if (resdata.success) {
                                 typeof window !== "undefined" &&
@@ -421,7 +407,7 @@ function CP1DoneOrders({ incrementCounter }) {
                             }
                           }}
                         >
-                          {sendRequest && sendRequest.includes(expert._id)
+                          {items && items.includes(expert._id)
                             ? "Re-Send Request"
                             : "Send Request"}
                         </Button>
