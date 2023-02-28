@@ -543,11 +543,7 @@ function ExpertAskedOrders({
             <Tr key={assignment.id}>
               <Td fontWeight={"semibold"} paddingTop={9}>
                 <Box display={"flex"}>
-                  <Link
-                    href={
-                      "/admin/assignment_details/" + navigate.query.assignmentID
-                    }
-                  >
+                  <Link href={"/admin/assignment_details/" + assignment.id}>
                     {assignment.id}
                   </Link>
                   {inProcessOrderDataMessageCount &&
@@ -629,10 +625,7 @@ function ExpertAskedOrders({
                         <Th>Id</Th>
                         <Td fontWeight={"semibold"}>
                           <Link
-                            href={
-                              "/admin/assignment_details/" +
-                              navigate.query.assignmentID
-                            }
+                            href={"/admin/assignment_details/" + assignment.id}
                           >
                             {assignment.id}
                           </Link>
