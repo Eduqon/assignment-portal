@@ -99,7 +99,6 @@ export default function Assignments() {
         apiUrl + "/assignment/fetch?client_id=" + id,
         config
       );
-      console.log(response);
       let data = response.data.assignmentData;
       assignmentList = [];
       for (let index = 0; index < data.length; index++) {

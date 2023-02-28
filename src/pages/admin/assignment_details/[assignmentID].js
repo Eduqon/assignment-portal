@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-import * as qs from "qs";
 import { apiUrl } from "../../../services/contants";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
@@ -104,6 +103,9 @@ function AssignmentDetails() {
   useEffect(() => {
     _fetchAssignmentDetails();
     setUserRole(localStorage.getItem("userRole"));
+    let userToken =
+      typeof window !== "undefined" && window.localStorage.getItem("userToken");
+    console.log({ userToken });
   }, [navigate]);
 
   async function _fetchToken() {
@@ -2465,3 +2467,50 @@ function AssignmentDetails() {
 }
 
 export default AssignmentDetails;
+
+// export async function getStaticPaths() {
+//   let userToken =
+//     typeof window !== "undefined" && window.localStorage.getItem("userToken");
+//   // if (userToken == null) {
+//   //   navigate.replace("/admin/login");
+//   // }
+//   console.log({ userToken });
+//   // let config = {
+//   //   headers: {
+//   //     Authorization: `Bearer ${userToken}`,
+//   //   },
+//   // };
+//   // const response = await axios.get(apiUrl + "/assignment/fetch", config);
+//   // let data = response.data.assignmentData;
+//   // console.log({ data });
+//   // const paths = data.map((path) => ({
+//   //   params: { assignmentID: path._id },
+//   // }));
+//   return {
+//     paths: [],
+//     fallback: false,
+//   };
+// }
+
+// export async function getStaticProps({ params }) {
+//   const { assignmentID } = params;
+//   let userToken = localStorage.getItem("userToken");
+//   if (userToken == null) {
+//     navigate.replace("/admin/login");
+//   }
+
+//   let config = {
+//     headers: { Authorization: `Bearer ${userToken}` },
+//   };
+//   const response = await axios.get(
+//     apiUrl + "/assignment/fetch?_id=" + assignmentID,
+//     config
+//   );
+//   let data = await response.data.assignmentData;
+
+//   return {
+//     props: {
+//       data,
+//     },
+//   };
+// }
