@@ -400,6 +400,7 @@ function AssignmentDetails() {
         config
       );
       let data = await response.data.assignmentData;
+      console.log({ data });
       if (data.length !== 0) {
         setAssignment({
           id: data[0]._id,
