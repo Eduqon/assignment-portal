@@ -55,7 +55,6 @@ import {
   AddIcon,
 } from "@chakra-ui/icons";
 import AdminLayout from "..";
-import NoSSRWrapper from "../../../components/NoSSRWrapper";
 
 function AssignmentDetails() {
   const [assignment, setAssignment] = useState();
@@ -909,7 +908,7 @@ function AssignmentDetails() {
       );
     } else {
       return (
-        <NoSSRWrapper>
+        <>
           <AdminLayout />
           <VStack alignItems={"start"} margin={5}>
             <Modal
@@ -2458,10 +2457,51 @@ function AssignmentDetails() {
               </Box>
             </Wrap>
           </VStack>
-        </NoSSRWrapper>
+        </>
       );
     }
   }
 }
 
 export default AssignmentDetails;
+
+export async function getStaticPaths() {
+  // let userToken = localStorage.getItem("userToken");
+
+  let config = {
+    headers: {
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.TWFuc2lnaGFuZ2FzOTk3QGdtYWlsLmNvbQ.KPWBp-VvwR49fneCGQdFCpWSpDDGSERHOfq7wCbgEyU`,
+    },
+  };
+  const response = await axios.get(apiUrl + "/assignment/fetch", config);
+  let data = await response.data.assignmentData;
+  const paths = data.map((data) => ({
+    params: { assignmentID: data._id },
+  }));
+  return {
+    paths,
+    fallback: false,
+  };
+}
+
+export async function getStaticProps({ params }) {
+  const { assignmentID } = params;
+  // let userToken = localStorage.getItem("userToken");
+
+  let config = {
+    headers: {
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.TWFuc2lnaGFuZ2FzOTk3QGdtYWlsLmNvbQ.KPWBp-VvwR49fneCGQdFCpWSpDDGSERHOfq7wCbgEyU`,
+    },
+  };
+  const response = await axios.get(
+    apiUrl + "/assignment/fetch?_id=" + assignmentID,
+    config
+  );
+  let data = await response.data.assignmentData;
+
+  return {
+    props: {
+      data,
+    },
+  };
+}
