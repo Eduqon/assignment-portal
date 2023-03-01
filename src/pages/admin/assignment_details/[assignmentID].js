@@ -55,6 +55,7 @@ import {
   AddIcon,
 } from "@chakra-ui/icons";
 import AdminLayout from "..";
+import NoSSRWrapper from "../../../components/NoSSRWrapper";
 
 function AssignmentDetails() {
   const [assignment, setAssignment] = useState();
@@ -103,9 +104,6 @@ function AssignmentDetails() {
   useEffect(() => {
     _fetchAssignmentDetails();
     setUserRole(localStorage.getItem("userRole"));
-    let userToken =
-      typeof window !== "undefined" && window.localStorage.getItem("userToken");
-    console.log({ userToken });
   }, [navigate]);
 
   async function _fetchToken() {
@@ -911,7 +909,7 @@ function AssignmentDetails() {
       );
     } else {
       return (
-        <>
+        <NoSSRWrapper>
           <AdminLayout />
           <VStack alignItems={"start"} margin={5}>
             <Modal
@@ -2460,57 +2458,10 @@ function AssignmentDetails() {
               </Box>
             </Wrap>
           </VStack>
-        </>
+        </NoSSRWrapper>
       );
     }
   }
 }
 
 export default AssignmentDetails;
-
-// export async function getStaticPaths() {
-//   let userToken =
-//     typeof window !== "undefined" && window.localStorage.getItem("userToken");
-//   // if (userToken == null) {
-//   //   navigate.replace("/admin/login");
-//   // }
-//   console.log({ userToken });
-//   // let config = {
-//   //   headers: {
-//   //     Authorization: `Bearer ${userToken}`,
-//   //   },
-//   // };
-//   // const response = await axios.get(apiUrl + "/assignment/fetch", config);
-//   // let data = response.data.assignmentData;
-//   // console.log({ data });
-//   // const paths = data.map((path) => ({
-//   //   params: { assignmentID: path._id },
-//   // }));
-//   return {
-//     paths: [],
-//     fallback: false,
-//   };
-// }
-
-// export async function getStaticProps({ params }) {
-//   const { assignmentID } = params;
-//   let userToken = localStorage.getItem("userToken");
-//   if (userToken == null) {
-//     navigate.replace("/admin/login");
-//   }
-
-//   let config = {
-//     headers: { Authorization: `Bearer ${userToken}` },
-//   };
-//   const response = await axios.get(
-//     apiUrl + "/assignment/fetch?_id=" + assignmentID,
-//     config
-//   );
-//   let data = await response.data.assignmentData;
-
-//   return {
-//     props: {
-//       data,
-//     },
-//   };
-// }
