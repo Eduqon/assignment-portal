@@ -104,7 +104,7 @@ export function FormOrderDetails() {
     onClose();
   }
 
-  console.log({ existingUser });
+  console.log({ existingUser, id });
   async function _submit() {
     if (isUploading) {
       window.alert("File Still being uploaded... Please Wait");
@@ -305,7 +305,10 @@ export function FormOrderDetails() {
             if (signupResponse.data.success === true) {
               if (typeof window !== "undefined") {
                 localStorage.setItem("clientToken", signupResponse.data.token);
-                localStorage.setItem("clientEmail", id);
+                localStorage.setItem(
+                  "clientEmail",
+                  signupResponse.data.chatTokenObj._id
+                );
               }
               let config = {
                 headers: { Authorization: `Bearer ${clientToken}` },
