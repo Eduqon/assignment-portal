@@ -2466,8 +2466,6 @@ function AssignmentDetails() {
 export default AssignmentDetails;
 
 export async function getStaticPaths() {
-  // let userToken = localStorage.getItem("userToken");
-
   let config = {
     headers: {
       Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.TWFuc2lnaGFuZ2FzOTk3QGdtYWlsLmNvbQ.KPWBp-VvwR49fneCGQdFCpWSpDDGSERHOfq7wCbgEyU`,
@@ -2486,7 +2484,6 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const { assignmentID } = params;
-  // let userToken = localStorage.getItem("userToken");
 
   let config = {
     headers: {

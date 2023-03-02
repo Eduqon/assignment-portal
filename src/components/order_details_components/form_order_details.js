@@ -104,6 +104,7 @@ export function FormOrderDetails() {
     onClose();
   }
 
+  console.log({ existingUser });
   async function _submit() {
     if (isUploading) {
       window.alert("File Still being uploaded... Please Wait");
@@ -326,7 +327,7 @@ export function FormOrderDetails() {
                 const response = await axios.post(
                   apiUrl + "/assignment/new",
                   {
-                    client_id: id,
+                    client_id: id || localStorage.getItem("clientEmail"),
                     status: "Fresh Order",
                     subject: subject,
                     level: level,
