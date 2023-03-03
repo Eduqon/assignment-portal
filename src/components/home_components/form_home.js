@@ -90,7 +90,6 @@ export const FormHome = () => {
       let hour = splitTime[0];
       let min = splitTime[1];
       let deadline = new Date(year, month - 1, day, hour, min, 0);
-      localStorage.setItem("Deadline", deadline.toISOString());
       await setDeadline(deadline.toISOString());
       deadlineVal = true;
     }
@@ -101,10 +100,6 @@ export const FormHome = () => {
       pagesVal === true &&
       deadlineVal === true
     ) {
-      localStorage.setItem("clientEmail", email.value);
-      localStorage.setItem("Subject", subject.value);
-      localStorage.setItem("Pages", pages);
-
       try {
         let config = {
           headers: { Authorization: `Bearer ${clientToken}` },

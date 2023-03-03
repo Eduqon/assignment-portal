@@ -104,7 +104,6 @@ export function FormOrderDetails() {
     onClose();
   }
 
-  console.log({ existingUser, id });
   async function _submit() {
     if (isUploading) {
       window.alert("File Still being uploaded... Please Wait");
@@ -330,18 +329,18 @@ export function FormOrderDetails() {
                 const response = await axios.post(
                   apiUrl + "/assignment/new",
                   {
-                    client_id: id || localStorage.getItem("clientEmail"),
+                    client_id: id,
                     status: "Fresh Order",
-                    subject: subject || localStorage.getItem("Subject"),
+                    subject: subject,
                     level: level,
                     reference: reference.value,
                     description: description.value,
                     descriptionFile: fileUrl,
-                    deadline: deadline || localStorage.getItem("Deadline"),
+                    deadline: deadline,
                     currencyOfQuote: "INR",
                     quotation: null,
                     paid: null,
-                    numOfPages: pages || localStorage.getItem("Pages"),
+                    numOfPages: pages,
                     vendorId: vendorId,
                   },
                   config
