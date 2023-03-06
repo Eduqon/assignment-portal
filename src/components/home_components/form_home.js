@@ -66,6 +66,7 @@ export const FormHome = () => {
       subjectVal = false;
     } else {
       await setSubject(subject.value);
+      localStorage.setItem("Subject", subject.value);
       subjectVal = true;
     }
 
@@ -74,6 +75,7 @@ export const FormHome = () => {
       pagesVal = false;
     } else {
       await setStorePages(pages);
+      localStorage.setItem("Pages", pages);
       pagesVal = true;
     }
 
@@ -91,9 +93,9 @@ export const FormHome = () => {
       let min = splitTime[1];
       let deadline = new Date(year, month - 1, day, hour, min, 0);
       await setDeadline(deadline.toISOString());
+      localStorage.setItem("Deadline", deadline.toISOString());
       deadlineVal = true;
     }
-    console.log({ email });
 
     if (
       emailVal === true &&
@@ -112,7 +114,6 @@ export const FormHome = () => {
           },
           config
         );
-        console.log({ response });
         if (response.data.success === true) {
           await setExistingUser(true);
           localStorage.setItem("clientEmail", email.value);

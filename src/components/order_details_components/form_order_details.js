@@ -40,19 +40,26 @@ export function FormOrderDetails() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const inputRef = useRef(null);
   const existingUser = ClientStore((state) => state.existingUser);
-  const id = ClientStore((state) => state.id);
-  const subject = AssignmentFormStore((state) => state.subject);
-  const deadline = AssignmentFormStore((state) => state.deadline);
-  const pages = AssignmentFormStore((state) => state.pages);
+  // const id = ClientStore((state) => state.id);
+  // const subject = AssignmentFormStore((state) => state.subject);
+  // const deadline = AssignmentFormStore((state) => state.deadline);
+  // const pages = AssignmentFormStore((state) => state.pages);
   const clearAssignmentStore = AssignmentFormStore(
     (state) => state.clearAssignmentStore
   );
 
+  const setExistingUser = ClientStore((state) => state.setExistingUser);
+
   let navigate = useRouter();
-  let clientToken;
+  let clientToken, clientEmail, subject, deadline, pages;
 
   useEffect(async () => {
+    clientEmail = localStorage.getItem("clientEmail");
+    subject = localStorage.getItem("Subject");
+    deadline = localStorage.getItem("Deadline");
+    pages = localStorage.getItem("Pages");
     await _fetchToken();
+    await _verifyUser();
     clientToken = localStorage.getItem("clientToken");
   });
 
@@ -67,6 +74,31 @@ export function FormOrderDetails() {
       }
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  async function _verifyUser() {
+    console.log({ clientEmail, subject, deadline, pages });
+    try {
+      let config = {
+        headers: { Authorization: `Bearer ${clientToken}` },
+      };
+      const response = await axios.post(
+        apiUrl + "/client/verify",
+        {
+          _id: clientEmail,
+        },
+        config
+      );
+      if (response.data.success === true) {
+        await setExistingUser(true);
+      }
+    } catch (error) {
+      if (error.response.status == 401) {
+        await setExistingUser(false);
+      } else {
+        window.alert(error.response.message);
+      }
     }
   }
 
