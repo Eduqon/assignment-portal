@@ -40,10 +40,6 @@ export function FormOrderDetails() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const inputRef = useRef(null);
   const existingUser = ClientStore((state) => state.existingUser);
-  // const id = ClientStore((state) => state.id);
-  // const subject = AssignmentFormStore((state) => state.subject);
-  // const deadline = AssignmentFormStore((state) => state.deadline);
-  // const pages = AssignmentFormStore((state) => state.pages);
   const clearAssignmentStore = AssignmentFormStore(
     (state) => state.clearAssignmentStore
   );
@@ -220,7 +216,7 @@ export function FormOrderDetails() {
               const response = await axios.post(
                 apiUrl + "/assignment/new",
                 {
-                  client_id: id || clientEmail,
+                  client_id: clientEmail,
                   status: "Fresh Order",
                   subject: subject,
                   level: level,
@@ -263,7 +259,7 @@ export function FormOrderDetails() {
                 apiUrl + "/assignment/new",
                 {
                   _id: taskCode.value,
-                  client_id: id || clientEmail,
+                  client_id: clientEmail,
                   status: "Fresh Order",
                   subject: subject,
                   level: level,
@@ -280,7 +276,7 @@ export function FormOrderDetails() {
                 config
               );
               const assignmentResponse = await axios.get(
-                apiUrl + "/assignment/fetch?client_id=" + id,
+                apiUrl + "/assignment/fetch?client_id=" + clientEmail,
                 config
               );
               let assignmentID = assignmentResponse.data.assignmentData[0]._id;
@@ -356,7 +352,7 @@ export function FormOrderDetails() {
           let countryName = countrycodeSplit[0];
           try {
             const signupResponse = await axios.post(apiUrl + "/client/signup", {
-              _id: id || localStorage.getItem("clientEmail"),
+              _id: clientEmail,
               country: countryName,
               countryCode: countrycode.value,
               contact_no: number.value,
@@ -390,7 +386,7 @@ export function FormOrderDetails() {
                 const response = await axios.post(
                   apiUrl + "/assignment/new",
                   {
-                    client_id: id,
+                    client_id: clientEmail,
                     status: "Fresh Order",
                     subject: subject,
                     level: level,
@@ -407,7 +403,7 @@ export function FormOrderDetails() {
                   config
                 );
                 const assignmentResponse = await axios.get(
-                  apiUrl + "/assignment/fetch?client_id=" + id,
+                  apiUrl + "/assignment/fetch?client_id=" + clientEmail,
                   config
                 );
 
@@ -435,7 +431,7 @@ export function FormOrderDetails() {
                   apiUrl + "/assignment/new",
                   {
                     _id: taskCode.value,
-                    client_id: id,
+                    client_id: clientEmail,
                     status: "Fresh Order",
                     subject: subject,
                     level: level,
@@ -452,7 +448,7 @@ export function FormOrderDetails() {
                   config
                 );
                 const assignmentResponse = await axios.get(
-                  apiUrl + "/assignment/fetch?client_id=" + id,
+                  apiUrl + "/assignment/fetch?client_id=" + clientEmail,
                   config
                 );
                 let assignmentID =
