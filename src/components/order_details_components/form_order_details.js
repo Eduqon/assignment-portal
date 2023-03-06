@@ -85,7 +85,6 @@ export function FormOrderDetails() {
         },
         config
       );
-      console.log({ response });
       if (response.data.success === true) {
         await setExistingUser(true);
       } else if (response.status == 203) {
@@ -122,7 +121,6 @@ export function FormOrderDetails() {
         window.alert(error.response.message);
       }
     }
-    console.log({ clientEmail, subject, deadline, pages, clientToken });
   }
 
   async function uploadFile(blobName, filePath) {
@@ -177,8 +175,6 @@ export function FormOrderDetails() {
       let countrycodeVal = false;
       let numberVal = false;
       let callbacktimeVal = false;
-
-      console.log({ existingUser, subject, deadline, pages });
 
       if (existingUser) {
         if (level == "") {
