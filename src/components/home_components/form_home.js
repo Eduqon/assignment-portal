@@ -93,6 +93,7 @@ export const FormHome = () => {
       await setDeadline(deadline.toISOString());
       deadlineVal = true;
     }
+    console.log({ email });
 
     if (
       emailVal === true &&
@@ -111,6 +112,7 @@ export const FormHome = () => {
           },
           config
         );
+        console.log({ response });
         if (response.data.success === true) {
           await setExistingUser(true);
           localStorage.setItem("clientEmail", email.value);
@@ -145,7 +147,8 @@ export const FormHome = () => {
           }
         }
       } catch (error) {
-        if (error.response.status == 401) {
+        console.log({ error });
+        if (error.response?.status == 401) {
           await setExistingUser(false);
           navigate.replace("/order_details");
         } else {

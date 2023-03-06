@@ -123,6 +123,8 @@ export function FormOrderDetails() {
       let numberVal = false;
       let callbacktimeVal = false;
 
+      console.log({ existingUser, id, subject, deadline, pages });
+
       if (existingUser) {
         if (level == "") {
           window.alert("Select an Assignment Level");
