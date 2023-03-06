@@ -182,7 +182,7 @@ export function FormOrderDetails() {
       let numberVal = false;
       let callbacktimeVal = false;
 
-      console.log({ existingUser, id, subject, deadline, pages });
+      console.log({ existingUser, subject, deadline, pages });
 
       if (existingUser) {
         if (level == "") {
