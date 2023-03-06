@@ -78,7 +78,6 @@ export function FormOrderDetails() {
   }
 
   async function _verifyUser() {
-    console.log({ clientEmail, subject, deadline, pages });
     try {
       let config = {
         headers: { Authorization: `Bearer ${clientToken}` },
@@ -90,8 +89,35 @@ export function FormOrderDetails() {
         },
         config
       );
+      console.log({ response });
       if (response.data.success === true) {
         await setExistingUser(true);
+      } else if (response.status == 203) {
+        localStorage.setItem("clientToken", response.data.token);
+        clientToken = response.data.token;
+
+        try {
+          let config = {
+            headers: { Authorization: `Bearer ${clientToken}` },
+          };
+          const response = await axios.post(
+            apiUrl + "/client/verify",
+            {
+              _id: clientEmail,
+            },
+            config
+          );
+          if (response.data.success === true) {
+            await setExistingUser(true);
+            localStorage.setItem("clientEmail", clientEmail);
+          }
+        } catch (error) {
+          if (error.response.status == 401) {
+            await setExistingUser(false);
+          } else {
+            window.alert(error.response.message);
+          }
+        }
       }
     } catch (error) {
       if (error.response.status == 401) {
@@ -100,6 +126,7 @@ export function FormOrderDetails() {
         window.alert(error.response.message);
       }
     }
+    console.log({ clientEmail, subject, deadline, pages, clientToken });
   }
 
   async function uploadFile(blobName, filePath) {
@@ -193,7 +220,7 @@ export function FormOrderDetails() {
               const response = await axios.post(
                 apiUrl + "/assignment/new",
                 {
-                  client_id: id,
+                  client_id: id || clientEmail,
                   status: "Fresh Order",
                   subject: subject,
                   level: level,
@@ -210,7 +237,7 @@ export function FormOrderDetails() {
                 config
               );
               const assignmentResponse = await axios.get(
-                apiUrl + "/assignment/fetch?client_id=" + id,
+                apiUrl + "/assignment/fetch?client_id=" + clientEmail,
                 config
               );
               let assignmentID = assignmentResponse.data.assignmentData[0]._id;
@@ -236,7 +263,7 @@ export function FormOrderDetails() {
                 apiUrl + "/assignment/new",
                 {
                   _id: taskCode.value,
-                  client_id: id,
+                  client_id: id || clientEmail,
                   status: "Fresh Order",
                   subject: subject,
                   level: level,
