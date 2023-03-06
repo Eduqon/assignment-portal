@@ -103,6 +103,7 @@ export const FormHome = () => {
       pagesVal === true &&
       deadlineVal === true
     ) {
+      localStorage.setItem("clientEmail", email.value);
       try {
         let config = {
           headers: { Authorization: `Bearer ${clientToken}` },
