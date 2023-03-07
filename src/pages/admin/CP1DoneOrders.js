@@ -397,11 +397,11 @@ function CP1DoneOrders({ incrementCounter }) {
                                 config
                               );
                               // incrementCounter("Expert Asked");
-                              let resdata = response.data;
-                              if (resdata.success) {
-                                typeof window !== "undefined" &&
-                                  window.alert("Expert Asked for Confirmation");
-                              }
+                              // let resdata = response.data;
+                              // if (resdata.success) {
+                              //   typeof window !== "undefined" &&
+                              //     window.alert("Expert Asked for Confirmation");
+                              // }
                             } catch (err) {
                               console.log(err);
                             }
