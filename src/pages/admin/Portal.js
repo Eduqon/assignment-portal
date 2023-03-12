@@ -64,6 +64,7 @@ function PortalLayout() {
 
   return (
     <>
+      {console.log(messageCount, "asdasdaszxxczxcc")}
       <AdminLayout />
       <Box padding={"10px"} position={"relative"}>
         <Tabs
