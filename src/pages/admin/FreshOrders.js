@@ -27,6 +27,7 @@ import {
   FormControl,
   Checkbox,
   Select,
+  Spinner,
 } from "@chakra-ui/react";
 import {
   Box,
@@ -48,6 +49,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
   const [subjects, setSubjects] = useState([]);
   const [selectDate, setSelectedDate] = useState();
   const [token, setToken] = useState("");
+  const [loader, setLoader] = useState(true);
 
   let navigate = useRouter();
 
@@ -140,6 +142,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
       } else {
         console.log("No Fresh Orders");
       }
+      setLoader(false);
       setAssignments(assignmentList);
     } catch (err) {
       console.log(err);
@@ -1190,6 +1193,21 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
 
   return (
     <>
+      {loader && (
+        <Box
+          width={"100%"}
+          height={"100vh"}
+          display="flex"
+          alignItems={"center"}
+          justifyContent={"center"}
+          position={"absolute"}
+          left={0}
+          top={0}
+          zIndex={1}
+        >
+          <Spinner size={"md"} />
+        </Box>
+      )}
       <div display={{ base: "none", sm: "block", md: "block" }}>
         <ExpertModal />
         <QuotationModal />

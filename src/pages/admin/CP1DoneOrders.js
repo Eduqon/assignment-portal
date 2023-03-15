@@ -27,6 +27,7 @@ import {
   ModalFooter,
   Spacer,
   Box,
+  Spinner,
 } from "@chakra-ui/react";
 import {
   Accordion,
@@ -44,7 +45,7 @@ function CP1DoneOrders({ incrementCounter }) {
   const [assignments, setAssignments] = useState([]);
   const [experts, setExperts] = useState([]);
   const [subjects, setSubjects] = useState([]);
-
+  const [loader, setLoader] = useState(true);
   let assignmentList = [];
   let expertList = [];
 
@@ -746,6 +747,7 @@ function CP1DoneOrders({ incrementCounter }) {
       } else {
         console.log("No CP1 Pending Orders");
       }
+      setLoader(false);
       setAssignments(assignmentList);
     } catch (err) {
       console.log(err);
@@ -754,6 +756,21 @@ function CP1DoneOrders({ incrementCounter }) {
 
   return (
     <>
+      {loader && (
+        <Box
+          width={"100%"}
+          height={"100vh"}
+          display="flex"
+          alignItems={"center"}
+          justifyContent={"center"}
+          position={"absolute"}
+          left={0}
+          top={0}
+          zIndex={1}
+        >
+          <Spinner size={"md"} />
+        </Box>
+      )}
       <div display={{ base: "none", sm: "block", md: "block" }}>
         <ExpertModal />
         <QcModal />

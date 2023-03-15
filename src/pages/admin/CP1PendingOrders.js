@@ -8,6 +8,7 @@ import {
   Td,
   Button,
   Link,
+  Spinner,
 } from "@chakra-ui/react";
 import {
   Box,
@@ -45,6 +46,7 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
   const [assignments, setAssignments] = useState([]);
   const [asId, setAsId] = useState("");
   const [paid, setPaid] = useState("");
+  const [loader, setLoader] = useState(true);
 
   let assignmentList = [];
 
@@ -107,6 +109,7 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
       } else {
         console.log("No CP1 Pending Orders");
       }
+      setLoader(false);
       setAssignments(assignmentList);
     } catch (err) {
       console.log(err);
@@ -272,6 +275,21 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
   // end My Work
   return (
     <>
+      {loader && (
+        <Box
+          width={"100%"}
+          height={"100vh"}
+          display="flex"
+          alignItems={"center"}
+          justifyContent={"center"}
+          position={"absolute"}
+          left={0}
+          top={0}
+          zIndex={1}
+        >
+          <Spinner size={"md"} />
+        </Box>
+      )}
       {/* <ExpertModal /> */}
       {/* Modal */}
 

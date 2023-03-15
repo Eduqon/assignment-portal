@@ -42,6 +42,7 @@ import {
   Box,
   InputLeftElement,
   InputRightElement,
+  Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
@@ -57,6 +58,7 @@ function RawSubmissionOrders({
   const [assignments, setAssignments] = useState([]);
   const [submissions, setSubmissions] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState();
+  const [loader, setLoader] = useState(true);
 
   const [messages, setMessages] = useState([]);
   const [id, setId] = useState("");
@@ -541,6 +543,7 @@ function RawSubmissionOrders({
       } else {
         console.log("No Raw Submission Orders");
       }
+      setLoader(false);
       setAssignments(assignmentList);
     } catch (err) {
       console.log(err);
@@ -884,6 +887,21 @@ function RawSubmissionOrders({
 
   return (
     <>
+      {loader && (
+        <Box
+          width={"100%"}
+          height={"100vh"}
+          display="flex"
+          alignItems={"center"}
+          justifyContent={"center"}
+          position={"absolute"}
+          left={0}
+          top={0}
+          zIndex={1}
+        >
+          <Spinner size={"md"} />
+        </Box>
+      )}
       <div display={{ base: "none", sm: "block", md: "block" }}>
         <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
