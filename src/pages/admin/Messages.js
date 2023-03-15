@@ -350,7 +350,7 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
             return acc;
           }
         }, 0);
-      setMessageCount([totalMessageCount, false]);
+      setMessageCount(totalMessageCount);
       setSpinnerLoading(false);
       console.log(confirmOrderAssignedExpertMessages);
       //debugger;
