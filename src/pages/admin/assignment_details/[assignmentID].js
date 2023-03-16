@@ -931,9 +931,10 @@ function AssignmentDetails() {
               <Button
                 onClick={async () => {
                   navigate.replace(`/admin/portal`);
+                  localStorage.setItem("backButton", true);
                 }}
               >
-                Back to Orders
+                Back to Orders meta
               </Button>
               <Button
                 leftIcon={<RepeatIcon />}

@@ -78,6 +78,10 @@ function PortalLayout() {
   useEffect(() => {
     typeof window !== "undefined" &&
       window.localStorage.setItem("tabIndex", Number(tabIndex));
+    let backButton = localStorage.getItem("backButton");
+    if (backButton) {
+      setLoading(false);
+    }
   }, [tabIndex]);
 
   useEffect(() => {
@@ -87,6 +91,7 @@ function PortalLayout() {
 
   const handleChange = (index) => {
     setTabIndex(index);
+    localStorage.removeItem("backButton");
   };
 
   const handleCount = (child) => {
