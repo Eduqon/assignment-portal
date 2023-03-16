@@ -82,6 +82,7 @@ function PortalLayout() {
     if (backButton) {
       setLoading(false);
     }
+    localStorage.removeItem("backButton");
   }, [tabIndex]);
 
   useEffect(() => {
