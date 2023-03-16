@@ -926,9 +926,6 @@ function CP1DoneOrders({ incrementCounter }) {
                 </AccordionButton>
               </h2>
               <AccordionPanel p={0}>
-                <ExpertModal />
-                <QcModal />
-                <QuotesModal />
                 <Table variant="simple" size="md">
                   <Tbody>
                     <Tr key={assignment.id}>

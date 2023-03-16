@@ -477,7 +477,7 @@ function RawSubmissionOrders({
   function SubmissionsModal() {
     return (
       <Modal
-        size={"2xl"}
+        size={"4xl"}
         onClose={SubmissionsModalDis.onClose}
         isOpen={SubmissionsModalDis.isOpen}
         onOpen={SubmissionsModalDis.onOpen}
@@ -1146,8 +1146,6 @@ function RawSubmissionOrders({
                     </ModalBody>
                   </ModalContent>
                 </Modal>
-                <SubmissionsModal />
-                <ReworkModal />
                 <Table variant="simple" size="md">
                   <Thead bgColor={"gray.200"}></Thead>
                   <Tbody>
