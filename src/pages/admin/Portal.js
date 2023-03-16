@@ -46,6 +46,8 @@ function PortalLayout() {
   const { onClose } = useDisclosure();
   const [messageCount, setMessageCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [tabIndex, setTabIndex] = useState(0);
+  const [orderIndex, setOrderIndex] = useState(0);
 
   const dropOrder = () => {
     var hideShow =
@@ -58,10 +60,43 @@ function PortalLayout() {
     }
   };
 
-  useEffect(async () => {
-    setUserRole(localStorage.getItem("userRole"));
-  });
+  useEffect(() => {
+    if (window.performance) {
+      if (performance.navigation.type == 1) {
+        typeof window !== "undefined" &&
+          window.localStorage.setItem("tabIndex", Number(0));
+        typeof window !== "undefined" &&
+          window.localStorage.setItem("orderIndex", Number(0));
+      }
+    }
 
+    setUserRole(localStorage.getItem("userRole"));
+    setTabIndex(Number(localStorage.getItem("tabIndex")));
+    setOrderIndex(Number(localStorage.getItem("orderIndex")));
+  }, []);
+
+  useEffect(() => {
+    typeof window !== "undefined" &&
+      window.localStorage.setItem("tabIndex", Number(tabIndex));
+    let backButton = localStorage.getItem("backButton");
+    if (backButton) {
+      setLoading(false);
+    }
+  }, [tabIndex]);
+
+  useEffect(() => {
+    typeof window !== "undefined" &&
+      window.localStorage.setItem("orderIndex", Number(orderIndex));
+  }, [orderIndex]);
+
+  const handleChange = (index) => {
+    setTabIndex(index);
+    localStorage.removeItem("backButton");
+  };
+
+  const handleCount = (child) => {
+    setOrderIndex(child);
+  };
   return (
     <>
       <AdminLayout />
@@ -71,6 +106,8 @@ function PortalLayout() {
           orientation="vertical"
           variant="solid-rounded"
           display={{ base: "none", sm: "inline-flex", md: "inline-flex " }}
+          onChange={(index) => handleChange(index)}
+          index={Number(tabIndex)}
         >
           {userRole === "Sales" ? (
             <>
@@ -157,7 +194,10 @@ function PortalLayout() {
                   <Calendars />
                 </TabPanel>
                 <TabPanel>
-                  <AdminOrders />
+                  <AdminOrders
+                    setOrderCount={handleCount}
+                    orderIndex={orderIndex}
+                  />
                 </TabPanel>
                 <TabPanel>
                   <RawSubmissionOrders />

@@ -35,6 +35,7 @@ import {
   Box,
   InputLeftElement,
   InputRightElement,
+  Spinner,
 } from "@chakra-ui/react";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
@@ -51,6 +52,7 @@ function AssignedExpertOrders({
   const [selectedIndex, setSelectedIndex] = useState();
   const [messages, setMessages] = useState([]);
   const [id, setId] = useState("");
+  const [loader, setLoader] = useState(true);
   const inputFileOperatorExpert = useRef(null);
   const { onOpen, onClose } = useDisclosure();
 
@@ -163,6 +165,7 @@ function AssignedExpertOrders({
       } else {
         console.log("No Expert Asked Orders");
       }
+      setLoader(false);
       setAssignments(assignmentList);
     } catch (err) {
       console.log(err);
@@ -515,6 +518,21 @@ function AssignedExpertOrders({
 
   return (
     <>
+      {loader && (
+        <Box
+          width={"100%"}
+          height={"100vh"}
+          display="flex"
+          alignItems={"center"}
+          justifyContent={"center"}
+          position={"absolute"}
+          left={0}
+          top={0}
+          zIndex={1}
+        >
+          <Spinner size={"md"} />
+        </Box>
+      )}
       <MessageModal />
       <ReplyMessageModal />
       <Table

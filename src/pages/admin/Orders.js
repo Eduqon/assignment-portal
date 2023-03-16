@@ -20,6 +20,7 @@ import {
   Th,
   Td,
   Button,
+  Spinner,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import AssignedExpertOrders from "./AssignedExpertOrders";
@@ -39,7 +40,7 @@ import { apiUrl, frontEndUrl } from "../../services/contants";
 import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "../../services/firebase";
 
-function AdminOrders() {
+function AdminOrders({ setOrderCount, orderIndex }) {
   const [messageData, setMessageData] = useState([]);
   const [confirmedOperatorExpertChat, setConfirmedOperatorExpertChat] =
     useState({});
@@ -49,7 +50,7 @@ function AdminOrders() {
   const [inProcessOrderData, setInProcessOrderData] = useState([]);
   const [confirmedOrders, setConfirmedOrders] = useState([]);
   const [inProcessOrders, setInProcessOrders] = useState([]);
-
+  const [tabIndex, setTabIndex] = useState(0);
   let confirmOrderAssignedExpertMessages,
     inProcessOrderAssignedExpertMessages,
     confirmedMessageData,
@@ -58,6 +59,7 @@ function AdminOrders() {
   const [userRole, setUserRole] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [notificationCounter, setNotificationCounter] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const navigate = useRouter();
   const NotificationModalDis = useDisclosure();
@@ -462,11 +464,20 @@ function AdminOrders() {
     });
   }
 
+  const handleChange = (index) => {
+    setOrderCount(index);
+  };
+
   return (
     <>
       <NotificationModal />
       <Box padding={0}>
-        <Tabs isLazy variant="soft-rounded">
+        <Tabs
+          isLazy
+          variant="soft-rounded"
+          onChange={(index) => handleChange(index)}
+          index={orderIndex}
+        >
           {userRole === "Super Admin" || userRole === "Admin" ? (
             <>
               <TabList>

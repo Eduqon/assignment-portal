@@ -34,6 +34,7 @@ import {
   Box,
   InputLeftElement,
   InputRightElement,
+  Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
@@ -55,6 +56,7 @@ function CP2DoneOrders({
   const { onOpen, onClose } = useDisclosure();
   const [token, setToken] = useState("");
   const [messageData, setMessageData] = useState([]);
+  const [loader, setLoader] = useState(true);
 
   const MessagesModalDis = useDisclosure();
   const ReplyMessageModalDis = useDisclosure();
@@ -119,6 +121,7 @@ function CP2DoneOrders({
       } else {
         console.log("No CP1 Pending Orders");
       }
+      setLoader(false);
       setAssignments(assignmentList);
     } catch (err) {
       console.log(err);
@@ -487,6 +490,21 @@ function CP2DoneOrders({
 
   return (
     <>
+      {loader && (
+        <Box
+          width={"100%"}
+          height={"100vh"}
+          display="flex"
+          alignItems={"center"}
+          justifyContent={"center"}
+          position={"absolute"}
+          left={0}
+          top={0}
+          zIndex={1}
+        >
+          <Spinner size={"md"} />
+        </Box>
+      )}
       <MessageModal />
       <ReplyMessageModal />
       <Table

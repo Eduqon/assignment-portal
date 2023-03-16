@@ -29,6 +29,7 @@ import {
   Input,
   InputLeftElement,
   InputRightElement,
+  Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
@@ -56,6 +57,7 @@ function ExpertAskedOrders({
   const [openModalId, setOpenModalId] = useState(null);
   const [id, setId] = useState("");
   const [token, setToken] = useState("");
+  const [loader, setLoader] = useState(true);
   const inputFileOperatorExpert = useRef(null);
   const { onOpen, onClose } = useDisclosure();
   let inProcessOrderDataMessageCount;
@@ -137,6 +139,7 @@ function ExpertAskedOrders({
       } else {
         console.log("No Expert Asked Orders");
       }
+      setLoader(false);
       setAssignments(assignmentList);
     } catch (err) {
       console.log(err);
@@ -540,6 +543,21 @@ function ExpertAskedOrders({
 
   return (
     <>
+      {loader && (
+        <Box
+          width={"100%"}
+          height={"100vh"}
+          display="flex"
+          alignItems={"center"}
+          justifyContent={"center"}
+          position={"absolute"}
+          left={0}
+          top={0}
+          zIndex={1}
+        >
+          <Spinner size={"md"} />
+        </Box>
+      )}
       <MessageModal />
       <ReplyMessageModal />
       <Table

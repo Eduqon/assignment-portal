@@ -930,7 +930,8 @@ function AssignmentDetails() {
             <HStack>
               <Button
                 onClick={async () => {
-                  navigate.replace("/admin/portal");
+                  navigate.replace(`/admin/portal`);
+                  localStorage.setItem("backButton", true);
                 }}
               >
                 Back to Orders

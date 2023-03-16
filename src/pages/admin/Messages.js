@@ -163,6 +163,7 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
           ...operatorExpertChat,
           [assignment_id]: doc.data().conversation,
         }));
+
         setLoading(false);
       });
     } catch (error) {
@@ -275,6 +276,7 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
       const date =
         values.length !== 0 &&
         new Date(values[values.length - 1].time).toLocaleDateString("en-US");
+
       return {
         id: key,
         chat: values,
@@ -320,10 +322,34 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
           return acc;
         }
       }, 0);
-    setMessageCount(totalMessageCount);
-    setSpinnerLoading(false);
   }
 
+  useEffect(() => {
+    if (
+      Object.keys(confirmedOperatorExpertChat).length !== 0 &&
+      Object.keys(processOperatorExpertChat).length !== 0
+    ) {
+      const confirmOrderAssignedExpertChat =
+        confirmOrderAssignedExpertMessages.filter(
+          (data) => data.chat.length !== 0
+        );
+      const processOrderAssignedExpertChat =
+        inProcessOrderAssignedExpertMessages.filter(
+          (data) => data.chat.length !== 0
+        );
+      let totalMessageCount = confirmOrderAssignedExpertChat
+        .concat(processOrderAssignedExpertChat)
+        .reduce((acc, val) => {
+          if (val && val.chat.length !== 0) {
+            return acc + val.chat[val.chat.length - 1].newMessageCount;
+          } else {
+            return acc;
+          }
+        }, 0);
+      setMessageCount(totalMessageCount);
+      setSpinnerLoading(false);
+    }
+  }, [confirmedOperatorExpertChat, processOperatorExpertChat]);
   return (
     <>
       <Box padding={0}>

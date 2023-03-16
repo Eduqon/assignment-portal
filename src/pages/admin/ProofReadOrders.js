@@ -34,6 +34,7 @@ import {
   Box,
   InputLeftElement,
   InputRightElement,
+  Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
@@ -53,6 +54,7 @@ function ProofReadOrders({
   const inputFileOperatorExpert = useRef(null);
   const { onOpen, onClose } = useDisclosure();
   const [token, setToken] = useState("");
+  const [loader, setLoader] = useState(true);
 
   const MessagesModalDis = useDisclosure();
   const ReplyMessageModalDis = useDisclosure();
@@ -116,6 +118,7 @@ function ProofReadOrders({
       } else {
         console.log("No Proof Read Orders");
       }
+      setLoader(false);
       setAssignments(assignmentList);
     } catch (err) {
       console.log(err);
@@ -484,6 +487,21 @@ function ProofReadOrders({
 
   return (
     <>
+      {loader && (
+        <Box
+          width={"100%"}
+          height={"100vh"}
+          display="flex"
+          alignItems={"center"}
+          justifyContent={"center"}
+          position={"absolute"}
+          left={0}
+          top={0}
+          zIndex={1}
+        >
+          <Spinner size={"md"} />
+        </Box>
+      )}
       <MessageModal />
       <ReplyMessageModal />
       <Table
