@@ -934,7 +934,7 @@ function AssignmentDetails() {
                   localStorage.setItem("backButton", true);
                 }}
               >
-                Back to Orders meta
+                Back to Orders
               </Button>
               <Button
                 leftIcon={<RepeatIcon />}

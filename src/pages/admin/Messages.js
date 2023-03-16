@@ -322,10 +322,6 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
           return acc;
         }
       }, 0);
-    //debugger;
-    console.log(totalMessageCount, "szxzcxzxzxzxzzxx");
-    // setMessageCount(totalMessageCount);
-    // setSpinnerLoading(false);
   }
 
   useEffect(() => {
@@ -352,14 +348,11 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
         }, 0);
       setMessageCount(totalMessageCount);
       setSpinnerLoading(false);
-      console.log(confirmOrderAssignedExpertMessages);
-      //debugger;
     }
   }, [confirmedOperatorExpertChat, processOperatorExpertChat]);
   return (
     <>
       <Box padding={0}>
-        {console.log(confirmOrderAssignedExpertMessages, "bababsanbsmansm")}
         <Tabs isLazy variant="soft-rounded">
           <TabList>
             <Box id="confirmed_orders">
