@@ -398,11 +398,11 @@ function CP1DoneOrders({ incrementCounter }) {
                                 config
                               );
                               // incrementCounter("Expert Asked");
-                              let resdata = response.data;
-                              if (resdata.success) {
-                                typeof window !== "undefined" &&
-                                  window.alert("Expert Asked for Confirmation");
-                              }
+                              // let resdata = response.data;
+                              // if (resdata.success) {
+                              //   typeof window !== "undefined" &&
+                              //     window.alert("Expert Asked for Confirmation");
+                              // }
                             } catch (err) {
                               console.log(err);
                             }
@@ -756,21 +756,6 @@ function CP1DoneOrders({ incrementCounter }) {
 
   return (
     <>
-      {loader && (
-        <Box
-          width={"100%"}
-          height={"100vh"}
-          display="flex"
-          alignItems={"center"}
-          justifyContent={"center"}
-          position={"absolute"}
-          left={0}
-          top={0}
-          zIndex={1}
-        >
-          <Spinner size={"md"} />
-        </Box>
-      )}
       <div display={{ base: "none", sm: "block", md: "block" }}>
         <ExpertModal />
         <QcModal />
@@ -926,9 +911,6 @@ function CP1DoneOrders({ incrementCounter }) {
                 </AccordionButton>
               </h2>
               <AccordionPanel p={0}>
-                <ExpertModal />
-                <QcModal />
-                <QuotesModal />
                 <Table variant="simple" size="md">
                   <Tbody>
                     <Tr key={assignment.id}>

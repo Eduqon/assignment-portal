@@ -50,11 +50,23 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
   const [selectDate, setSelectedDate] = useState();
   const [token, setToken] = useState("");
   const [loader, setLoader] = useState(true);
+  const [selectedIndex, setSelectedIndex] = useState();
+  const [quotes, setQuotes] = useState([]);
+  const [doableResponses, setDoableResponses] = useState([]);
+  const [quoteAssignmentData, setQuoteAssignmentData] = useState({});
 
   let navigate = useRouter();
 
   let assignmentList = [];
   let expertList = [];
+  let quotesList = [];
+  let doableResponsesList = [];
+  let selectedCost;
+
+  const AskDoableModalDis = useDisclosure();
+  const ExpertModalDis = useDisclosure();
+  const QuotesModalDis = useDisclosure();
+  const DoableResponsesModalDis = useDisclosure();
 
   useEffect(() => {
     _fetchAssignments();
@@ -148,10 +160,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
       console.log(err);
     }
   }
-
-  const ExpertModalDis = useDisclosure();
-
-  const [selectedIndex, setSelectedIndex] = useState();
 
   async function fetchExperts(subject) {
     // input taken as a deadline date in quatation
@@ -312,8 +320,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
     );
   }
 
-  const AskDoableModalDis = useDisclosure();
-
   async function openAskDoableModal(index) {
     setSelectedIndex(index);
     await fetchExperts("");
@@ -429,12 +435,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
       </Modal>
     );
   }
-
-  const [quotes, setQuotes] = useState([]);
-  let quotesList = [];
-  let selectedCost;
-
-  const QuotesModalDis = useDisclosure();
 
   async function openQuotesModal(index) {
     setSelectedIndex(index);
@@ -679,11 +679,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
     );
   }
 
-  const [doableResponses, setDoableResponses] = useState([]);
-  let doableResponsesList = [];
-
-  const DoableResponsesModalDis = useDisclosure();
-
   async function openDoableResponsesModal(index) {
     setSelectedIndex(index);
     try {
@@ -761,8 +756,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
     );
   }
 
-  const [quoteAssignmentData, setQuoteAssignmentData] = useState({});
-
   async function _fetchQuoteAssignmentDetail(index) {
     setQuoteAssignmentData({
       _id: assignments[index].id,
@@ -833,9 +826,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
               >
                 {quoteAssignmentData.description}
               </Textarea>
-              {/* <Input type={"text"}  value={quoteAssignmentData.description}  onChange={(e)=>{
-                                setQuoteAssignmentData({...quoteAssignmentData , description: e.target.value })
-                            }} /> */}
             </VStack>
             <HStack padding={2}>
               <Text fontWeight={"bold"}>Level:</Text>
@@ -856,7 +846,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
               </Text>
             </HStack>
             <VStack padding={2} alignItems={"left"}></VStack>
-            <FormControl padding={2} id="expertDeadline">
+            <FormControl padding={2}>
               <FormLabel fontWeight={"bold"}>Set Expert Deadline</FormLabel>
               <HStack>
                 <Input
@@ -1048,18 +1038,15 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
             <Button
               onClick={async () => {
                 try {
-                  // alert("call...");
                   let userEmail = localStorage.getItem("userEmail");
                   let userName = localStorage.getItem("userName");
                   let userToken = localStorage.getItem("userToken");
-                  //alert(userToken);
                   if (userToken == null) {
                     navigate.replace("/admin/login");
                   }
                   let config = {
                     headers: { Authorization: `Bearer ${userToken}` },
                   };
-                  // alert("call...3")
                   let dateElement = document.getElementById("date");
                   let timeElement = document.getElementById("time");
 
@@ -1067,27 +1054,17 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                   let year = splitDate[0];
                   let month = splitDate[1];
                   let day = splitDate[2];
-                  // alert("call...5")
-                  // let splitTime = await Time.split(":");
                   let splitTime = time.split(":");
                   let hour = splitTime[0];
                   let min = splitTime[1];
-                  //let deadline = new Date(year, month - 1, day, hour, min, 0);
-                  //console.log(deadline, "deadline");
-                  //let iso = deadline?.toISOString();
-                  //   console.log({ iso });
-                  // alert("call...6")
-                  // alert(timeElement.value);
+
                   if (timeElement.value !== undefined && quote !== "") {
-                    // alert("call 2....")
                     if (isExternal) {
                       try {
-                        // window.alert('Please Wait..')
                         const responseDeadline = await axios.post(
                           apiUrl + "/assignment/update",
                           {
                             _id: quoteAssignmentData._id,
-                            //expertDeadline: iso,
                             status: "CP1 Done",
                             quotation: quote,
                             paid: quote,
@@ -1141,12 +1118,12 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                         },
                         config
                       );
-                      incrementCounter("CP1 Pending");
-                      decrementCounter("Fresh Order");
                       if (resdata.success) {
-                        await _fetchAssignments();
                         window.alert("Quote Generated");
                         onClose();
+                        await _fetchAssignments();
+                        incrementCounter("CP1 Pending");
+                        decrementCounter("Fresh Order");
                       }
                     }
                   } else {
@@ -1193,21 +1170,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
 
   return (
     <>
-      {loader && (
-        <Box
-          width={"100%"}
-          height={"100vh"}
-          display="flex"
-          alignItems={"center"}
-          justifyContent={"center"}
-          position={"absolute"}
-          left={0}
-          top={0}
-          zIndex={1}
-        >
-          <Spinner size={"md"} />
-        </Box>
-      )}
       <div display={{ base: "none", sm: "block", md: "block" }}>
         <ExpertModal />
         <QuotationModal />
@@ -1466,11 +1428,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={0}>
-                  <ExpertModal />
-                  <QuotationModal />
-                  <QuotesModal />
-                  <AskDoableModal />
-                  <DoableResponsesModal />
                   <Table variant="simple" size="md">
                     <Tbody>
                       <Tr key={assignment.id}>

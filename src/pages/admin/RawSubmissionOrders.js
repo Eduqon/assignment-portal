@@ -46,7 +46,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { apiUrl } from "../../services/contants";
+import { apiUrl, localUrl } from "../../services/contants";
 import { db } from "../../services/firebase";
 
 function RawSubmissionOrders({
@@ -72,6 +72,7 @@ function RawSubmissionOrders({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isUploading, setIsUploading] = useState(false);
   const [sendRework, setSendRework] = useState(() => new Set());
+  const [error, setError] = useState(false);
 
   const MessagesModalDis = useDisclosure();
   const ReplyMessageModalDis = useDisclosure();
@@ -136,9 +137,27 @@ function RawSubmissionOrders({
     }
   }
 
-  async function sendForRework(index, qcComments) {
+  async function sendForRework(index, qcComments, inputValue) {
     let userEmail = localStorage.getItem("userEmail");
     let userName = localStorage.getItem("userName");
+    let iso;
+    if (!inputValue.date || !inputValue.time) {
+      setError(true);
+    } else {
+      let splitDate = inputValue.date.split("-");
+
+      let year = splitDate[0];
+      let month = splitDate[1];
+      let day = splitDate[2];
+
+      let splitTime = inputValue.time.split(":");
+
+      let hour = splitTime[0];
+      let min = splitTime[1];
+      let deadline = new Date(year, month - 1, day, hour, min, 0);
+
+      iso = deadline?.toISOString();
+    }
 
     if (qcComments === "") {
       window.alert("Add a comment");
@@ -178,6 +197,7 @@ function RawSubmissionOrders({
                 _id: userEmail,
                 name: userName,
                 comment: qcComments,
+                deadline: iso,
               },
             },
             config
@@ -217,28 +237,17 @@ function RawSubmissionOrders({
           );
           incrementCounter("Internal Rework");
           decrementCounter("Raw Submission");
-          const responseQcNoteFile = await axios.post(
-            apiUrl + "/assignment/comments/QCToExpert",
+          const responseQcMail = await axios.post(
+            localUrl + "/assignment/comments/QCToExpert",
             {
               assignmentId: assignments[index].id,
               expertId: assignments[index].assignedExpert,
               commentsFromQC: {
                 _id: userEmail,
                 name: userName,
-                comment: fileUrl,
-              },
-            },
-            config
-          );
-          const responseQcNote = await axios.post(
-            apiUrl + "/assignment/comments/QCToExpert",
-            {
-              assignmentId: assignments[index].id,
-              expertId: assignments[index].assignedExpert,
-              commentsFromQC: {
-                _id: userEmail,
-                name: userName,
+                file: fileUrl,
                 comment: qcComments,
+                deadline: iso,
               },
             },
             config
@@ -310,6 +319,17 @@ function RawSubmissionOrders({
 
   function ReworkModal() {
     const [qcComments, setQcComment] = useState("");
+    const [inputValue, setInputValue] = useState({
+      date: "",
+      time: "",
+    });
+    const closeModal = () => {
+      setInputValue({
+        date: "",
+        time: "",
+      });
+      ReworkModalDis.onClose();
+    };
 
     return (
       <Modal
@@ -357,6 +377,38 @@ function RawSubmissionOrders({
                 }}
               ></Textarea>
             </InputGroup>
+            <FormControl padding={2} id="expertDeadline">
+              <FormLabel fontWeight={"bold"}>3) Set Expert Deadline</FormLabel>
+              <HStack>
+                <Input
+                  type="date"
+                  id="date"
+                  value={inputValue.date}
+                  onChange={(e) => {
+                    setInputValue({
+                      ...inputValue,
+                      date: e.target.value,
+                    });
+                  }}
+                />
+                <Input
+                  type="time"
+                  id="time"
+                  value={inputValue.time}
+                  onChange={(e) => {
+                    setInputValue({
+                      ...inputValue,
+                      time: e.target.value,
+                    });
+                  }}
+                />
+              </HStack>
+              {error && (
+                <span style={{ color: "red" }}>
+                  ** Expert Deadline is mandatory
+                </span>
+              )}
+            </FormControl>
           </ModalBody>
           <ModalFooter>
             <Button
@@ -364,7 +416,7 @@ function RawSubmissionOrders({
                 if (isUploading) {
                   window.alert("File is still being uploaded");
                 } else {
-                  sendForRework(selectedIndex, qcComments);
+                  sendForRework(selectedIndex, qcComments, inputValue);
                 }
               }}
             >
@@ -425,7 +477,7 @@ function RawSubmissionOrders({
   function SubmissionsModal() {
     return (
       <Modal
-        size={"2xl"}
+        size={"4xl"}
         onClose={SubmissionsModalDis.onClose}
         isOpen={SubmissionsModalDis.isOpen}
         onOpen={SubmissionsModalDis.onOpen}
@@ -887,21 +939,6 @@ function RawSubmissionOrders({
 
   return (
     <>
-      {loader && (
-        <Box
-          width={"100%"}
-          height={"100vh"}
-          display="flex"
-          alignItems={"center"}
-          justifyContent={"center"}
-          position={"absolute"}
-          left={0}
-          top={0}
-          zIndex={1}
-        >
-          <Spinner size={"md"} />
-        </Box>
-      )}
       <div display={{ base: "none", sm: "block", md: "block" }}>
         <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
@@ -1094,8 +1131,6 @@ function RawSubmissionOrders({
                     </ModalBody>
                   </ModalContent>
                 </Modal>
-                <SubmissionsModal />
-                <ReworkModal />
                 <Table variant="simple" size="md">
                   <Thead bgColor={"gray.200"}></Thead>
                   <Tbody>

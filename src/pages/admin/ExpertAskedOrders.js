@@ -44,10 +44,12 @@ import {
 } from "@chakra-ui/react";
 import { doc, arrayUnion, updateDoc } from "firebase/firestore";
 import { db } from "../../services/firebase";
+import { updateAssignment } from "../../services/functions/assignmentFun";
 function ExpertAskedOrders({
   inProcessOrderAssignedExpertMessages,
   operatorExpertChat,
   inProcessOrderData,
+  incrementCounter,
 }) {
   const [assignments, setAssignments] = useState([]);
 
@@ -512,23 +514,35 @@ function ExpertAskedOrders({
     });
   }
 
+  const addToDone = async (assignmentID) => {
+    let userToken = localStorage.getItem("userToken");
+    let data = {
+      _id: assignmentID,
+      status: "CP1 Done",
+    };
+    let response = await updateAssignment(JSON.stringify(data));
+
+    let config = {
+      headers: { Authorization: `Bearer ${userToken}` },
+    };
+
+    const createNotification = await axios.post(
+      apiUrl + "/notifications",
+      {
+        assignmentId: assignmentID,
+        status: "CP1 Done",
+        read: false,
+      },
+      config
+    );
+    incrementCounter("CP1 Done");
+    if (response.success) {
+      _fetchAssignments();
+    }
+  };
+
   return (
     <>
-      {loader && (
-        <Box
-          width={"100%"}
-          height={"100vh"}
-          display="flex"
-          alignItems={"center"}
-          justifyContent={"center"}
-          position={"absolute"}
-          left={0}
-          top={0}
-          zIndex={1}
-        >
-          <Spinner size={"md"} />
-        </Box>
-      )}
       <MessageModal />
       <ReplyMessageModal />
       <Table
@@ -621,6 +635,22 @@ function ExpertAskedOrders({
               </Td>
               <Td color={"red.600"} fontWeight={"semibold"}>
                 {assignment.deadline}
+              </Td>
+              <Td>
+                <Button
+                  display={
+                    localStorage.getItem("userRole") === "Operator" ||
+                    localStorage.getItem("userRole") === "Super Admin" ||
+                    localStorage.getItem("userRole") === "Admin"
+                      ? "flex"
+                      : "none"
+                  }
+                  onClick={() => {
+                    addToDone(assignment.id);
+                  }}
+                >
+                  Back to CP1 Done
+                </Button>
               </Td>
             </Tr>
           ))}

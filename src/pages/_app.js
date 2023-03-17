@@ -1,9 +1,13 @@
 import "bootstrap/dist/css/bootstrap.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import Script from "next/script";
+import { useEffect } from "react";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { strapiUrl } from "../services/contants";
 import "../styles/globals.css";
+import * as gTag from "../../lib/gTag";
 
 //Apollo client
 export const client = new ApolloClient({
@@ -12,6 +16,16 @@ export const client = new ApolloClient({
 });
 
 function App({ Component, pageProps }) {
+  const router = useRouter();
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      gTag.pageview(url);
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router.events]);
   return (
     <>
       <Head>
@@ -36,7 +50,24 @@ function App({ Component, pageProps }) {
           href="https://fonts.googleapis.com/css2?family=Abhaya+Libre&display=swap"
           rel="stylesheet"
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${gTag.GA_TRACKING_ID}', {
+                page_path: window.location.pathname,
+              });
+            `,
+          }}
+        />
       </Head>
+      {/* Global Site Tag (gtag.js) - Google Analytics */}
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${gTag.GA_TRACKING_ID}`}
+      />
       <ChakraProvider>
         <ApolloProvider client={client}>
           <Component {...pageProps} />
