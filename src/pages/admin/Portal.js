@@ -43,11 +43,8 @@ import AdminLayout from ".";
 
 function PortalLayout() {
   const [userRole, setUserRole] = useState("");
-  const { onClose } = useDisclosure();
   const [messageCount, setMessageCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [tabIndex, setTabIndex] = useState(0);
-  const [orderIndex, setOrderIndex] = useState(0);
 
   const dropOrder = () => {
     var hideShow =
@@ -61,43 +58,10 @@ function PortalLayout() {
   };
 
   useEffect(() => {
-    if (window.performance) {
-      if (performance.navigation.type == 1) {
-        typeof window !== "undefined" &&
-          window.localStorage.setItem("tabIndex", Number(0));
-        typeof window !== "undefined" &&
-          window.localStorage.setItem("orderIndex", Number(0));
-      }
-    }
-
     setUserRole(localStorage.getItem("userRole"));
-    setTabIndex(Number(localStorage.getItem("tabIndex")));
-    setOrderIndex(Number(localStorage.getItem("orderIndex")));
   }, []);
 
-  useEffect(() => {
-    typeof window !== "undefined" &&
-      window.localStorage.setItem("tabIndex", Number(tabIndex));
-    let backButton = localStorage.getItem("backButton");
-    if (backButton) {
-      setLoading(false);
-    }
-    localStorage.removeItem("backButton");
-  }, [tabIndex]);
-
-  useEffect(() => {
-    typeof window !== "undefined" &&
-      window.localStorage.setItem("orderIndex", Number(orderIndex));
-  }, [orderIndex]);
-
-  const handleChange = (index) => {
-    setTabIndex(index);
-    localStorage.removeItem("backButton");
-  };
-
-  const handleCount = (child) => {
-    setOrderIndex(child);
-  };
+  console.log({ loading, messageCount });
   return (
     <>
       <AdminLayout />
@@ -107,8 +71,6 @@ function PortalLayout() {
           orientation="vertical"
           variant="solid-rounded"
           display={{ base: "none", sm: "inline-flex", md: "inline-flex " }}
-          onChange={(index) => handleChange(index)}
-          index={Number(tabIndex)}
         >
           {userRole === "Sales" ? (
             <>
@@ -132,21 +94,6 @@ function PortalLayout() {
             </>
           ) : userRole === "Operator" ? (
             <>
-              {loading && (
-                <Box
-                  width={"100%"}
-                  height={"100vh"}
-                  display="flex"
-                  alignItems={"center"}
-                  justifyContent={"center"}
-                  position={"absolute"}
-                  left={0}
-                  top={0}
-                  zIndex={1}
-                >
-                  <Spinner size={"xl"} />
-                </Box>
-              )}
               <TabList>
                 <Tab>
                   <Heading fontSize={"md"}>Calendar</Heading>
@@ -184,7 +131,21 @@ function PortalLayout() {
                         >
                           {messageCount}
                         </Box>
-                      ) : null}
+                      ) : (
+                        loading && (
+                          <Box
+                            display={"flex"}
+                            alignItems={"center"}
+                            justifyContent={"center"}
+                            marginLeft={2}
+                            position={"absolute"}
+                            right={"-10px"}
+                            top={"-10px"}
+                          >
+                            <Spinner />
+                          </Box>
+                        )
+                      )}
                     </Box>
                   </Box>
                 </Tab>
@@ -195,10 +156,7 @@ function PortalLayout() {
                   <Calendars />
                 </TabPanel>
                 <TabPanel>
-                  <AdminOrders
-                    setOrderCount={handleCount}
-                    orderIndex={orderIndex}
-                  />
+                  <AdminOrders />
                 </TabPanel>
                 <TabPanel>
                   <RawSubmissionOrders />

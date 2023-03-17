@@ -756,21 +756,6 @@ function CP1DoneOrders({ incrementCounter }) {
 
   return (
     <>
-      {loader && (
-        <Box
-          width={"100%"}
-          height={"100vh"}
-          display="flex"
-          alignItems={"center"}
-          justifyContent={"center"}
-          position={"absolute"}
-          left={0}
-          top={0}
-          zIndex={1}
-        >
-          <Spinner size={"md"} />
-        </Box>
-      )}
       <div display={{ base: "none", sm: "block", md: "block" }}>
         <ExpertModal />
         <QcModal />

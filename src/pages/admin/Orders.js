@@ -40,7 +40,7 @@ import { apiUrl, frontEndUrl } from "../../services/contants";
 import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "../../services/firebase";
 
-function AdminOrders({ setOrderCount, orderIndex }) {
+function AdminOrders() {
   const [messageData, setMessageData] = useState([]);
   const [confirmedOperatorExpertChat, setConfirmedOperatorExpertChat] =
     useState({});
@@ -50,7 +50,6 @@ function AdminOrders({ setOrderCount, orderIndex }) {
   const [inProcessOrderData, setInProcessOrderData] = useState([]);
   const [confirmedOrders, setConfirmedOrders] = useState([]);
   const [inProcessOrders, setInProcessOrders] = useState([]);
-  const [tabIndex, setTabIndex] = useState(0);
   let confirmOrderAssignedExpertMessages,
     inProcessOrderAssignedExpertMessages,
     confirmedMessageData,
@@ -59,7 +58,6 @@ function AdminOrders({ setOrderCount, orderIndex }) {
   const [userRole, setUserRole] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [notificationCounter, setNotificationCounter] = useState({});
-  const [loading, setLoading] = useState(true);
 
   const navigate = useRouter();
   const NotificationModalDis = useDisclosure();
@@ -464,20 +462,11 @@ function AdminOrders({ setOrderCount, orderIndex }) {
     });
   }
 
-  const handleChange = (index) => {
-    setOrderCount(index);
-  };
-
   return (
     <>
       <NotificationModal />
       <Box padding={0}>
-        <Tabs
-          isLazy
-          variant="soft-rounded"
-          onChange={(index) => handleChange(index)}
-          index={orderIndex}
-        >
+        <Tabs isLazy variant="soft-rounded">
           {userRole === "Super Admin" || userRole === "Admin" ? (
             <>
               <TabList>
