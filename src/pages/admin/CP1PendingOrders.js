@@ -46,7 +46,6 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
   const [assignments, setAssignments] = useState([]);
   const [asId, setAsId] = useState("");
   const [paid, setPaid] = useState("");
-  const [loader, setLoader] = useState(true);
 
   let assignmentList = [];
 
@@ -66,15 +65,6 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
       let config = {
         headers: { Authorization: `Bearer ${userToken}` },
       };
-      // if ()
-      //   const response = await axios.post(apiUrl + '/assignment/fetch',
-      //     {
-      //       "status": {
-      //         "$in": ["Fresh Order", "Quotation Asked", "Doability Asked",]
-      //       }
-      //     },
-      //     config
-      //   );
       const response = await axios.get(
         apiUrl + "/assignment/fetch?status=CP1%20Pending",
         config
@@ -109,7 +99,6 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
       } else {
         console.log("No CP1 Pending Orders");
       }
-      setLoader(false);
       setAssignments(assignmentList);
     } catch (err) {
       console.log(err);

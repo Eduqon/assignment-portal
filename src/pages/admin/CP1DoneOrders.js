@@ -45,7 +45,6 @@ function CP1DoneOrders({ incrementCounter }) {
   const [assignments, setAssignments] = useState([]);
   const [experts, setExperts] = useState([]);
   const [subjects, setSubjects] = useState([]);
-  const [loader, setLoader] = useState(true);
   let assignmentList = [];
   let expertList = [];
 
@@ -747,7 +746,6 @@ function CP1DoneOrders({ incrementCounter }) {
       } else {
         console.log("No CP1 Pending Orders");
       }
-      setLoader(false);
       setAssignments(assignmentList);
     } catch (err) {
       console.log(err);

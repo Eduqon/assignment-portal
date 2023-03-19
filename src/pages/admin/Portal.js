@@ -15,29 +15,8 @@ import AdminHome from "./Home";
 import { useEffect, useState } from "react";
 import Calendars from "./Calendars";
 import AdminPanel from "./AdminPanel";
-import Assignments from "./Assignments";
-import Subjects from "./Subjects";
-import Vendors from "./Vendors";
-import NewUser from "./NewUser";
-import Admins from "./Admins";
-import Operators from "./Operators";
-import QC from "./QC";
-import Sales from "./Sales";
-import Experts from "./Experts";
-import AnnChatQueue from "./AnnChatQueue";
-import SalesChatQueue from "./SalesChatQueue";
-import FreshOrders from "./FreshOrders";
-import CP1PendingOrders from "./CP1PendingOrders";
-import CP1DoneOrders from "./CP1DoneOrders";
-import ExpertAskedOrders from "./ExpertAskedOrders";
-import AssignedExpertOrders from "./AssignedExpertOrders";
 import RawSubmissionOrders from "./RawSubmissionOrders";
-import InternalReworkOrders from "./InternalReworkOrders";
-import ProofReadOrders from "./ProofReadOrders";
-import CP2DoneOrders from "./CP2DoneOrders";
-import ClientReworkOrders from "./ClientReworkOrders";
-import { mobTab } from "../../components/sidebar/Sidebar";
-import { ChatIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { ChatIcon } from "@chakra-ui/icons";
 import Messages from "./Messages";
 import AdminLayout from ".";
 
@@ -61,7 +40,6 @@ function PortalLayout() {
     setUserRole(localStorage.getItem("userRole"));
   }, []);
 
-  console.log({ loading, messageCount });
   return (
     <>
       <AdminLayout />
@@ -217,33 +195,6 @@ function PortalLayout() {
             </>
           )}
         </Tabs>
-      </Box>
-      <Box display={{ base: "block", sm: "none", md: "none " }} id="parent_tab">
-        <Assignments />
-        <Subjects />
-        <NewUser />
-        <Vendors />
-        <Admins />
-        <Operators />
-        <QC />
-        <Sales />
-        <Experts />
-        {/* support start  */}
-        <AnnChatQueue />
-        <SalesChatQueue />
-        {/* celender */}
-        <Calendars />
-        {/* orders tab started  */}
-        <FreshOrders />
-        <CP1PendingOrders />
-        <CP1DoneOrders />
-        <ExpertAskedOrders />
-        <AssignedExpertOrders />
-        <RawSubmissionOrders />
-        <InternalReworkOrders />
-        <ProofReadOrders />
-        <CP2DoneOrders />
-        <ClientReworkOrders />
       </Box>
     </>
   );
