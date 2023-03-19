@@ -50,9 +50,10 @@ function AdminOrders() {
   const [inProcessOrderData, setInProcessOrderData] = useState([]);
   const [confirmedOrders, setConfirmedOrders] = useState([]);
   const [inProcessOrders, setInProcessOrders] = useState([]);
+  const [confirmedMessageData, setconfirmedMessageData] = useState([]);
   let confirmOrderAssignedExpertMessages,
     inProcessOrderAssignedExpertMessages,
-    confirmedMessageData,
+    // confirmedMessageData,
     inProcessMessageData;
 
   const [userRole, setUserRole] = useState("");
@@ -110,6 +111,7 @@ function AdminOrders() {
       );
       let data = await response.data.assignmentData;
       if (data && data.length !== 0) {
+        debugger;
         setConfirmedOrders(data);
       } else {
         console.log("Assignment Not Found");
@@ -150,8 +152,28 @@ function AdminOrders() {
   }
 
   useEffect(() => {
+    debugger;
+    if (
+      confirmedOrders.length !== 0 &&
+      inProcessOrders.length !== 0 &&
+      messageData.length !== 0
+    ) {
+      debugger;
+      console.log("banjouralam", messageData);
+      confirmedMessageData = messageData.filter((data) => {
+        return confirmedOrders.some((val) => val._id === data._id);
+      });
+      inProcessMessageData = messageData.filter((data) => {
+        return inProcessOrders.some((val) => val._id === data._id);
+      });
+      setconfirmedMessageData(confirmedMessageData);
+    }
+  }, [confirmedOrders, inProcessOrders, messageData]);
+
+  useEffect(() => {
     (async () => {
       if (confirmedMessageData && confirmedMessageData.length !== 0) {
+        debugger;
         confirmedMessageData.map(async (msg) => {
           await _fetchConfirmedOperatorExpertChat(msg.expertEmail, msg._id);
         });
@@ -167,7 +189,7 @@ function AdminOrders() {
         });
       }
     })();
-  }, [messageData]);
+  }, [confirmedMessageData]);
 
   useEffect(() => {
     (async () => {
@@ -188,6 +210,7 @@ function AdminOrders() {
   }
 
   async function _fetchConfirmedOperatorExpertChat(expertEmail, assignment_id) {
+    //debugger;
     let userEmail = localStorage.getItem("userEmail");
     try {
       const chatName = expertEmail + "_" + userEmail + "_" + assignment_id;
@@ -200,6 +223,8 @@ function AdminOrders() {
         });
       }
       const unsubChat = onSnapshot(doc(db, "chat", chatName), (doc) => {
+        debugger;
+        // console.log(operatorExpertChat, "dcvcsdvcsdsdvs");
         setConfirmedOperatorExpertChat((operatorExpertChat) => ({
           ...operatorExpertChat,
           [assignment_id]: doc.data().conversation,
@@ -231,18 +256,18 @@ function AdminOrders() {
     }
   }
 
-  if (
-    confirmedOrders.length !== 0 &&
-    inProcessOrders.length !== 0 &&
-    messageData.length !== 0
-  ) {
-    confirmedMessageData = messageData.filter((data) => {
-      return confirmedOrders.some((val) => val._id === data._id);
-    });
-    inProcessMessageData = messageData.filter((data) => {
-      return inProcessOrders.some((val) => val._id === data._id);
-    });
-  }
+  // if (
+  //   confirmedOrders.length !== 0 &&
+  //   inProcessOrders.length !== 0 &&
+  //   messageData.length !== 0
+  // ) {
+  //   confirmedMessageData = messageData.filter((data) => {
+  //     return confirmedOrders.some((val) => val._id === data._id);
+  //   });
+  //   inProcessMessageData = messageData.filter((data) => {
+  //     return inProcessOrders.some((val) => val._id === data._id);
+  //   });
+  // }
 
   if (Object.keys(processOperatorExpertChat).length !== 0) {
     inProcessOrderAssignedExpertMessages = Object.keys(
@@ -869,7 +894,7 @@ function AdminOrders() {
                   {notificationCounter["CP2 Done"]}
                 </div>
               </TabList>
-
+              {console.log(confirmedOperatorExpertChat, "cdvcscsvcdvscdvs")}
               <TabPanels>
                 <TabPanel>
                   <FreshOrders
