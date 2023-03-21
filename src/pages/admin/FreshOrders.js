@@ -212,17 +212,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
         <ModalOverlay />
         <ModalContent maxH={"500px"} overflowY="scroll">
           <ModalHeader>Choose Expert</ModalHeader>
-          {/* <h4 style={{width:"80%",
-    marginLeft:"5%"}}> Deadline Date:</h4>
-        <br></br>
-                <Input
-                placeholder="Select Date and Time"
-                  size="lg"
-                   type="datetime-local"
-                   style={{width:"80%",
-                border:"none",
-            marginLeft:"3%"}}
-                 /> */}
           <ModalCloseButton />
           <ModalBody>
             <Select

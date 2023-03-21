@@ -75,3 +75,43 @@ export const FAQSCHEMA = gql`
     }
   }
 `;
+
+export const BLOGS = gql`
+  query {
+    blogs(pagination: { limit: 1000 }) {
+      data {
+        id
+        attributes {
+          Slug
+          Heading
+          body
+          Author
+          createdAt
+        }
+      }
+    }
+  }
+`;
+
+export const BLOG = gql`
+  query GetBlogs($blog: String!) {
+    blogs(filters: { Slug: { eq: $blog } }) {
+      data {
+        id
+        attributes {
+          Heading
+          Slug
+          body
+          Categories
+          Author
+          Author_BIO
+          Seo_Title
+          Seo_Description
+          Seo_Keyword
+          Seo_Cntag
+          createdAt
+        }
+      }
+    }
+  }
+`;

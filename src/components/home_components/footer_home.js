@@ -12,7 +12,7 @@ import { LinkIcon } from "@chakra-ui/icons";
 
 export function FooterHome() {
   return (
-    <div className="row p-0 m-0  set-back">
+    <div className="row p-0 m-0 set-back">
       <div className="col-12 ">
         <div className="row pt-4 m-0  d-flex align-items-center">
           <div className="col-md-4 col-12">
