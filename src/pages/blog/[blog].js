@@ -292,7 +292,7 @@ export default function NavService({ blogsdata, services, faqschemas }) {
               <br />
               <Faqschema
                 title={SchemaTitle}
-                slug={slug}
+                slug={blog}
                 faqschemas={faqschemas}
               />
             </Box>
