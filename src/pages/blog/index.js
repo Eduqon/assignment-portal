@@ -14,11 +14,21 @@ import { FooterHome } from "../../components/home_components/footer_home";
 import SearchBar from "../../components/home_components/SearchBar";
 import HeadLayout from "../../components/home_components/HeadLayout";
 import { NavbarHome } from "../../components/home_components/navbar_home";
-import { BLOGS, SEOTAGS, SERVICES } from "../../services/contants";
+import { BLOGS, mediaUrl, SEOTAGS, SERVICES } from "../../services/contants";
 import { client } from "../_app";
+import useFetch from "../../hooks/useFetch";
 
-export default function Blog({ services, seotags, blogs }) {
+export default function Blog({ services, seotags, blogs, blogsdata }) {
   const { data: blogData } = blogs;
+
+  const { apiData } = useFetch(mediaUrl + "/upload/files");
+
+  const blogImage =
+    apiData &&
+    blogData &&
+    apiData.filter((data) =>
+      blogData.find((val) => val.attributes.Slug === data.name)
+    );
   return (
     <>
       <HeadLayout slug="blog" seotags={seotags} />
@@ -66,13 +76,24 @@ export default function Blog({ services, seotags, blogs }) {
                 borderRadius="15px"
                 mt="1rem"
               >
-                <Image
-                  src="/assets/img/card-image.jpeg"
-                  alt="waterfall"
-                  borderRadius="xl"
-                  objectFit="cover"
-                  mx="auto"
-                />
+                {blogImage && blogImage.length !== 0 && (
+                  <Box
+                    display={"flex"}
+                    alignItems={"center"}
+                    justifyContent={"space-around"}
+                    width={"100%"}
+                    height={"200px"}
+                    marginTop={2}
+                  >
+                    <Box
+                      width={"100%"}
+                      height={"100%"}
+                      backgroundImage={`url(https://assignmentsantastrapi.fly.dev${blogImage[0].url})`}
+                      backgroundSize={"cover"}
+                      backgroundPosition={"center"}
+                    />
+                  </Box>
+                )}
                 <Box px="1rem">
                   <HStack mt="5" spacing="3" color="gray.500">
                     <span>

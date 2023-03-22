@@ -110,6 +110,7 @@ export const BLOG = gql`
           Seo_Keyword
           Seo_Cntag
           createdAt
+          SchemaTitle
         }
       }
     }

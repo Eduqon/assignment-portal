@@ -39,6 +39,7 @@ import Link from "next/link";
 import { client } from "../_app";
 import Custom404 from "../404";
 import AnonymousChat from "../../components/chat_components/anonymous_chat";
+import Faqschema from "../../components/home_components/Faqschema";
 
 export default function NavService({ blogsdata, services, faqschemas }) {
   const [pages, setPages] = useState(0);
@@ -70,6 +71,8 @@ export default function NavService({ blogsdata, services, faqschemas }) {
     blogsdata && getURL && blogsdata.data[0].attributes.Seo_Keyword;
   const canonicalURL =
     blogsdata && getURL && blogsdata.data[0].attributes.Seo_Cntag;
+  const SchemaTitle =
+    blogsdata && getURL && blogsdata.data[0].attributes.SchemaTitle;
 
   async function _submit() {
     let email = document.getElementById("email");
@@ -225,9 +228,9 @@ export default function NavService({ blogsdata, services, faqschemas }) {
               boxShadow="lg"
               borderRadius="10px"
             >
-              <Heading size="xl">
+              <h1 style={{ fontSize: "2.5rem", fontWeight: "bold" }}>
                 {blogsdata.data[0].attributes.Heading}
-              </Heading>
+              </h1>
               <HStack mt="1rem">
                 <span>
                   Published by <i class="fa fa-user" aria-hidden="true"></i>{" "}
@@ -262,7 +265,7 @@ export default function NavService({ blogsdata, services, faqschemas }) {
               <Box
                 mt="1rem"
                 className="service-body"
-                style={{ whiteSpace: "pre-line" }}
+                style={{ whiteSpace: "pre-line", padding: "0 1rem" }}
               >
                 <ReactMarkdown>
                   {blogsdata &&
@@ -270,17 +273,28 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                 </ReactMarkdown>
               </Box>
               <Divider mt="1rem" />
-              <Box display="flex" alignItems="center" mt="1rem">
-                <Box id="user_icon">
+              <Box
+                display="flex"
+                justifyContent="space-evenly"
+                mt="1rem"
+                p={4}
+                background="gray.100"
+                borderRadius="15px"
+              >
+                <Box id="user_icon" w="5%">
                   <Avatar />
                 </Box>
-                <Box id="user_info" overflow="hidden" ml="1rem">
-                  <Stack p={4} background="gray.100" borderRadius="15px">
-                    <Heading>{blogsdata.data[0].attributes.Author}</Heading>
-                    <p>{blogsdata.data[0].attributes.Author_BIO}</p>
-                  </Stack>
+                <Box id="user_info" w="90%">
+                  <Heading>{blogsdata.data[0].attributes.Author}</Heading>
+                  <p>{blogsdata.data[0].attributes.Author_BIO}</p>
                 </Box>
               </Box>
+              <br />
+              <Faqschema
+                title={SchemaTitle}
+                slug={slug}
+                faqschemas={faqschemas}
+              />
             </Box>
             <Box
               id="right_section"
@@ -300,7 +314,9 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                   className="set-pp"
                 >
                   <Stack align={"center"}>
-                    <Heading size={"xl"}>Assignment Santa</Heading>
+                    <p style={{ fontSize: "2.25rem", fontWeight: "bold" }}>
+                      Assignment Santa
+                    </p>
                     <p color="#000" className="text-capitalize">
                       Take help from best writing service !!
                     </p>
