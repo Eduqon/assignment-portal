@@ -1,4 +1,4 @@
-import { RepeatIcon } from "@chakra-ui/icons";
+import { AddIcon, MinusIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
   Table,
   Thead,
@@ -28,6 +28,8 @@ import {
   Spacer,
   Box,
   Spinner,
+  InputLeftElement,
+  InputRightElement,
 } from "@chakra-ui/react";
 import {
   Accordion,
@@ -243,6 +245,14 @@ function CP1DoneOrders({ incrementCounter }) {
       time: "",
     });
     const [items, setItems] = useState([]);
+    const [pages, setPages] = useState(
+      0 || assignments[selectedIndex]?.numOfPages
+    );
+    const [words, setWords] = useState(0);
+    const [comments, setComments] = useState("");
+    const [charges, setCharges] = useState("");
+    const [chargesAmount, setChargesAmount] = useState("");
+    const [selectValue, setSelectValue] = useState("page_number");
 
     const sendRequestIcon = (info) => {
       setItems([...items, info._id]);
@@ -317,6 +327,108 @@ function CP1DoneOrders({ incrementCounter }) {
                 </span>
               )}
             </FormControl>
+            <FormControl padding={2}>
+              <FormLabel fontWeight={"bold"}>Page No./Word Count</FormLabel>
+              <HStack>
+                <Select onChange={(e) => setSelectValue(e.target.value)}>
+                  <option value="page_number">Page No.</option>
+                  <option value="word_count">Word Count</option>
+                </Select>
+                <InputGroup>
+                  <InputLeftElement h={"full"}>
+                    <Button
+                      variant={"outline"}
+                      onClick={() => {
+                        if (pages <= 0 || words <= 0) {
+                          console.log("Already zero");
+                        } else {
+                          if (selectValue === "page_number") {
+                            setPages(pages - 1);
+                          } else {
+                            setWords(words - 100);
+                          }
+                        }
+                      }}
+                    >
+                      <MinusIcon />
+                    </Button>
+                  </InputLeftElement>
+                  {selectValue === "page_number" ? (
+                    <Input
+                      type="text"
+                      value={"   " + pages + " Pages"}
+                      onChange={(e) => {
+                        setPages(e.target.value);
+                      }}
+                      contentEditable={false}
+                    />
+                  ) : (
+                    <Input
+                      type="text"
+                      value={"   " + words + " Words"}
+                      onChange={(e) => {
+                        setWords(e.target.value);
+                      }}
+                      contentEditable={false}
+                    />
+                  )}
+                  <InputRightElement h={"full"}>
+                    <Button
+                      variant={"outline"}
+                      onClick={() => {
+                        if (selectValue === "page_number") {
+                          setPages(pages + 1);
+                        } else {
+                          setWords(words + 100);
+                        }
+                      }}
+                    >
+                      <AddIcon />
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+              </HStack>
+            </FormControl>
+            <FormControl padding={2}>
+              <FormLabel fontWeight={"bold"}>Comments</FormLabel>
+              <Textarea
+                id="note"
+                value={comments}
+                onChange={(e) => {
+                  setComments(e.target.value);
+                }}
+              ></Textarea>
+            </FormControl>
+            <FormControl padding={2}>
+              <FormLabel fontWeight={"bold"}>Charges</FormLabel>
+              <HStack>
+                <Button onClick={() => setCharges("regular")}>
+                  Regular Charges
+                </Button>
+                <Button onClick={() => setCharges("custom")}>
+                  Enter Charges
+                </Button>
+              </HStack>
+            </FormControl>
+            <FormControl
+              display={charges === "custom" ? "block" : "none"}
+              h={"full"}
+              padding={2}
+            >
+              <FormLabel fontWeight={"bold"}>Enter Custom Charges</FormLabel>
+              <InputGroup>
+                <InputLeftAddon>
+                  <Text fontWeight={"bold"}>INR</Text>
+                </InputLeftAddon>
+                <Input
+                  type="number"
+                  value={chargesAmount}
+                  onChange={(e) => {
+                    setChargesAmount(e.target.value);
+                  }}
+                />
+              </InputGroup>
+            </FormControl>
             <Table marginTop={2} variant="simple" size="sm">
               <Thead bgColor={"gray.200"}>
                 <Tr>
@@ -378,12 +490,26 @@ function CP1DoneOrders({ incrementCounter }) {
                             };
                             try {
                               sendRequestIcon(expert);
+                              const requestData = {
+                                display_page_word:
+                                  selectValue === "word_count"
+                                    ? "Words Count"
+                                    : "Pages",
+                                page_word_data:
+                                  selectValue === "word_count" ? words : pages,
+                                charges:
+                                  charges === "custom"
+                                    ? chargesAmount
+                                    : "Regular Charges",
+                                comments: comments,
+                              };
                               const response = await axios.post(
                                 apiUrl + "/expert/assignment/ask",
                                 {
                                   expertId: experts[index]._id,
                                   assignmentId: assignments[selectedIndex].id,
                                   expertDeadline: iso,
+                                  requestData: requestData,
                                 },
                                 config
                               );
