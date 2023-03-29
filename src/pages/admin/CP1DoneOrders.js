@@ -45,7 +45,6 @@ import { useRouter } from "next/router";
 
 function CP1DoneOrders({ incrementCounter }) {
   const [assignments, setAssignments] = useState([]);
-  const [experts, setExperts] = useState([]);
   const [subjects, setSubjects] = useState([]);
   let assignmentList = [];
   let expertList = [];
@@ -203,43 +202,14 @@ function CP1DoneOrders({ incrementCounter }) {
     );
   }
 
-  async function fetchExperts(subject) {
-    try {
-      const response = await axios.post(
-        apiUrl + "/expert/fetch",
-        subject === ""
-          ? {}
-          : {
-              subject: subject,
-            }
-      );
-      let data = await response.data.res;
-      expertList = [];
-      if (data.length !== 0) {
-        for (let index = 0; index < data.length; index++) {
-          expertList.push({
-            _id: data[index]._id,
-            name: data[index].name,
-            subject: data[index].subject,
-          });
-        }
-      } else {
-        console.log("No Experts Found");
-      }
-      setExperts(expertList);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
   async function openExpertModal(index) {
     setSelectedIndex(index);
-    await fetchExperts("");
     ExpertModalDis.onOpen();
   }
 
   function ExpertModal() {
     const [error, setError] = useState(false);
+    const [experts, setExperts] = useState([]);
     const [inputValue, setInputValue] = useState({
       date: "",
       time: "",
@@ -254,6 +224,39 @@ function CP1DoneOrders({ incrementCounter }) {
     const [chargesAmount, setChargesAmount] = useState("");
     const [selectValue, setSelectValue] = useState("page_number");
 
+    useEffect(() => {
+      fetchExperts();
+    }, [selectedIndex]);
+
+    async function fetchExperts(subject) {
+      try {
+        const response = await axios.post(
+          apiUrl + "/expert/fetch",
+          subject === ""
+            ? {}
+            : {
+                subject: subject,
+              }
+        );
+        let data = await response.data.res;
+        expertList = [];
+        if (data.length !== 0) {
+          for (let index = 0; index < data.length; index++) {
+            expertList.push({
+              _id: data[index]._id,
+              name: data[index].name,
+              subject: data[index].subject,
+            });
+          }
+        } else {
+          console.log("No Experts Found");
+        }
+        setExperts(expertList);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
     const sendRequestIcon = (info) => {
       setItems([...items, info._id]);
     };
@@ -265,6 +268,7 @@ function CP1DoneOrders({ incrementCounter }) {
       });
       ExpertModalDis.onClose();
     };
+
     return (
       <Modal
         size={"5xl"}
@@ -278,23 +282,29 @@ function CP1DoneOrders({ incrementCounter }) {
           <ModalHeader>Choose Expert</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Select
-              onChange={async (e) => {
-                await fetchExperts(e.target.value);
-              }}
-              id="subject"
-            >
-              <option value="">All Subjects</option>
-              {subjects.length === 0 ? (
-                <></>
-              ) : (
-                subjects.map((subject, index) => (
-                  <option value={subject._id} key={index}>
-                    {subject._id}
-                  </option>
-                ))
-              )}
-            </Select>
+            <HStack>
+              <Select
+                onChange={async (e) => {
+                  await fetchExperts(e.target.value);
+                }}
+                id="subject"
+                w="80%"
+              >
+                <option value="">All Subjects</option>
+                {subjects.length === 0 ? (
+                  <></>
+                ) : (
+                  subjects.map((subject, index) => (
+                    <option value={subject._id} key={index}>
+                      {subject._id}
+                    </option>
+                  ))
+                )}
+              </Select>
+              <Button variant={"outline"} w="20%">
+                Instruction File
+              </Button>
+            </HStack>
             <FormControl padding={2} id="expertDeadline">
               <FormLabel fontWeight={"bold"}>Set Expert Deadline</FormLabel>
               <HStack>
@@ -334,18 +344,22 @@ function CP1DoneOrders({ incrementCounter }) {
                   <option value="page_number">Page No.</option>
                   <option value="word_count">Word Count</option>
                 </Select>
-                <InputGroup>
-                  <InputLeftElement h={"full"}>
+                <InputGroup display="flex" justifyContent="space-around">
+                  <InputLeftElement h={"full"} w="10%">
                     <Button
                       variant={"outline"}
                       onClick={() => {
-                        if (pages <= 0 || words <= 0) {
-                          console.log("Already zero");
-                        } else {
-                          if (selectValue === "page_number") {
+                        if (selectValue === "page_number") {
+                          if (pages > 0) {
                             setPages(pages - 1);
                           } else {
+                            setPages(0);
+                          }
+                        } else {
+                          if (words > 0) {
                             setWords(words - 100);
+                          } else {
+                            setWords(0);
                           }
                         }
                       }}
@@ -355,24 +369,28 @@ function CP1DoneOrders({ incrementCounter }) {
                   </InputLeftElement>
                   {selectValue === "page_number" ? (
                     <Input
-                      type="text"
-                      value={"   " + pages + " Pages"}
+                      w="80%"
+                      type="number"
+                      paddingLeft="1rem"
+                      value={pages}
                       onChange={(e) => {
-                        setPages(e.target.value);
+                        setPages(Number(e.target.value));
                       }}
                       contentEditable={false}
                     />
                   ) : (
                     <Input
-                      type="text"
-                      value={"   " + words + " Words"}
+                      w="80%"
+                      type="number"
+                      value={words}
+                      paddingLeft="1rem"
                       onChange={(e) => {
-                        setWords(e.target.value);
+                        setWords(Number(e.target.value));
                       }}
                       contentEditable={false}
                     />
                   )}
-                  <InputRightElement h={"full"}>
+                  <InputRightElement w="10%" h={"full"}>
                     <Button
                       variant={"outline"}
                       onClick={() => {
@@ -407,6 +425,9 @@ function CP1DoneOrders({ incrementCounter }) {
                 </Button>
                 <Button onClick={() => setCharges("custom")}>
                   Enter Charges
+                </Button>
+                <Button onClick={() => setCharges("ask_quote")}>
+                  Ask Quote Charges
                 </Button>
               </HStack>
             </FormControl>
@@ -488,7 +509,7 @@ function CP1DoneOrders({ incrementCounter }) {
                             let config = {
                               headers: { Authorization: `Bearer ${userToken}` },
                             };
-                            try {
+                            if (charges === "ask_quote") {
                               sendRequestIcon(expert);
                               const requestData = {
                                 display_page_word:
@@ -497,39 +518,62 @@ function CP1DoneOrders({ incrementCounter }) {
                                     : "Pages",
                                 page_word_data:
                                   selectValue === "word_count" ? words : pages,
-                                charges:
-                                  charges === "custom"
-                                    ? chargesAmount
-                                    : "Regular Charges",
                                 comments: comments,
                               };
-                              const response = await axios.post(
-                                apiUrl + "/expert/assignment/ask",
-                                {
-                                  expertId: experts[index]._id,
-                                  assignmentId: assignments[selectedIndex].id,
-                                  expertDeadline: iso,
-                                  requestData: requestData,
-                                },
-                                config
-                              );
-                              const createNotification = await axios.post(
-                                apiUrl + "/notifications",
-                                {
-                                  assignmentId: assignments[selectedIndex].id,
-                                  status: "Expert Asked",
-                                  read: false,
-                                },
-                                config
-                              );
-                              // incrementCounter("Expert Asked");
-                              // let resdata = response.data;
-                              // if (resdata.success) {
-                              //   typeof window !== "undefined" &&
-                              //     window.alert("Expert Asked for Confirmation");
-                              // }
-                            } catch (err) {
-                              console.log(err);
+                              try {
+                                const response = await axios.post(
+                                  apiUrl + "/expert/quote/askCharges",
+                                  {
+                                    expertId: experts[index]._id,
+                                    assignmentId: assignments[selectedIndex].id,
+                                    expertDeadline: iso,
+                                    requestData: requestData,
+                                  },
+                                  config
+                                );
+                              } catch (err) {
+                                console.log(err);
+                              }
+                            } else {
+                              try {
+                                sendRequestIcon(expert);
+                                const requestData = {
+                                  display_page_word:
+                                    selectValue === "word_count"
+                                      ? "Words Count"
+                                      : "Pages",
+                                  page_word_data:
+                                    selectValue === "word_count"
+                                      ? words
+                                      : pages,
+                                  charges:
+                                    charges === "custom"
+                                      ? chargesAmount
+                                      : "Regular Charges",
+                                  comments: comments,
+                                };
+                                const response = await axios.post(
+                                  apiUrl + "/expert/assignment/ask",
+                                  {
+                                    expertId: experts[index]._id,
+                                    assignmentId: assignments[selectedIndex].id,
+                                    expertDeadline: iso,
+                                    requestData: requestData,
+                                  },
+                                  config
+                                );
+                                const createNotification = await axios.post(
+                                  apiUrl + "/notifications",
+                                  {
+                                    assignmentId: assignments[selectedIndex].id,
+                                    status: "Expert Asked",
+                                    read: false,
+                                  },
+                                  config
+                                );
+                              } catch (err) {
+                                console.log(err);
+                              }
                             }
                           }}
                         >
@@ -664,7 +708,6 @@ function CP1DoneOrders({ incrementCounter }) {
                 onClick={async () => {
                   try {
                     let userEmail = localStorage.getItem("userEmail");
-                    console.log(userEmail);
                     let userName = localStorage.getItem("userName");
                     let userToken = localStorage.getItem("userToken");
                     if (userToken == null) {
@@ -810,6 +853,9 @@ function CP1DoneOrders({ incrementCounter }) {
                             }}
                           >
                             Send Request
+                          </Button>
+                          <Button onClick={async () => {}}>
+                            Edit Quotation
                           </Button>
                         </HStack>
                       </Td>

@@ -32,7 +32,7 @@ export default function Contact({ services, seotags }) {
                 <h1 className="">Contact Us </h1>
               </div>
               <div className="row contact_details">
-                <div className="col-md-6 col-12 d-flex flex-column justify-content-around align-items-center">
+                <div className="col-md-8 col-12 d-flex flex-column justify-content-around align-items-center">
                   <ul className="set-lisT" style={{ listStyle: "none" }}>
                     {/* <li>
                                             <div className="d-flex align-items-center">
@@ -41,20 +41,72 @@ export default function Contact({ services, seotags }) {
                                             </div>
 
                                         </li> */}
-
                     {/* <li>
                                             <div className="d-flex align-items-center">
                                                 <RiWhatsappFill className='whst' /> &nbsp;&nbsp; <a href='http://api.whatsapp.com/send?phone=917986021317' target="_blank">7986021317 (WhatsApp)</a>
                                             </div>
                                         </li> */}
                     <li>
-                      <div className="d-flex align-items-center">
-                        <FaRegAddressCard className="whst" /> &nbsp;&nbsp; 301
-                        Hostorical dr, Aintree, Melbourne, Australia
+                      <div className="d-flex">
+                        <FaRegAddressCard className="whst" />
+                        <span style={{ marginLeft: "1rem" }}>
+                          301 Hostorical dr, Aintree, Melbourne, Australia
+                        </span>
                       </div>
-                      <div className="d-flex align-items-center">
-                        <FaPhoneAlt className="whst" /> &nbsp;&nbsp; +61
-                        48889-3287
+                      <div className="d-flex">
+                        <FaPhoneAlt className="whst" />
+                        <span style={{ marginLeft: "1rem" }}>
+                          +61 48889-3287
+                        </span>
+                      </div>
+                    </li>
+                    <br />
+                    <li>
+                      <div className="d-flex">
+                        <FaRegAddressCard className="whst" />
+                        <span style={{ marginLeft: "1rem" }}>
+                          USA address and Contact number 2600 Bay Area Blvd,
+                          Houston, Texas 77058, United States
+                        </span>
+                      </div>
+                      <div className="d-flex">
+                        <FaPhoneAlt className="whst" />
+                        <span style={{ marginLeft: "1rem" }}>
+                          +1(337) 252-0077
+                        </span>
+                      </div>
+                    </li>
+                    <br />
+                    <li>
+                      <div className="d-flex">
+                        <FaRegAddressCard className="whst" />
+                        <span style={{ marginLeft: "1rem" }}>
+                          Canada address and contact number 9990 125 Street
+                          Surrey, V3V 4Y2
+                        </span>
+                      </div>
+                      <div className="d-flex">
+                        <FaPhoneAlt className="whst" />
+                        <span style={{ marginLeft: "1rem" }}>
+                          +1(604) 256-2312
+                        </span>
+                      </div>
+                    </li>
+                    <br />
+                    <li>
+                      <div className="d-flex">
+                        <FaRegAddressCard className="whst" />
+                        <span style={{ marginLeft: "1rem" }}>
+                          UK address and contact number Stringfellow Hall Block
+                          5, Cranfield, Wharley End, Bedford, Bedfordshire- MK43
+                          0FX 44
+                        </span>
+                      </div>
+                      <div className="d-flex">
+                        <FaPhoneAlt className="whst" />
+                        <span style={{ marginLeft: "1rem" }}>
+                          +(744) 144-1907
+                        </span>
                       </div>
                     </li>
                     {/* <li>    <div className="mail d-flex align-items-center">
@@ -87,7 +139,7 @@ export default function Contact({ services, seotags }) {
                                         </div>
                                     </div> */}
                 </div>
-                <div className="col-md-6 col-12">
+                <div className="col-md-4 col-12">
                   <div className="img-contact">
                     <img src="/assets/contact.png" alt="" />
                   </div>

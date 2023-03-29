@@ -1341,6 +1341,9 @@ h1.set-contact {
 .service-body img {
   margin: 0 auto;
 }
+.service-body ul {
+  padding: 0 1rem;
+}
 #bottom-section ul,
 #bottom-section ol {
   padding: 0px 25px !important;

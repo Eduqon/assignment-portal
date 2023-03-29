@@ -272,6 +272,12 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                     blogsdata.data[0].attributes.body.split("<br/>").join("\n")}
                 </ReactMarkdown>
               </Box>
+              <br />
+              <Faqschema
+                title={SchemaTitle}
+                slug={blog}
+                faqschemas={faqschemas}
+              />
               <Divider mt="1rem" />
               <Box
                 display="flex"
@@ -290,11 +296,6 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                 </Box>
               </Box>
               <br />
-              <Faqschema
-                title={SchemaTitle}
-                slug={blog}
-                faqschemas={faqschemas}
-              />
             </Box>
             <Box
               id="right_section"

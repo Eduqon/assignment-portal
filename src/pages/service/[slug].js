@@ -18,7 +18,7 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+import { AddIcon, MinusIcon, Search2Icon } from "@chakra-ui/icons";
 import { isMobile } from "react-device-detect";
 import validator from "validator";
 import { ClientStore } from "../../services/stores/client_store";
@@ -226,9 +226,9 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                 className="col-md-6 col-12 d-flex align-items-center flex-column justify-content-center p-4"
               >
                 <Box id="heading-section" color={"white"} width={"500px"}>
-                  <Heading size={"xl"}>
+                  <h1 style={{ fontSize: "2.25rem", fontWeight: "bold" }}>
                     {servicesdata && servicesdata.data[0].attributes.title}
-                  </Heading>
+                  </h1>
                   <Heading size={"md"} lineHeight={"1.5"}>
                     {servicesdata && servicesdata.data[0].attributes.Sub_Title}
                   </Heading>
@@ -427,12 +427,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                   flexDirection={"column"}
                   padding={"5"}
                 >
-                  <img
-                    alt="Question Bank"
-                    src="https://www.totalassignment.com/uploads/search-assignment03.png"
-                    width="60px;"
-                  />
-
+                  <Search2Icon fontSize="3rem" />
                   <Heading
                     size={"md"}
                     className="lspacing"
@@ -449,42 +444,37 @@ export default function NavService({ servicesdata, services, faqschemas }) {
               </Box>
               <Box>
                 <img
-                  class=""
-                  alt=""
+                  alt="Paypal Image"
                   style={{ "padding-top": "20px", "padding-bottom": "20px" }}
-                  src="https://www.totalassignment.com/assets/image/we_accept.png"
+                  src="/assets/img/paypal_image.png"
                 />
               </Box>
               <Box>
                 <img
-                  className=""
                   style={{ "padding-top": "10px", "padding-bottom": "20px" }}
-                  alt=""
-                  src="https://www.totalassignment.com/assets/image/MONEY_BACK.png"
+                  alt="MONEY BACK"
+                  src="/assets/img/MONEY_BACK.png"
                 />
               </Box>
               <Box>
                 <img
-                  className=""
                   style={{ "padding-top": "10px", "padding-bottom": "20px" }}
-                  alt=""
-                  src="https://www.totalassignment.com/assets/image/100p_QUALITY.png"
+                  alt="100p QUALITY"
+                  src="/assets/img/100p_QUALITY.png"
                 />
               </Box>
               <Box>
                 <img
-                  className=""
                   style={{ "padding-top": "10px", "padding-bottom": "20px" }}
-                  alt=""
-                  src="https://www.totalassignment.com/assets/image/Lowest_Price_Guarantee.png"
+                  alt="Lowest_Price_Guarantee"
+                  src="/assets/img/Lowest_Price_Guarantee.png"
                 />
               </Box>
               <Box>
                 <img
-                  className=""
                   style={{ "padding-top": "10px", "padding-bottom": "20px" }}
-                  alt=""
-                  src="https://www.totalassignment.com/assets/image/Plagiarism_Free_Work.png"
+                  alt="Plagiarism_Free_Work"
+                  src="/assets/img/Plagiarism_Free_Work.png"
                 />
               </Box>
               <Box width={"100%"} backgroundColor={"#f0f5f8"}>

@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 function Faqschema({ title, slug, faqschemas }) {
   return (
     <>
-      <Box id="schema-section" style={{ padding: "0rem 2rem", width: "100%" }}>
+      <Box id="schema-section" style={{ padding: "0rem 1rem", width: "100%" }}>
         <Box itemScope itemType="https://schema.org/FAQPage">
           {title && (
             <Heading textAlign={"left"} width={"100%"}>
