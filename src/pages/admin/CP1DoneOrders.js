@@ -46,6 +46,12 @@ import { useRouter } from "next/router";
 function CP1DoneOrders({ incrementCounter }) {
   const [assignments, setAssignments] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [showModals, setShowModals] = useState({
+    showExpertModal: false,
+    showQCModal: false,
+    showQuotesModal: false,
+    showEditQuoteModal: false,
+  });
   let assignmentList = [];
   let expertList = [];
 
@@ -53,6 +59,7 @@ function CP1DoneOrders({ incrementCounter }) {
 
   const ExpertModalDis = useDisclosure();
   const QcModalDis = useDisclosure();
+  const EditQuoteExpertModalDis = useDisclosure();
 
   const [selectedIndex, setSelectedIndex] = useState();
 
@@ -121,6 +128,7 @@ function CP1DoneOrders({ incrementCounter }) {
 
   async function openQcModal(index) {
     setSelectedIndex(index);
+    setShowModals({ ...showModals, showQCModal: true });
     await _fetchQcs();
     QcModalDis.onOpen();
   }
@@ -128,10 +136,15 @@ function CP1DoneOrders({ incrementCounter }) {
   function QcModal() {
     let checkedListTemp = [];
 
+    const closeModal = () => {
+      setShowModals({ ...showModals, showQCModal: false });
+      QcModalDis.onClose();
+    };
+
     return (
       <Modal
         size={"xl"}
-        onClose={QcModalDis.onClose}
+        onClose={closeModal}
         isOpen={QcModalDis.isOpen}
         onOpen={QcModalDis.onOpen}
         isCentered
@@ -204,6 +217,7 @@ function CP1DoneOrders({ incrementCounter }) {
 
   async function openExpertModal(index) {
     setSelectedIndex(index);
+    setShowModals({ ...showModals, showExpertModal: true });
     ExpertModalDis.onOpen();
   }
 
@@ -266,6 +280,7 @@ function CP1DoneOrders({ incrementCounter }) {
         date: "",
         time: "",
       });
+      setShowModals({ ...showModals, showExpertModal: false });
       ExpertModalDis.onClose();
     };
 
@@ -301,9 +316,13 @@ function CP1DoneOrders({ incrementCounter }) {
                   ))
                 )}
               </Select>
-              <Button variant={"outline"} w="20%">
-                Instruction File
-              </Button>
+              <Link
+                w="20%"
+                href={assignments[selectedIndex]?.descriptionFile[0]}
+                fontWeight={"bold"}
+              >
+                <Button w="100%">Instruction File</Button>
+              </Link>
             </HStack>
             <FormControl padding={2} id="expertDeadline">
               <FormLabel fontWeight={"bold"}>Set Expert Deadline</FormLabel>
@@ -526,7 +545,10 @@ function CP1DoneOrders({ incrementCounter }) {
                                   {
                                     expertId: experts[index]._id,
                                     assignmentId: assignments[selectedIndex].id,
-                                    expertDeadline: iso,
+                                    expertDeadline:
+                                      new Date(iso).toDateString() +
+                                      " " +
+                                      new Date(iso).toLocaleTimeString(),
                                     requestData: requestData,
                                   },
                                   config
@@ -557,7 +579,6 @@ function CP1DoneOrders({ incrementCounter }) {
                                   {
                                     expertId: experts[index]._id,
                                     assignmentId: assignments[selectedIndex].id,
-                                    expertDeadline: iso,
                                     requestData: requestData,
                                   },
                                   config
@@ -601,6 +622,7 @@ function CP1DoneOrders({ incrementCounter }) {
 
   async function openQuotesModal(index) {
     setSelectedIndex(index);
+    setShowModals({ ...showModals, showQuotesModal: true });
     try {
       let userToken = localStorage.getItem("userToken");
       if (userToken == null) {
@@ -641,6 +663,11 @@ function CP1DoneOrders({ incrementCounter }) {
 
   function QuotesModal() {
     const ExpertQuoteGenerateModalDis = useDisclosure();
+
+    const closeModal = () => {
+      setShowModals({ ...showModals, showQuotesModal: false });
+      QuotesModalDis.onClose();
+    };
 
     async function openExpertQuoteGenerateModal(index) {
       selectedCost = index;
@@ -786,7 +813,7 @@ function CP1DoneOrders({ incrementCounter }) {
     return (
       <Modal
         size={"4xl"}
-        onClose={QuotesModalDis.onClose}
+        onClose={closeModal}
         isOpen={QuotesModalDis.isOpen}
         onOpen={QuotesModalDis.onOpen}
         isCentered
@@ -834,11 +861,27 @@ function CP1DoneOrders({ incrementCounter }) {
                                 },
                               };
                               try {
+                                const requestData = {
+                                  display_page_word: "Words Count",
+                                  page_word_data: quote.wordCount,
+                                  charges: quote.cost,
+                                  comments: quote.comments,
+                                };
                                 const response = await axios.post(
                                   apiUrl + "/expert/assignment/ask",
                                   {
                                     expertId: quote._id,
                                     assignmentId: assignments[selectedIndex].id,
+                                    requestData: requestData,
+                                  },
+                                  config
+                                );
+                                const createNotification = await axios.post(
+                                  apiUrl + "/notifications",
+                                  {
+                                    assignmentId: assignments[selectedIndex].id,
+                                    status: "Expert Asked",
+                                    read: false,
                                   },
                                   config
                                 );
@@ -854,7 +897,11 @@ function CP1DoneOrders({ incrementCounter }) {
                           >
                             Send Request
                           </Button>
-                          <Button onClick={async () => {}}>
+                          <Button
+                            onClick={async () => {
+                              openEditQuoteExpertModal(index);
+                            }}
+                          >
                             Edit Quotation
                           </Button>
                         </HStack>
@@ -904,6 +951,7 @@ function CP1DoneOrders({ incrementCounter }) {
             paid: data[index].paid,
             cp1PaymentId: data[index].cp1PaymentId,
             cp2PaymentId: data[index].cp2PaymentId,
+            deadline_quote: data[index].deadline,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
               ", " +
@@ -924,12 +972,280 @@ function CP1DoneOrders({ incrementCounter }) {
     }
   }
 
+  async function openEditQuoteExpertModal(index) {
+    setSelectedIndex(index);
+    setShowModals({ ...showModals, showEditQuoteModal: true });
+    EditQuoteExpertModalDis.onOpen();
+  }
+
+  function EditQuoteExpertModal() {
+    const [error, setError] = useState(false);
+    const [inputValue, setInputValue] = useState({
+      date: new Date(assignments[selectedIndex]?.deadline_quote)
+        .toLocaleDateString()
+        .split("/")
+        .reverse()
+        .join("-"),
+      time: new Date(
+        assignments[selectedIndex]?.deadline_quote
+      ).toLocaleTimeString(),
+    });
+    const [pages, setPages] = useState(
+      0 || assignments[selectedIndex]?.numOfPages
+    );
+    const [words, setWords] = useState(0);
+    const [comments, setComments] = useState(
+      "" || quotes[selectedIndex]?.comments
+    );
+    const [updatedCharges, setUpdatedCharges] = useState("");
+    const [selectValue, setSelectValue] = useState("page_number");
+
+    const closeModal = () => {
+      setInputValue({
+        date: "",
+        time: "",
+      });
+      setShowModals({ ...showModals, showEditQuoteModal: false });
+      EditQuoteExpertModalDis.onClose();
+    };
+
+    return (
+      <Modal
+        size={"5xl"}
+        onClose={closeModal}
+        isOpen={EditQuoteExpertModalDis.isOpen}
+        onOpen={EditQuoteExpertModalDis.onOpen}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent maxH={"500px"} overflowY="scroll">
+          <ModalHeader>Choose Expert</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <HStack>
+              <Link
+                w="20%"
+                href={assignments[selectedIndex]?.descriptionFile[0]}
+                fontWeight={"bold"}
+              >
+                <Button w="100%">Instruction File</Button>
+              </Link>
+            </HStack>
+            <FormControl padding={2} id="expertDeadline">
+              <FormLabel fontWeight={"bold"}>Set Expert Deadline</FormLabel>
+              <HStack>
+                <Input
+                  type="date"
+                  id="date"
+                  value={inputValue.date}
+                  onChange={(e) => {
+                    setInputValue({
+                      ...inputValue,
+                      date: e.target.value,
+                    });
+                  }}
+                />
+                <Input
+                  type="time"
+                  id="time"
+                  value={inputValue.time}
+                  onChange={(e) => {
+                    setInputValue({
+                      ...inputValue,
+                      time: e.target.value,
+                    });
+                  }}
+                />
+              </HStack>
+              {error && (
+                <span style={{ color: "red" }}>
+                  ** Expert Deadline is mandatory
+                </span>
+              )}
+            </FormControl>
+            <FormControl padding={2}>
+              <FormLabel fontWeight={"bold"}>Page No./Word Count</FormLabel>
+              <HStack>
+                <Select onChange={(e) => setSelectValue(e.target.value)}>
+                  <option value="page_number">Page No.</option>
+                  <option value="word_count">Word Count</option>
+                </Select>
+                <InputGroup display="flex" justifyContent="space-around">
+                  <InputLeftElement h={"full"} w="10%">
+                    <Button
+                      variant={"outline"}
+                      onClick={() => {
+                        if (selectValue === "page_number") {
+                          if (pages > 0) {
+                            setPages(pages - 1);
+                          } else {
+                            setPages(0);
+                          }
+                        } else {
+                          if (words > 0) {
+                            setWords(words - 100);
+                          } else {
+                            setWords(0);
+                          }
+                        }
+                      }}
+                    >
+                      <MinusIcon />
+                    </Button>
+                  </InputLeftElement>
+                  {selectValue === "page_number" ? (
+                    <Input
+                      w="80%"
+                      type="number"
+                      paddingLeft="1rem"
+                      value={pages}
+                      onChange={(e) => {
+                        setPages(Number(e.target.value));
+                      }}
+                      contentEditable={false}
+                    />
+                  ) : (
+                    <Input
+                      w="80%"
+                      type="number"
+                      value={words}
+                      paddingLeft="1rem"
+                      onChange={(e) => {
+                        setWords(Number(e.target.value));
+                      }}
+                      contentEditable={false}
+                    />
+                  )}
+                  <InputRightElement w="10%" h={"full"}>
+                    <Button
+                      variant={"outline"}
+                      onClick={() => {
+                        if (selectValue === "page_number") {
+                          setPages(pages + 1);
+                        } else {
+                          setWords(words + 100);
+                        }
+                      }}
+                    >
+                      <AddIcon />
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+              </HStack>
+            </FormControl>
+            <FormControl padding={2}>
+              <FormLabel fontWeight={"bold"}>Comments</FormLabel>
+              <Textarea
+                id="note"
+                value={comments}
+                onChange={(e) => {
+                  setComments(e.target.value);
+                }}
+              ></Textarea>
+            </FormControl>
+            <FormControl padding={2}>
+              <FormLabel fontWeight={"bold"}>Charges</FormLabel>
+              <HStack display="flex" justifyContent="space-between">
+                <Button width="30%">Expert’s Quoted Charges</Button>
+                <InputGroup>
+                  <InputLeftAddon>
+                    <Text fontWeight={"bold"}>INR</Text>
+                  </InputLeftAddon>
+                  <Input
+                    w="60%"
+                    type="number"
+                    value={quotes[selectedIndex]?.cost}
+                    paddingLeft="1rem"
+                    contentEditable={false}
+                    disabled
+                  />
+                </InputGroup>
+              </HStack>
+              <HStack display="flex" justifyContent="space-between" mt="1rem">
+                <Button width="30%">Updated Charges</Button>
+                <InputGroup>
+                  <InputLeftAddon>
+                    <Text fontWeight={"bold"}>INR</Text>
+                  </InputLeftAddon>
+                  <Input
+                    w="60%"
+                    type="number"
+                    value={updatedCharges}
+                    paddingLeft="1rem"
+                    onChange={(e) => setUpdatedCharges(e.target.value)}
+                    contentEditable={false}
+                  />
+                </InputGroup>
+              </HStack>
+            </FormControl>
+
+            <Button
+              mt="1rem"
+              float="right"
+              onClick={async () => {
+                let userToken = localStorage.getItem("userToken");
+                if (userToken == null) {
+                  navigate.replace("/admin/login");
+                }
+
+                let config = {
+                  headers: {
+                    Authorization: `Bearer ${userToken}`,
+                  },
+                };
+                try {
+                  const requestData = {
+                    display_page_word:
+                      selectValue === "word_count" ? "Words Count" : "Pages",
+                    page_word_data:
+                      selectValue === "word_count" ? words : pages,
+                    charges: updatedCharges || quotes[selectedIndex]?.cost,
+                    comments: comments,
+                  };
+                  const response = await axios.post(
+                    apiUrl + "/expert/assignment/ask",
+                    {
+                      expertId: quotes[selectedIndex]._id,
+                      assignmentId: assignments[selectedIndex].id,
+                      requestData: requestData,
+                    },
+                    config
+                  );
+                  const createNotification = await axios.post(
+                    apiUrl + "/notifications",
+                    {
+                      assignmentId: assignments[selectedIndex].id,
+                      status: "Expert Asked",
+                      read: false,
+                    },
+                    config
+                  );
+                  let resdata = response.data;
+                  if (resdata.success) {
+                    window.alert("Expert Asked for Confirmation");
+                    EditQuoteExpertModalDis.onClose();
+                  }
+                } catch (err) {
+                  console.log(err);
+                }
+              }}
+            >
+              Send Request
+            </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
   return (
     <>
       <div display={{ base: "none", sm: "block", md: "block" }}>
-        <ExpertModal />
-        <QcModal />
-        <QuotesModal />
+        {showModals.showExpertModal && <ExpertModal />}
+        {showModals.showQCModal && <QcModal />}
+        {showModals.showQuotesModal && <QuotesModal />}
+        {showModals.showEditQuoteModal && <EditQuoteExpertModal />}
+
         <Table
           variant="simple"
           size="md"
@@ -1027,9 +1343,7 @@ function CP1DoneOrders({ incrementCounter }) {
                           ? "flex"
                           : "none"
                       }
-                      onClick={async () =>
-                        openExpertModal(index, assignment.id)
-                      }
+                      onClick={async () => openExpertModal(index)}
                     >
                       Assign Expert
                     </Button>
@@ -1187,7 +1501,7 @@ function CP1DoneOrders({ incrementCounter }) {
                                           : "none"
                                       }
                                       onClick={async () =>
-                                        openExpertModal(index, assignment.id)
+                                        openExpertModal(index)
                                       }
                                     >
                                       Assign Expert
