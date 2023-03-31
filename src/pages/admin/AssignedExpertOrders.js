@@ -5,6 +5,7 @@ import {
   ArrowForwardIcon,
   AttachmentIcon,
   ViewOffIcon,
+  ViewIcon,
 } from "@chakra-ui/icons";
 import {
   Table,
@@ -57,6 +58,8 @@ function AssignedExpertOrders({
   const [loader, setLoader] = useState(true);
   const inputFileOperatorExpert = useRef(null);
   const { onOpen, onClose } = useDisclosure();
+
+  const [showAllAmount, setShowAllAmount] = useState(false);
 
   //    expert deadline start
   const [showPopup, setShowPopup] = useState(false);
@@ -546,7 +549,21 @@ function AssignedExpertOrders({
             <Th>Id</Th>
             <Th>Student Email</Th>
             <Th>Subject</Th>
-            <Th>Amount Paid</Th>
+            <Th display="flex" alignItems="center">
+              Amount Paid{" "}
+              <Button
+                onClick={() => setShowAllAmount(!showAllAmount)}
+                background="none"
+                _hover={{
+                  background: "none",
+                }}
+                _focus={{
+                  boxShadow: "none",
+                }}
+              >
+                {showAllAmount ? <ViewIcon /> : <ViewOffIcon />}
+              </Button>
+            </Th>
             <Th>Expert</Th>
             <Th>Expert Deadline</Th>
             <Th>Deadline</Th>
@@ -627,58 +644,62 @@ function AssignedExpertOrders({
               <Td color={"green.600"} fontWeight={"semibold"}>
                 {assignment.subject}
               </Td>
-              <Td>
-                <Button
-                  onClick={async () => {
-                    let userToken = localStorage.getItem("userToken");
-                    if (userToken == null) {
-                      navigate.replace("/admin/login");
-                    }
+              {showAllAmount ? (
+                <Td>{assignment.paid}</Td>
+              ) : (
+                <Td>
+                  <Button
+                    onClick={async () => {
+                      let userToken = localStorage.getItem("userToken");
+                      if (userToken == null) {
+                        navigate.replace("/admin/login");
+                      }
 
-                    let config = {
-                      headers: { Authorization: `Bearer ${userToken}` },
-                    };
-                    if (!showAmountAssignments.includes(assignment.id)) {
-                      try {
-                        const response = await axios.post(
-                          apiUrl + "/expert/assignment/showAmount",
-                          {
-                            assignmentId: assignment.id,
-                          },
-                          config
-                        );
-                        let resdata = response.data;
-                        if (resdata.success) {
-                          window.alert("Show Amount Asked");
+                      let config = {
+                        headers: { Authorization: `Bearer ${userToken}` },
+                      };
+                      if (!showAmountAssignments.includes(assignment.id)) {
+                        try {
+                          const response = await axios.post(
+                            apiUrl + "/expert/assignment/showAmount",
+                            {
+                              assignmentId: assignment.id,
+                            },
+                            config
+                          );
+                          let resdata = response.data;
+                          if (resdata.success) {
+                            window.alert("Show Amount Asked");
+                          }
+                        } catch (err) {
+                          console.log(err);
                         }
-                      } catch (err) {
-                        console.log(err);
+                      } else {
+                        const newData = [...showAmountAssignments];
+                        const index = newData.indexOf(assignment.id);
+                        if (index !== -1) {
+                          newData.splice(index, 1);
+                          setShowAmountAssignments(newData);
+                        }
                       }
-                    } else {
-                      const newData = [...showAmountAssignments];
-                      const index = newData.indexOf(assignment.id);
-                      if (index !== -1) {
-                        newData.splice(index, 1);
-                        setShowAmountAssignments(newData);
-                      }
-                    }
-                  }}
-                  background="none"
-                  _hover={{
-                    background: "none",
-                  }}
-                  _focus={{
-                    boxShadow: "none",
-                  }}
-                >
-                  {showAmountAssignments &&
-                  showAmountAssignments?.includes(assignment.id) ? (
-                    assignment.paid
-                  ) : (
-                    <ViewOffIcon />
-                  )}
-                </Button>
-              </Td>
+                    }}
+                    background="none"
+                    _hover={{
+                      background: "none",
+                    }}
+                    _focus={{
+                      boxShadow: "none",
+                    }}
+                  >
+                    {showAmountAssignments &&
+                    showAmountAssignments?.includes(assignment.id) ? (
+                      assignment.paid
+                    ) : (
+                      <ViewOffIcon />
+                    )}
+                  </Button>
+                </Td>
+              )}
               <Td>
                 {localStorage.getItem("userRole") === "Super Admin" ||
                 localStorage.getItem("userRole") === "Admin"
