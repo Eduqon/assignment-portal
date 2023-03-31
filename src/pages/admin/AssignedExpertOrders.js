@@ -4,6 +4,7 @@ import {
   RepeatIcon,
   ArrowForwardIcon,
   AttachmentIcon,
+  ViewOffIcon,
 } from "@chakra-ui/icons";
 import {
   Table,
@@ -41,7 +42,7 @@ import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { db } from "../../services/firebase";
-import { apiUrl, localUrl } from "../../services/contants";
+import { apiUrl } from "../../services/contants";
 import DeadlinePopup from "./DeadlinePopup";
 
 function AssignedExpertOrders({
@@ -49,6 +50,7 @@ function AssignedExpertOrders({
   operatorExpertChat,
 }) {
   const [assignments, setAssignments] = useState([]);
+  const [showAmountAssignments, setShowAmountAssignments] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState();
   const [messages, setMessages] = useState([]);
   const [id, setId] = useState("");
@@ -64,6 +66,7 @@ function AssignedExpertOrders({
   const MessagesModalDis = useDisclosure();
   const ReplyMessageModalDis = useDisclosure();
   let assignmentList = [];
+  let amountDataList = [];
 
   let navigate = useRouter();
 
@@ -134,8 +137,23 @@ function AssignedExpertOrders({
         apiUrl + "/assignment/fetch?status=Expert%20Assigned",
         config
       );
-      let data = response.data.assignmentData;
+      const Amount_Approved = await axios.get(
+        apiUrl + "/assignment/fetch?status=Amount%20Approved",
+        config
+      );
+      const Amount_Reject = await axios.get(
+        apiUrl + "/assignment/fetch?status=Amount%20Reject",
+        config
+      );
+
+      let Amount_approved_data = Amount_Approved.data.assignmentData;
+      let Amount_reject_data = Amount_Reject.data.assignmentData;
+      let data = response.data.assignmentData.concat(
+        Amount_approved_data,
+        Amount_reject_data
+      );
       assignmentList = [];
+      amountDataList = [];
       if (data.length !== 0) {
         for (let index = 0; index < data.length; index++) {
           assignmentList.push({
@@ -165,8 +183,14 @@ function AssignedExpertOrders({
       } else {
         console.log("No Expert Asked Orders");
       }
+      if (Amount_approved_data.length !== 0) {
+        for (let index = 0; index < Amount_approved_data.length; index++) {
+          amountDataList.push(Amount_approved_data[index]._id);
+        }
+      }
       setLoader(false);
       setAssignments(assignmentList);
+      setShowAmountAssignments(amountDataList);
     } catch (err) {
       console.log(err);
     }
@@ -611,8 +635,68 @@ function AssignedExpertOrders({
               <Td color={"green.600"} fontWeight={"semibold"}>
                 {assignment.subject}
               </Td>
-              <Td>{assignment.paid}</Td>
-              <Td>{assignment.assignedExpert}</Td>
+              <Td>
+                <Button
+                  onClick={async () => {
+                    let userToken = localStorage.getItem("userToken");
+                    if (userToken == null) {
+                      navigate.replace("/admin/login");
+                    }
+
+                    let config = {
+                      headers: { Authorization: `Bearer ${userToken}` },
+                    };
+                    if (!showAmountAssignments.includes(assignment.id)) {
+                      try {
+                        const response = await axios.post(
+                          apiUrl + "/expert/assignment/showAmount",
+                          {
+                            assignmentId: assignment.id,
+                          },
+                          config
+                        );
+                        let resdata = response.data;
+                        if (resdata.success) {
+                          window.alert("Show Amount Asked");
+                        }
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    } else {
+                      const newData = [...showAmountAssignments];
+                      const index = newData.indexOf(assignment.id);
+                      if (index !== -1) {
+                        newData.splice(index, 1);
+                        setShowAmountAssignments(newData);
+                      }
+                    }
+                  }}
+                  background="none"
+                  _hover={{
+                    background: "none",
+                  }}
+                  _focus={{
+                    boxShadow: "none",
+                  }}
+                >
+                  {showAmountAssignments &&
+                  showAmountAssignments?.includes(assignment.id) ? (
+                    assignment.paid
+                  ) : (
+                    <ViewOffIcon />
+                  )}
+                </Button>
+              </Td>
+              <Td>
+                {localStorage.getItem("userRole") === "Super Admin" ||
+                localStorage.getItem("userRole") === "Admin"
+                  ? assignment.assignedExpert
+                  : assignment.assignedExpert.substring(0, 2) +
+                    "****" +
+                    "@" +
+                    "****" +
+                    ".com"}
+              </Td>
               <Td
                 color={"red.600"}
                 fontWeight={"semibold"}
@@ -701,7 +785,17 @@ function AssignedExpertOrders({
                         </Tr>
                         <Tr>
                           <Th>Expert</Th>
-                          <Td>{assignment.assignedExpert}</Td>
+                          <Td>
+                            {localStorage.getItem("userRole") ===
+                              "Super Admin" ||
+                            localStorage.getItem("userRole") === "Admin"
+                              ? assignment.assignedExpert
+                              : assignment.assignedExpert.substring(0, 2) +
+                                "****" +
+                                "@" +
+                                "****" +
+                                ".com"}
+                          </Td>
                         </Tr>
                         <Tr>
                           <Th>Expert Deadline</Th>

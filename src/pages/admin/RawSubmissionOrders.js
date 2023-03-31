@@ -1052,8 +1052,26 @@ function RawSubmissionOrders({
                 <Td color={"red.600"} fontWeight={"semibold"}>
                   {assignment.expertDeadline}
                 </Td>
-                <Td>{assignment.assignedExpert}</Td>
-                <Td>{assignment.assignedQC}</Td>
+                <Td>
+                  {localStorage.getItem("userRole") === "Super Admin" ||
+                  localStorage.getItem("userRole") === "Admin"
+                    ? assignment.assignedExpert
+                    : assignment.assignedExpert.substring(0, 2) +
+                      "****" +
+                      "@" +
+                      "****" +
+                      ".com"}
+                </Td>
+                <Td>
+                  {localStorage.getItem("userRole") === "Super Admin" ||
+                  localStorage.getItem("userRole") === "Admin"
+                    ? assignment.assignedQC
+                    : assignment.assignedQC.substring(0, 2) +
+                      "****" +
+                      "@" +
+                      "****" +
+                      ".com"}
+                </Td>
                 <Td>
                   <HStack>
                     <Button onClick={async () => openSubmissionsModal(index)}>
@@ -1156,11 +1174,31 @@ function RawSubmissionOrders({
                         </Tr>
                         <Tr>
                           <Th>Assigned Expert</Th>
-                          <Td>{assignment.assignedExpert}</Td>
+                          <Td>
+                            {localStorage.getItem("userRole") ===
+                              "Super Admin" ||
+                            localStorage.getItem("userRole") === "Admin"
+                              ? assignment.assignedExpert
+                              : assignment.assignedExpert.substring(0, 2) +
+                                "****" +
+                                "@" +
+                                "****" +
+                                ".com"}
+                          </Td>
                         </Tr>
                         <Tr>
                           <Th>Assigned QC</Th>
-                          <Td>{assignment.assignedQC}</Td>
+                          <Td>
+                            {localStorage.getItem("userRole") ===
+                              "Super Admin" ||
+                            localStorage.getItem("userRole") === "Admin"
+                              ? assignment.assignedQC
+                              : assignment.assignedQC.substring(0, 2) +
+                                "****" +
+                                "@" +
+                                "****" +
+                                ".com"}
+                          </Td>
                         </Tr>
                         <Tr>
                           <Td p={0}>

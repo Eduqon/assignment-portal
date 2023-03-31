@@ -589,7 +589,17 @@ function ProofReadOrders({
               <Td color={"red.600"} fontWeight={"semibold"}>
                 {assignment.deadline}
               </Td>
-              <Td>{assignment.assignedQC}</Td>
+              <Td>
+                {localStorage.getItem("userRole") === "Super Admin" ||
+                localStorage.getItem("userRole") === "Admin"
+                  ? assignment.assignedQC
+                  : assignment.assignedQC &&
+                    assignment.assignedQC.substring(0, 2) +
+                      "****" +
+                      "@" +
+                      "****" +
+                      ".com"}
+              </Td>
               {/* <Td><Button>Choose Expert</Button></Td> */}
             </Tr>
           ))}
@@ -671,7 +681,18 @@ function ProofReadOrders({
                         </Tr>
                         <Tr>
                           <Th>Assigned QC</Th>
-                          <Td>{assignment.assignedQC}</Td>
+                          <Td>
+                            {localStorage.getItem("userRole") ===
+                              "Super Admin" ||
+                            localStorage.getItem("userRole") === "Admin"
+                              ? assignment.assignedQC
+                              : assignment.assignedQC &&
+                                assignment.assignedQC.substring(0, 2) +
+                                  "****" +
+                                  "@" +
+                                  "****" +
+                                  ".com"}
+                          </Td>
                         </Tr>
                         <Tr>
                           <Th>
