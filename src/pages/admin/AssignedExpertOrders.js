@@ -141,17 +141,9 @@ function AssignedExpertOrders({
         apiUrl + "/assignment/fetch?status=Amount%20Approved",
         config
       );
-      const Amount_Reject = await axios.get(
-        apiUrl + "/assignment/fetch?status=Amount%20Reject",
-        config
-      );
 
       let Amount_approved_data = Amount_Approved.data.assignmentData;
-      let Amount_reject_data = Amount_Reject.data.assignmentData;
-      let data = response.data.assignmentData.concat(
-        Amount_approved_data,
-        Amount_reject_data
-      );
+      let data = response.data.assignmentData.concat(Amount_approved_data);
       assignmentList = [];
       amountDataList = [];
       if (data.length !== 0) {
