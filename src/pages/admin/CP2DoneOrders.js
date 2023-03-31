@@ -3,6 +3,7 @@ import {
   RepeatIcon,
   ArrowForwardIcon,
   AttachmentIcon,
+  ViewOffIcon,
 } from "@chakra-ui/icons";
 import {
   Table,
@@ -57,6 +58,7 @@ function CP2DoneOrders({
   const [token, setToken] = useState("");
   const [messageData, setMessageData] = useState([]);
   const [loader, setLoader] = useState(true);
+  const [userID, setUserID] = useState("");
 
   const MessagesModalDis = useDisclosure();
   const ReplyMessageModalDis = useDisclosure();
@@ -78,6 +80,8 @@ function CP2DoneOrders({
   async function _fetchAssignments() {
     try {
       let userToken = localStorage.getItem("userToken");
+      let userEmail = localStorage.getItem("userEmail");
+
       if (userToken == null) {
         navigate.replace("/admin/login");
       }
@@ -116,6 +120,7 @@ function CP2DoneOrders({
               new Date(data[index].expertDeadline).toLocaleTimeString() +
               ", " +
               new Date(data[index].expertDeadline).toDateString(),
+            amountStatus: data[index].amountStatus,
           });
         }
       } else {
@@ -590,7 +595,74 @@ function CP2DoneOrders({
                     : "green"
                 }
               >
-                {assignment.quotation}
+                {assignment &&
+                assignment.amountStatus &&
+                assignment.amountStatus[userID] === "Approved" ? (
+                  <Button
+                    onClick={async () => {
+                      try {
+                        const response = await axios.get(
+                          apiUrl +
+                            `/expert/assignment/showAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
+                              assignment["id"]
+                            }&operatorID=${userID}`
+                        );
+                        let resdata = response.data;
+                        if (resdata.success) {
+                          _fetchAssignments();
+                        }
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }}
+                    background="none"
+                    _hover={{
+                      background: "none",
+                    }}
+                    _focus={{
+                      boxShadow: "none",
+                    }}
+                  >
+                    {assignment.quotation}
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={async () => {
+                      let userToken = localStorage.getItem("userToken");
+                      if (userToken == null) {
+                        navigate.replace("/admin/login");
+                      }
+
+                      let config = {
+                        headers: { Authorization: `Bearer ${userToken}` },
+                      };
+                      try {
+                        const response = await axios.post(
+                          apiUrl + "/expert/assignment/showAmount",
+                          {
+                            assignmentId: assignment.id,
+                          },
+                          config
+                        );
+                        let resdata = response.data;
+                        if (resdata.success) {
+                          window.alert("Show Amount Asked");
+                        }
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }}
+                    background="none"
+                    _hover={{
+                      background: "none",
+                    }}
+                    _focus={{
+                      boxShadow: "none",
+                    }}
+                  >
+                    <ViewOffIcon />
+                  </Button>
+                )}
               </Td>
               <Td
                 fontWeight={"bold"}
@@ -600,7 +672,74 @@ function CP2DoneOrders({
                     : "green"
                 }
               >
-                {assignment.paid}
+                {assignment &&
+                assignment.amountStatus &&
+                assignment.amountStatus[userID] === "Approved" ? (
+                  <Button
+                    onClick={async () => {
+                      try {
+                        const response = await axios.get(
+                          apiUrl +
+                            `/expert/assignment/showAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
+                              assignment["id"]
+                            }&operatorID=${userID}`
+                        );
+                        let resdata = response.data;
+                        if (resdata.success) {
+                          _fetchAssignments();
+                        }
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }}
+                    background="none"
+                    _hover={{
+                      background: "none",
+                    }}
+                    _focus={{
+                      boxShadow: "none",
+                    }}
+                  >
+                    {assignment.paid}
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={async () => {
+                      let userToken = localStorage.getItem("userToken");
+                      if (userToken == null) {
+                        navigate.replace("/admin/login");
+                      }
+
+                      let config = {
+                        headers: { Authorization: `Bearer ${userToken}` },
+                      };
+                      try {
+                        const response = await axios.post(
+                          apiUrl + "/expert/assignment/showAmount",
+                          {
+                            assignmentId: assignment.id,
+                          },
+                          config
+                        );
+                        let resdata = response.data;
+                        if (resdata.success) {
+                          window.alert("Show Amount Asked");
+                        }
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }}
+                    background="none"
+                    _hover={{
+                      background: "none",
+                    }}
+                    _focus={{
+                      boxShadow: "none",
+                    }}
+                  >
+                    <ViewOffIcon />
+                  </Button>
+                )}
               </Td>
               <Td color={"red.600"} fontWeight={"semibold"}>
                 {assignment.deadline}

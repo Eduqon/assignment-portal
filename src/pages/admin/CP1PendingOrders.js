@@ -1,4 +1,4 @@
-import { AddIcon, RepeatIcon } from "@chakra-ui/icons";
+import { AddIcon, RepeatIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Table,
   Thead,
@@ -36,7 +36,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { apiUrl } from "../../services/contants";
+import { apiUrl, localUrl } from "../../services/contants";
 import { useRouter } from "next/router";
 import { updateAssignment } from "../../services/functions/assignmentFun";
 import DeadlinePopup from "./DeadlinePopup";
@@ -46,6 +46,7 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
   const [assignments, setAssignments] = useState([]);
   const [asId, setAsId] = useState("");
   const [paid, setPaid] = useState("");
+  const [userID, setUserID] = useState("");
 
   let assignmentList = [];
 
@@ -58,6 +59,7 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
   async function _fetchAssignments() {
     try {
       let userToken = localStorage.getItem("userToken");
+      let userEmail = localStorage.getItem("userEmail");
       if (userToken == null) {
         navigate.replace("/admin/login");
       }
@@ -94,11 +96,13 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
               new Date(data[index].expertDeadline).toLocaleTimeString() +
               ", " +
               new Date(data[index].expertDeadline).toDateString(),
+            amountStatus: data[index].amountStatus,
           });
         }
       } else {
         console.log("No CP1 Pending Orders");
       }
+      setUserID(userEmail);
       setAssignments(assignmentList);
     } catch (err) {
       console.log(err);
@@ -226,7 +230,76 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
               <Td color={"green.600"} fontWeight={"semibold"}>
                 {assignment.subject}
               </Td>
-              <Td>{assignment.quotation}</Td>
+              <Td>
+                {assignment &&
+                assignment.amountStatus &&
+                assignment.amountStatus[userID] === "Approved" ? (
+                  <Button
+                    onClick={async () => {
+                      try {
+                        const response = await axios.get(
+                          apiUrl +
+                            `/expert/assignment/showAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
+                              assignment["id"]
+                            }&operatorID=${userID}`
+                        );
+                        let resdata = response.data;
+                        if (resdata.success) {
+                          _fetchAssignments();
+                        }
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }}
+                    background="none"
+                    _hover={{
+                      background: "none",
+                    }}
+                    _focus={{
+                      boxShadow: "none",
+                    }}
+                  >
+                    {assignment.quotation}
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={async () => {
+                      let userToken = localStorage.getItem("userToken");
+                      if (userToken == null) {
+                        navigate.replace("/admin/login");
+                      }
+
+                      let config = {
+                        headers: { Authorization: `Bearer ${userToken}` },
+                      };
+                      try {
+                        const response = await axios.post(
+                          apiUrl + "/expert/assignment/showAmount",
+                          {
+                            assignmentId: assignment.id,
+                          },
+                          config
+                        );
+                        let resdata = response.data;
+                        if (resdata.success) {
+                          window.alert("Show Amount Asked");
+                        }
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }}
+                    background="none"
+                    _hover={{
+                      background: "none",
+                    }}
+                    _focus={{
+                      boxShadow: "none",
+                    }}
+                  >
+                    <ViewOffIcon />
+                  </Button>
+                )}
+              </Td>
               <Td>{assignment.paid}</Td>
               <Td color={"red.600"} fontWeight={"semibold"}>
                 {assignment.expertDeadline}

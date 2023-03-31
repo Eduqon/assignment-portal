@@ -55,11 +55,10 @@ function AssignedExpertOrders({
   const [selectedIndex, setSelectedIndex] = useState();
   const [messages, setMessages] = useState([]);
   const [id, setId] = useState("");
-  const [loader, setLoader] = useState(true);
   const inputFileOperatorExpert = useRef(null);
   const { onOpen, onClose } = useDisclosure();
 
-  const [showAllAmount, setShowAllAmount] = useState(false);
+  const [userID, setUserID] = useState("");
 
   //    expert deadline start
   const [showPopup, setShowPopup] = useState(false);
@@ -129,6 +128,7 @@ function AssignedExpertOrders({
   async function _fetchAssignments() {
     try {
       let userToken = localStorage.getItem("userToken");
+      let userEmail = localStorage.getItem("userEmail");
       if (userToken == null) {
         navigate.replace("/admin/login");
       }
@@ -140,15 +140,8 @@ function AssignedExpertOrders({
         apiUrl + "/assignment/fetch?status=Expert%20Assigned",
         config
       );
-      const Amount_Approved = await axios.get(
-        apiUrl + "/assignment/fetch?status=Amount%20Approved",
-        config
-      );
-
-      let Amount_approved_data = Amount_Approved.data.assignmentData;
-      let data = response.data.assignmentData.concat(Amount_approved_data);
+      let data = response.data.assignmentData;
       assignmentList = [];
-      amountDataList = [];
       if (data.length !== 0) {
         for (let index = 0; index < data.length; index++) {
           assignmentList.push({
@@ -173,19 +166,14 @@ function AssignedExpertOrders({
               new Date(data[index].expertDeadline).toLocaleTimeString() +
               ", " +
               new Date(data[index].expertDeadline).toDateString(),
+            amountStatus: data[index].amountStatus,
           });
         }
       } else {
         console.log("No Expert Asked Orders");
       }
-      if (Amount_approved_data.length !== 0) {
-        for (let index = 0; index < Amount_approved_data.length; index++) {
-          amountDataList.push(Amount_approved_data[index]._id);
-        }
-      }
-      setLoader(false);
+      setUserID(userEmail);
       setAssignments(assignmentList);
-      setShowAmountAssignments(amountDataList);
     } catch (err) {
       console.log(err);
     }
@@ -550,19 +538,7 @@ function AssignedExpertOrders({
             <Th>Student Email</Th>
             <Th>Subject</Th>
             <Th display="flex" alignItems="center">
-              Amount Paid{" "}
-              <Button
-                onClick={() => setShowAllAmount(!showAllAmount)}
-                background="none"
-                _hover={{
-                  background: "none",
-                }}
-                _focus={{
-                  boxShadow: "none",
-                }}
-              >
-                {showAllAmount ? <ViewIcon /> : <ViewOffIcon />}
-              </Button>
+              Amount Paid
             </Th>
             <Th>Expert</Th>
             <Th>Expert Deadline</Th>
@@ -644,43 +620,25 @@ function AssignedExpertOrders({
               <Td color={"green.600"} fontWeight={"semibold"}>
                 {assignment.subject}
               </Td>
-              {showAllAmount ? (
-                <Td>{assignment.paid}</Td>
-              ) : (
-                <Td>
+              <Td>
+                {assignment &&
+                assignment.amountStatus &&
+                assignment.amountStatus[userID] === "Approved" ? (
                   <Button
                     onClick={async () => {
-                      let userToken = localStorage.getItem("userToken");
-                      if (userToken == null) {
-                        navigate.replace("/admin/login");
-                      }
-
-                      let config = {
-                        headers: { Authorization: `Bearer ${userToken}` },
-                      };
-                      if (!showAmountAssignments.includes(assignment.id)) {
-                        try {
-                          const response = await axios.post(
-                            apiUrl + "/expert/assignment/showAmount",
-                            {
-                              assignmentId: assignment.id,
-                            },
-                            config
-                          );
-                          let resdata = response.data;
-                          if (resdata.success) {
-                            window.alert("Show Amount Asked");
-                          }
-                        } catch (err) {
-                          console.log(err);
+                      try {
+                        const response = await axios.get(
+                          apiUrl +
+                            `/expert/assignment/showAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
+                              assignment["id"]
+                            }&operatorID=${userID}`
+                        );
+                        let resdata = response.data;
+                        if (resdata.success) {
+                          _fetchAssignments();
                         }
-                      } else {
-                        const newData = [...showAmountAssignments];
-                        const index = newData.indexOf(assignment.id);
-                        if (index !== -1) {
-                          newData.splice(index, 1);
-                          setShowAmountAssignments(newData);
-                        }
+                      } catch (err) {
+                        console.log(err);
                       }
                     }}
                     background="none"
@@ -691,20 +649,52 @@ function AssignedExpertOrders({
                       boxShadow: "none",
                     }}
                   >
-                    {showAmountAssignments &&
-                    showAmountAssignments?.includes(assignment.id) ? (
-                      assignment.paid
-                    ) : (
-                      <ViewOffIcon />
-                    )}
+                    {assignment.quotation}
                   </Button>
-                </Td>
-              )}
+                ) : (
+                  <Button
+                    onClick={async () => {
+                      let userToken = localStorage.getItem("userToken");
+                      if (userToken == null) {
+                        navigate.replace("/admin/login");
+                      }
+
+                      let config = {
+                        headers: { Authorization: `Bearer ${userToken}` },
+                      };
+                      try {
+                        const response = await axios.post(
+                          apiUrl + "/expert/assignment/showAmount",
+                          {
+                            assignmentId: assignment.id,
+                          },
+                          config
+                        );
+                        let resdata = response.data;
+                        if (resdata.success) {
+                          window.alert("Show Amount Asked");
+                        }
+                      } catch (err) {
+                        console.log(err);
+                      }
+                    }}
+                    background="none"
+                    _hover={{
+                      background: "none",
+                    }}
+                    _focus={{
+                      boxShadow: "none",
+                    }}
+                  >
+                    <ViewOffIcon />
+                  </Button>
+                )}
+              </Td>
               <Td>
                 {localStorage.getItem("userRole") === "Super Admin" ||
                 localStorage.getItem("userRole") === "Admin"
                   ? assignment.assignedExpert
-                  : assignment.assignedExpert.substring(0, 2) +
+                  : assignment.assignedExpert?.substring(0, 2) +
                     "****" +
                     "@" +
                     "****" +
@@ -803,7 +793,7 @@ function AssignedExpertOrders({
                               "Super Admin" ||
                             localStorage.getItem("userRole") === "Admin"
                               ? assignment.assignedExpert
-                              : assignment.assignedExpert.substring(0, 2) +
+                              : assignment.assignedExpert?.substring(0, 2) +
                                 "****" +
                                 "@" +
                                 "****" +

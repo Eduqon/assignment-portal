@@ -1,4 +1,4 @@
-import { AddIcon, MinusIcon, RepeatIcon } from "@chakra-ui/icons";
+import { AddIcon, MinusIcon, RepeatIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Table,
   Thead,
@@ -60,6 +60,7 @@ function CP1DoneOrders({ incrementCounter }) {
   const ExpertModalDis = useDisclosure();
   const QcModalDis = useDisclosure();
   const EditQuoteExpertModalDis = useDisclosure();
+  const [userID, setUserID] = useState("");
 
   const [selectedIndex, setSelectedIndex] = useState();
 
@@ -920,6 +921,7 @@ function CP1DoneOrders({ incrementCounter }) {
   async function _fetchAssignments() {
     try {
       let userToken = localStorage.getItem("userToken");
+      let userEmail = localStorage.getItem("userEmail");
       if (userToken == null) {
         navigate.replace("/admin/login");
       }
@@ -960,12 +962,14 @@ function CP1DoneOrders({ incrementCounter }) {
               new Date(data[index].expertDeadline).toLocaleTimeString() +
               ", " +
               new Date(data[index].expertDeadline).toDateString(),
+            amountStatus: data[index].amountStatus,
           });
         }
         await _fetchSubjects();
       } else {
         console.log("No CP1 Pending Orders");
       }
+      setUserID(userEmail);
       setAssignments(assignmentList);
     } catch (err) {
       console.log(err);
@@ -1302,7 +1306,74 @@ function CP1DoneOrders({ incrementCounter }) {
                       : "green"
                   }
                 >
-                  {assignment.quotation}
+                  {assignment &&
+                  assignment.amountStatus &&
+                  assignment.amountStatus[userID] === "Approved" ? (
+                    <Button
+                      onClick={async () => {
+                        try {
+                          const response = await axios.get(
+                            apiUrl +
+                              `/expert/assignment/showAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
+                                assignment["id"]
+                              }&operatorID=${userID}`
+                          );
+                          let resdata = response.data;
+                          if (resdata.success) {
+                            _fetchAssignments();
+                          }
+                        } catch (err) {
+                          console.log(err);
+                        }
+                      }}
+                      background="none"
+                      _hover={{
+                        background: "none",
+                      }}
+                      _focus={{
+                        boxShadow: "none",
+                      }}
+                    >
+                      {assignment.quotation}
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={async () => {
+                        let userToken = localStorage.getItem("userToken");
+                        if (userToken == null) {
+                          navigate.replace("/admin/login");
+                        }
+
+                        let config = {
+                          headers: { Authorization: `Bearer ${userToken}` },
+                        };
+                        try {
+                          const response = await axios.post(
+                            apiUrl + "/expert/assignment/showAmount",
+                            {
+                              assignmentId: assignment.id,
+                            },
+                            config
+                          );
+                          let resdata = response.data;
+                          if (resdata.success) {
+                            window.alert("Show Amount Asked");
+                          }
+                        } catch (err) {
+                          console.log(err);
+                        }
+                      }}
+                      background="none"
+                      _hover={{
+                        background: "none",
+                      }}
+                      _focus={{
+                        boxShadow: "none",
+                      }}
+                    >
+                      <ViewOffIcon />
+                    </Button>
+                  )}
                 </Td>
                 <Td
                   fontWeight={"bold"}
@@ -1312,7 +1383,74 @@ function CP1DoneOrders({ incrementCounter }) {
                       : "green"
                   }
                 >
-                  {assignment.paid}
+                  {assignment &&
+                  assignment.amountStatus &&
+                  assignment.amountStatus[userID] === "Approved" ? (
+                    <Button
+                      onClick={async () => {
+                        try {
+                          const response = await axios.get(
+                            apiUrl +
+                              `/expert/assignment/showAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
+                                assignment["id"]
+                              }&operatorID=${userID}`
+                          );
+                          let resdata = response.data;
+                          if (resdata.success) {
+                            _fetchAssignments();
+                          }
+                        } catch (err) {
+                          console.log(err);
+                        }
+                      }}
+                      background="none"
+                      _hover={{
+                        background: "none",
+                      }}
+                      _focus={{
+                        boxShadow: "none",
+                      }}
+                    >
+                      {assignment.paid}
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={async () => {
+                        let userToken = localStorage.getItem("userToken");
+                        if (userToken == null) {
+                          navigate.replace("/admin/login");
+                        }
+
+                        let config = {
+                          headers: { Authorization: `Bearer ${userToken}` },
+                        };
+                        try {
+                          const response = await axios.post(
+                            apiUrl + "/expert/assignment/showAmount",
+                            {
+                              assignmentId: assignment.id,
+                            },
+                            config
+                          );
+                          let resdata = response.data;
+                          if (resdata.success) {
+                            window.alert("Show Amount Asked");
+                          }
+                        } catch (err) {
+                          console.log(err);
+                        }
+                      }}
+                      background="none"
+                      _hover={{
+                        background: "none",
+                      }}
+                      _focus={{
+                        boxShadow: "none",
+                      }}
+                    >
+                      <ViewOffIcon />
+                    </Button>
+                  )}
                 </Td>
                 <Td color={"red.600"} fontWeight={"semibold"}>
                   {assignment.expertDeadline}
