@@ -121,6 +121,7 @@ function CP2DoneOrders({
               ", " +
               new Date(data[index].expertDeadline).toDateString(),
             amountStatus: data[index].amountStatus,
+            quoteAmountStatus: data[index].quoteAmountStatus,
           });
         }
       } else {
@@ -596,14 +597,14 @@ function CP2DoneOrders({
                 }
               >
                 {assignment &&
-                assignment.amountStatus &&
-                assignment.amountStatus[userID] === "Approved" ? (
+                assignment.quoteAmountStatus &&
+                assignment.quoteAmountStatus[userID] === "Approved" ? (
                   <Button
                     onClick={async () => {
                       try {
                         const response = await axios.get(
                           apiUrl +
-                            `/expert/assignment/showAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
+                            `/expert/assignment/showQuoteAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
                               assignment["id"]
                             }&operatorID=${userID}`
                         );
@@ -638,7 +639,7 @@ function CP2DoneOrders({
                       };
                       try {
                         const response = await axios.post(
-                          apiUrl + "/expert/assignment/showAmount",
+                          apiUrl + "/expert/assignment/showQuoteAmount",
                           {
                             assignmentId: assignment.id,
                           },
@@ -646,7 +647,7 @@ function CP2DoneOrders({
                         );
                         let resdata = response.data;
                         if (resdata.success) {
-                          window.alert("Show Amount Asked");
+                          window.alert("Show Quote Amount Asked");
                         }
                       } catch (err) {
                         console.log(err);

@@ -117,6 +117,7 @@ function ProofReadOrders({
               ", " +
               new Date(data[index].expertDeadline).toDateString(),
             amountStatus: data[index].amountStatus,
+            quoteAmountStatus: data[index].quoteAmountStatus,
           });
         }
       } else {
@@ -585,17 +586,23 @@ function ProofReadOrders({
               <Td color={"green.600"} fontWeight={"semibold"}>
                 {assignment.subject}
               </Td>
-              <Td>
+              <Td
+                fontWeight={"bold"}
+                color={
+                  assignment.cp1PaymentId === "External Payment"
+                    ? "red"
+                    : "green"
+                }
+              >
                 {assignment &&
-                assignment.amountStatus &&
-                assignment.quotation &&
-                assignment.amountStatus[userID] === "Approved" ? (
+                assignment.quoteAmountStatus &&
+                assignment.quoteAmountStatus[userID] === "Approved" ? (
                   <Button
                     onClick={async () => {
                       try {
                         const response = await axios.get(
                           apiUrl +
-                            `/expert/assignment/showAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
+                            `/expert/assignment/showQuoteAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
                               assignment["id"]
                             }&operatorID=${userID}`
                         );
@@ -630,7 +637,7 @@ function ProofReadOrders({
                       };
                       try {
                         const response = await axios.post(
-                          apiUrl + "/expert/assignment/showAmount",
+                          apiUrl + "/expert/assignment/showQuoteAmount",
                           {
                             assignmentId: assignment.id,
                           },
@@ -638,7 +645,7 @@ function ProofReadOrders({
                         );
                         let resdata = response.data;
                         if (resdata.success) {
-                          window.alert("Show Amount Asked");
+                          window.alert("Show Quote Amount Asked");
                         }
                       } catch (err) {
                         console.log(err);

@@ -963,6 +963,7 @@ function CP1DoneOrders({ incrementCounter }) {
               ", " +
               new Date(data[index].expertDeadline).toDateString(),
             amountStatus: data[index].amountStatus,
+            quoteAmountStatus: data[index].quoteAmountStatus,
           });
         }
         await _fetchSubjects();
@@ -1307,14 +1308,14 @@ function CP1DoneOrders({ incrementCounter }) {
                   }
                 >
                   {assignment &&
-                  assignment.amountStatus &&
-                  assignment.amountStatus[userID] === "Approved" ? (
+                  assignment.quoteAmountStatus &&
+                  assignment.quoteAmountStatus[userID] === "Approved" ? (
                     <Button
                       onClick={async () => {
                         try {
                           const response = await axios.get(
                             apiUrl +
-                              `/expert/assignment/showAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
+                              `/expert/assignment/showQuoteAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
                                 assignment["id"]
                               }&operatorID=${userID}`
                           );
@@ -1349,7 +1350,7 @@ function CP1DoneOrders({ incrementCounter }) {
                         };
                         try {
                           const response = await axios.post(
-                            apiUrl + "/expert/assignment/showAmount",
+                            apiUrl + "/expert/assignment/showQuoteAmount",
                             {
                               assignmentId: assignment.id,
                             },
@@ -1357,7 +1358,7 @@ function CP1DoneOrders({ incrementCounter }) {
                           );
                           let resdata = response.data;
                           if (resdata.success) {
-                            window.alert("Show Amount Asked");
+                            window.alert("Show Quote Amount Asked");
                           }
                         } catch (err) {
                           console.log(err);
