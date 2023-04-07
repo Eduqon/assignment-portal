@@ -663,7 +663,14 @@ function ProofReadOrders({
                   </Button>
                 )}
               </Td>
-              <Td>
+              <Td
+                fontWeight={"bold"}
+                color={
+                  assignment.cp1PaymentId === "External Payment"
+                    ? "red"
+                    : "green"
+                }
+              >
                 {assignment &&
                 assignment.amountStatus &&
                 assignment.amountStatus[userID] === "Approved" ? (

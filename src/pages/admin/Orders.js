@@ -674,13 +674,22 @@ function AdminOrders() {
 
               <TabPanels>
                 <TabPanel>
-                  <FreshOrders />
+                  <FreshOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <CP1PendingOrders />
+                  <CP1PendingOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <CP1DoneOrders />
+                  <CP1DoneOrders
+                    incrementCounter={incrementCounter}
+                    decrementCounter={decrementCounter}
+                  />
                 </TabPanel>
                 <TabPanel>
                   <ExpertAskedOrders />
@@ -701,7 +710,7 @@ function AdminOrders() {
                   <CP2DoneOrders />
                 </TabPanel>
                 <TabPanel>
-                  <ClientReworkOrders incrementCounter={incrementCounter} />
+                  <ClientReworkOrders />
                 </TabPanel>
               </TabPanels>
             </>

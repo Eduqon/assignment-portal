@@ -1066,7 +1066,7 @@ function RawSubmissionOrders({
                   {localStorage.getItem("userRole") === "Super Admin" ||
                   localStorage.getItem("userRole") === "Admin"
                     ? assignment.assignedQC
-                    : assignment.assignedQC.substring(0, 2) +
+                    : assignment.assignedQC?.substring(0, 2) +
                       "****" +
                       "@" +
                       "****" +
@@ -1193,7 +1193,7 @@ function RawSubmissionOrders({
                               "Super Admin" ||
                             localStorage.getItem("userRole") === "Admin"
                               ? assignment.assignedQC
-                              : assignment.assignedQC.substring(0, 2) +
+                              : assignment.assignedQC?.substring(0, 2) +
                                 "****" +
                                 "@" +
                                 "****" +

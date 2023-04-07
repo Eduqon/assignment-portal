@@ -43,7 +43,7 @@ import { useEffect, useState } from "react";
 import { apiUrl } from "../../services/contants";
 import { useRouter } from "next/router";
 
-function CP1DoneOrders({ incrementCounter }) {
+function CP1DoneOrders({ incrementCounter, decrementCounter }) {
   const [assignments, setAssignments] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [showModals, setShowModals] = useState({
@@ -593,6 +593,10 @@ function CP1DoneOrders({ incrementCounter }) {
                                   },
                                   config
                                 );
+                                if (resdata.success) {
+                                  incrementCounter("Expert Asked");
+                                  decrementCounter("CP1 Done");
+                                }
                               } catch (err) {
                                 console.log(err);
                               }

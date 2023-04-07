@@ -19,6 +19,7 @@ import RawSubmissionOrders from "./RawSubmissionOrders";
 import { ChatIcon } from "@chakra-ui/icons";
 import Messages from "./Messages";
 import AdminLayout from ".";
+import GetExcelData from "./GetExcelData";
 
 function PortalLayout() {
   const [userRole, setUserRole] = useState("");
@@ -162,6 +163,9 @@ function PortalLayout() {
                 <Tab>
                   <Heading fontSize={"md"}>Orders</Heading>
                 </Tab>
+                <Tab>
+                  <Heading fontSize={"md"}>Data</Heading>
+                </Tab>
               </TabList>
 
               <TabPanels>
@@ -176,6 +180,9 @@ function PortalLayout() {
                 </TabPanel>
                 <TabPanel>
                   <AdminOrders />
+                </TabPanel>
+                <TabPanel>
+                  <GetExcelData />
                 </TabPanel>
               </TabPanels>
             </>
