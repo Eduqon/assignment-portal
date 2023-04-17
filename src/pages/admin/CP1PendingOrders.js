@@ -36,7 +36,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { apiUrl, localUrl } from "../../services/contants";
+import { apiUrl } from "../../services/contants";
 import { useRouter } from "next/router";
 import { updateAssignment } from "../../services/functions/assignmentFun";
 import DeadlinePopup from "./DeadlinePopup";
@@ -44,6 +44,7 @@ import DeadlinePopup from "./DeadlinePopup";
 function CP1PendingOrders({ incrementCounter, decrementCounter }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [assignments, setAssignments] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState("");
   const [asId, setAsId] = useState("");
   const [paid, setPaid] = useState("");
   const [userID, setUserID] = useState("");
@@ -87,15 +88,15 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
             description: data[index].description,
             descriptionFile: data[index].descriptionFile,
             numOfPages: data[index].numOfPages,
+            order_placed_time: data[index].order_placed_time,
             paid: data[index].paid,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
               ", " +
               new Date(data[index].deadline).toDateString(),
-            expertDeadline:
-              new Date(data[index].expertDeadline).toLocaleTimeString() +
-              ", " +
-              new Date(data[index].expertDeadline).toDateString(),
+            expertDeadline: data[index].expertDeadline
+              ? data[index].expertDeadline[data[index]._id]
+              : "",
             amountStatus: data[index].amountStatus,
           });
         }
@@ -115,6 +116,12 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
         _id: asId,
         status: "CP1 Done",
         paid: paid,
+        order_confirmed_time: Date.now(),
+        currentState: 2,
+        order_placed_time: {
+          ...assignments[selectedIndex].order_placed_time,
+          2: Date.now(),
+        },
       };
       let response = await updateAssignment(JSON.stringify(data));
 
@@ -302,7 +309,13 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
               </Td>
               <Td>{assignment.paid}</Td>
               <Td color={"red.600"} fontWeight={"semibold"}>
-                {assignment.expertDeadline}
+                {assignment.expertDeadline
+                  ? new Date(
+                      assignment.expertDeadline[0]
+                    ).toLocaleTimeString() +
+                    ", " +
+                    new Date(assignment.expertDeadline[0]).toDateString()
+                  : ""}
               </Td>
               <Td color={"red.600"} fontWeight={"semibold"}>
                 {assignment.deadline}
@@ -324,6 +337,7 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
                   onClick={() => {
                     onOpen();
                     setAsId(assignment.id);
+                    setSelectedIndex(index);
                     decrementCounter("CP1 Pending");
                   }}
                 >
@@ -405,7 +419,15 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
                     <Tr>
                       <Th>Expert Deadline</Th>
                       <Td color={"red.600"} fontWeight={"semibold"}>
-                        {assignment.expertDeadline}
+                        {assignment.expertDeadline
+                          ? new Date(
+                              assignment.expertDeadline[0]
+                            ).toLocaleTimeString() +
+                            ", " +
+                            new Date(
+                              assignment.expertDeadline[0]
+                            ).toDateString()
+                          : ""}
                       </Td>
                     </Tr>
                     <Tr>

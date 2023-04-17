@@ -20,6 +20,7 @@ import { ChatIcon } from "@chakra-ui/icons";
 import Messages from "./Messages";
 import AdminLayout from ".";
 import GetExcelData from "./GetExcelData";
+import GetStatusExcelData from "./GetStatusExcelData";
 
 function PortalLayout() {
   const [userRole, setUserRole] = useState("");
@@ -128,6 +129,9 @@ function PortalLayout() {
                     </Box>
                   </Box>
                 </Tab>
+                <Tab>
+                  <Heading fontSize={"md"}>Data</Heading>
+                </Tab>
               </TabList>
 
               <TabPanels>
@@ -145,6 +149,9 @@ function PortalLayout() {
                     setMessageCount={setMessageCount}
                     setSpinnerLoading={setLoading}
                   />
+                </TabPanel>
+                <TabPanel>
+                  <GetStatusExcelData />
                 </TabPanel>
               </TabPanels>
             </>

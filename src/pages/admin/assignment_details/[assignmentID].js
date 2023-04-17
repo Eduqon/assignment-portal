@@ -413,14 +413,13 @@ function AssignmentDetails() {
           status: data[0].status,
           quotation: data[0].quotation,
           currencyOfQuote: data[0].currencyOfQuote,
+          order_placed_time: data[0].order_placed_time,
           createdAt:
             new Date(data[0].createdAt).toLocaleTimeString() +
             ", " +
             new Date(data[0].createdAt).toDateString(),
           expertDeadline: data[0].expertDeadline
-            ? new Date(data[0].expertDeadline).toLocaleTimeString() +
-              ", " +
-              new Date(data[0].expertDeadline).toDateString()
+            ? data[0].expertDeadline[data[0]._id]
             : "",
           level: data[0].level,
           reference: data[0].reference,
@@ -728,6 +727,20 @@ function AssignmentDetails() {
                         window.alert("Enter Email");
                       } else {
                         try {
+                          const responseDeadline = await axios.post(
+                            apiUrl + "/assignment/update",
+                            {
+                              _id: navigate.query.assignmentID,
+                              status: "CP2 Done",
+                              currentState: 8,
+                              order_placed_time: {
+                                ...assignment.order_placed_time,
+                                8: Date.now(),
+                              },
+                              final_delivery: checkedListTemp,
+                            },
+                            config
+                          );
                           let response = await axios.post(
                             apiUrl + "/assignment/final-delivery",
                             {
@@ -741,7 +754,6 @@ function AssignmentDetails() {
                             apiUrl + "/notifications",
                             {
                               assignmentId: assignment.id,
-                              status: "CP2 Done",
                               read: false,
                             },
                             config
@@ -752,6 +764,20 @@ function AssignmentDetails() {
                       }
                     } else {
                       try {
+                        const responseDeadline = await axios.post(
+                          apiUrl + "/assignment/update",
+                          {
+                            _id: navigate.query.assignmentID,
+                            status: "CP2 Done",
+                            currentState: 8,
+                            order_placed_time: {
+                              ...assignment.order_placed_time,
+                              8: Date.now(),
+                            },
+                            final_delivery: checkedListTemp,
+                          },
+                          config
+                        );
                         let response = await axios.post(
                           apiUrl + "/assignment/final-delivery",
                           {
@@ -765,16 +791,7 @@ function AssignmentDetails() {
                           apiUrl + "/notifications",
                           {
                             assignmentId: assignment.id,
-                            status: "CP2 Done",
                             read: false,
-                          },
-                          config
-                        );
-                        let responseData = await axios.post(
-                          apiUrl + "/assignment/update",
-                          {
-                            _id: navigate.query.assignmentID,
-                            status: "CP2 Done",
                           },
                           config
                         );
@@ -1009,7 +1026,15 @@ function AssignmentDetails() {
               </HStack>
               <HStack padding={2}>
                 <Text fontWeight={"bold"}>Expert Deadline:</Text>
-                <Text>{assignment.expertDeadline}</Text>
+                <Text>
+                  {assignment.expertDeadline
+                    ? new Date(
+                        assignment.expertDeadline[0]
+                      ).toLocaleTimeString() +
+                      ", " +
+                      new Date(assignment.expertDeadline[0]).toDateString()
+                    : ""}
+                </Text>
               </HStack>
               <VStack padding={2} alignItems={"left"}>
                 {assignment.descriptionFile.length != 0 ? (

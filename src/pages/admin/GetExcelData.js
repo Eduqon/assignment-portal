@@ -97,7 +97,7 @@ function GetExcelData() {
               payment_Status: "",
             });
           })
-        : console.log("No CP1 Pending Orders");
+        : console.log("No Assignments");
 
       setAssignments(assignmentList);
     } catch (err) {

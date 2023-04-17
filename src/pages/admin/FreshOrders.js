@@ -141,6 +141,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
             reference: data[index].reference,
             description: data[index].description,
             descriptionFile: data[index].descriptionFile,
+            order_placed_time: data[index].order_placed_time,
             numOfPages: data[index].numOfPages,
             paid: data[index].paid,
             deadline:
@@ -564,6 +565,11 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                         {
                           _id: assignments[selectedIndex].id,
                           expertDeadline: iso,
+                          currentState: 1,
+                          order_placed_time: {
+                            ...assignments[selectedIndex].order_placed_time,
+                            1: Date.now(),
+                          },
                         },
                         config
                       );
@@ -757,6 +763,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
       reference: assignments[index].reference,
       description: assignments[index].description,
       descriptionFile: assignments[index].descriptionFile,
+      order_placed_time: assignments[index].order_placed_time,
       numOfPages: assignments[index].numOfPages,
       paid: assignments[index].paid,
       deadline:
@@ -1054,12 +1061,17 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                           apiUrl + "/assignment/update",
                           {
                             _id: quoteAssignmentData._id,
-                            status: "CP1 Done",
+                            status: "CP1 Pending",
                             quotation: quote,
                             paid: quote,
                             cp1PaymentId: "External Payment",
                             cp2PaymentId: "External Payment",
                             description: description,
+                            currentState: 1,
+                            order_placed_time: {
+                              ...quoteAssignmentData.order_placed_time,
+                              1: Date.now(),
+                            },
                           },
                           config
                         );
@@ -1072,6 +1084,13 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                         apiUrl + "/assignment/update",
                         {
                           _id: quoteAssignmentData._id,
+                          status: "CP1 Pending",
+                          order_placed_time: Date.now(),
+                          currentState: 1,
+                          order_placed_time: {
+                            ...quoteAssignmentData.order_placed_time,
+                            1: Date.now(),
+                          },
                         },
                         config
                       );

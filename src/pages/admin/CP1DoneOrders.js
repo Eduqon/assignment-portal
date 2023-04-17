@@ -42,6 +42,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { apiUrl } from "../../services/contants";
 import { useRouter } from "next/router";
+import { updateAssignment } from "../../services/functions/assignmentFun";
 
 function CP1DoneOrders({ incrementCounter, decrementCounter }) {
   const [assignments, setAssignments] = useState([]);
@@ -188,6 +189,12 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                                 {
                                   _id: assignments[selectedIndex].id,
                                   assignedQC: qcs[index].id,
+                                  currentState: 3,
+                                  order_placed_time: {
+                                    ...assignments[selectedIndex]
+                                      .order_placed_time,
+                                    3: Date.now(),
+                                  },
                                 },
                                 config
                               );
@@ -540,16 +547,28 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                                   selectValue === "word_count" ? words : pages,
                                 comments: comments,
                               };
+                              let data = {
+                                _id: assignments[selectedIndex].id,
+                                status: "Expert Asked",
+                                currentState: 3,
+                                order_placed_time: {
+                                  ...assignments[selectedIndex]
+                                    .order_placed_time,
+                                  3: Date.now(),
+                                },
+                                expertDeadline: {
+                                  [assignments[selectedIndex].id]: [iso],
+                                },
+                              };
+
                               try {
+                                let assignment_response =
+                                  await updateAssignment(JSON.stringify(data));
                                 const response = await axios.post(
                                   apiUrl + "/expert/quote/askCharges",
                                   {
                                     expertId: experts[index]._id,
                                     assignmentId: assignments[selectedIndex].id,
-                                    expertDeadline:
-                                      new Date(iso).toDateString() +
-                                      " " +
-                                      new Date(iso).toLocaleTimeString(),
                                     requestData: requestData,
                                   },
                                   config
@@ -575,12 +594,30 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                                       : "Regular Charges",
                                   comments: comments,
                                 };
+                                let data = {
+                                  _id: assignments[selectedIndex].id,
+                                  status: "Expert Asked",
+                                  currentState: 3,
+                                  order_placed_time: {
+                                    ...assignments[selectedIndex]
+                                      .order_placed_time,
+                                    3: Date.now(),
+                                  },
+                                  expertDeadline: {
+                                    [assignments[selectedIndex].id]: [iso],
+                                  },
+                                };
+                                let assignment_response =
+                                  await updateAssignment(JSON.stringify(data));
                                 const response = await axios.post(
                                   apiUrl + "/expert/assignment/ask",
                                   {
                                     expertId: experts[index]._id,
                                     assignmentId: assignments[selectedIndex].id,
                                     requestData: requestData,
+                                    expertDeadline: {
+                                      [assignments[selectedIndex].id]: [iso],
+                                    },
                                   },
                                   config
                                 );
@@ -588,12 +625,11 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                                   apiUrl + "/notifications",
                                   {
                                     assignmentId: assignments[selectedIndex].id,
-                                    status: "Expert Asked",
                                     read: false,
                                   },
                                   config
                                 );
-                                if (resdata.success) {
+                                if (response.success) {
                                   incrementCounter("Expert Asked");
                                   decrementCounter("CP1 Done");
                                 }
@@ -768,7 +804,14 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                         apiUrl + "/assignment/update",
                         {
                           _id: assignments[selectedIndex].id,
-                          expertDeadline: iso,
+                          expertDeadline: {
+                            [assignments[selectedIndex].id]: [iso],
+                          },
+                          currentState: 3,
+                          order_placed_time: {
+                            ...assignments[selectedIndex].order_placed_time,
+                            3: Date.now(),
+                          },
                         },
                         config
                       );
@@ -872,11 +915,24 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                                   charges: quote.cost,
                                   comments: quote.comments,
                                 };
+                                let data = {
+                                  _id: assignments[selectedIndex].id,
+                                  status: "Expert Asked",
+                                  order_placed_time: Date.now(),
+                                  expertDeadline: {
+                                    [assignments[selectedIndex].id]: [iso],
+                                  },
+                                };
+                                let assignment_response =
+                                  await updateAssignment(JSON.stringify(data));
                                 const response = await axios.post(
                                   apiUrl + "/expert/assignment/ask",
                                   {
                                     expertId: quote._id,
                                     assignmentId: assignments[selectedIndex].id,
+                                    expertDeadline: {
+                                      [assignments[selectedIndex].id]: [iso],
+                                    },
                                     requestData: requestData,
                                   },
                                   config
@@ -885,7 +941,6 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                                   apiUrl + "/notifications",
                                   {
                                     assignmentId: assignments[selectedIndex].id,
-                                    status: "Expert Asked",
                                     read: false,
                                   },
                                   config
@@ -958,14 +1013,14 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
             cp1PaymentId: data[index].cp1PaymentId,
             cp2PaymentId: data[index].cp2PaymentId,
             deadline_quote: data[index].deadline,
+            order_placed_time: data[index].order_placed_time,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
               ", " +
               new Date(data[index].deadline).toDateString(),
-            expertDeadline:
-              new Date(data[index].expertDeadline).toLocaleTimeString() +
-              ", " +
-              new Date(data[index].expertDeadline).toDateString(),
+            expertDeadline: data[index].expertDeadline
+              ? data[index].expertDeadline[data[index]._id]
+              : "",
             amountStatus: data[index].amountStatus,
             quoteAmountStatus: data[index].quoteAmountStatus,
           });
@@ -1211,11 +1266,25 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                     charges: updatedCharges || quotes[selectedIndex]?.cost,
                     comments: comments,
                   };
+                  let data = {
+                    _id: assignments[selectedIndex].id,
+                    status: "Expert Asked",
+                    order_placed_time: Date.now(),
+                    expertDeadline: {
+                      [assignments[selectedIndex].id]: [iso],
+                    },
+                  };
+                  let assignment_response = await updateAssignment(
+                    JSON.stringify(data)
+                  );
                   const response = await axios.post(
                     apiUrl + "/expert/assignment/ask",
                     {
                       expertId: quotes[selectedIndex]._id,
                       assignmentId: assignments[selectedIndex].id,
+                      expertDeadline: {
+                        [assignments[selectedIndex].id]: [iso],
+                      },
                       requestData: requestData,
                     },
                     config
@@ -1224,7 +1293,6 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                     apiUrl + "/notifications",
                     {
                       assignmentId: assignments[selectedIndex].id,
-                      status: "Expert Asked",
                       read: false,
                     },
                     config
@@ -1458,7 +1526,13 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                   )}
                 </Td>
                 <Td color={"red.600"} fontWeight={"semibold"}>
-                  {assignment.expertDeadline}
+                  {assignment.expertDeadline
+                    ? new Date(
+                        assignment.expertDeadline[0]
+                      ).toLocaleTimeString() +
+                      ", " +
+                      new Date(assignment.expertDeadline[0]).toDateString()
+                    : ""}
                 </Td>
                 <Td color={"red.600"} fontWeight={"semibold"}>
                   {assignment.deadline}
@@ -1592,7 +1666,15 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                         <Tr>
                           <Th>Expert Deadline</Th>
                           <Td color={"red.600"} fontWeight={"semibold"}>
-                            {assignment.expertDeadline}
+                            {assignment.expertDeadline
+                              ? new Date(
+                                  assignment.expertDeadline[0]
+                                ).toLocaleTimeString() +
+                                ", " +
+                                new Date(
+                                  assignment.expertDeadline[0]
+                                ).toDateString()
+                              : ""}
                           </Td>
                         </Tr>
                         <Tr>

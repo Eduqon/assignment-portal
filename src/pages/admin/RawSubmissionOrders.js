@@ -46,7 +46,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { apiUrl, localUrl } from "../../services/contants";
+import { apiUrl } from "../../services/contants";
 import { db } from "../../services/firebase";
 
 function RawSubmissionOrders({
@@ -116,6 +116,11 @@ function RawSubmissionOrders({
           status: "Proof Read",
           sendReworkFrom: "",
           assignedQC: userEmail,
+          currentState: 7,
+          order_placed_time: {
+            ...assignments[index].order_placed_time,
+            7: Date.now(),
+          },
         },
         config
       );
@@ -174,6 +179,61 @@ function RawSubmissionOrders({
               _id: assignments[index].id,
               status: "Internal Rework",
               assignedQC: userEmail,
+              currentState: 6,
+              order_placed_time: {
+                ...assignments[index].order_placed_time,
+                6: Date.now(),
+              },
+              expertDeadline: assignments[index].expertDeadline[
+                assignments[index].id
+              ]
+                ? {
+                    [[assignments[index].id]]: [
+                      ...assignments[index].expertDeadline[
+                        assignments[index].id
+                      ],
+                      iso,
+                    ],
+                  }
+                : {
+                    [assignments[index].id]: [iso],
+                  },
+              internal_rework_date: assignments[index].internal_rework_date[
+                assignments[index].id
+              ]
+                ? {
+                    [[assignments[index].id]]: [
+                      ...assignments[index].internal_rework_date[
+                        [assignments[index].id]
+                      ],
+                      Date.now(),
+                    ],
+                  }
+                : {
+                    [assignments[index].id]: [Date.now()],
+                  },
+              internal_rework: assignments[index].internal_rework[
+                assignments[index].id
+              ]
+                ? {
+                    [[assignments[index].id]]: [
+                      ...assignments[index].internal_rework[
+                        [assignments[index].id]
+                      ],
+                      {
+                        file: "",
+                        comment: qcComments,
+                      },
+                    ],
+                  }
+                : {
+                    [assignments[index].id]: [
+                      {
+                        file: "",
+                        comment: qcComments,
+                      },
+                    ],
+                  },
             },
             config
           );
@@ -181,7 +241,6 @@ function RawSubmissionOrders({
             apiUrl + "/notifications",
             {
               assignmentId: assignments[index].id,
-              status: "Internal Rework",
               read: false,
             },
             config
@@ -222,15 +281,69 @@ function RawSubmissionOrders({
               status: "Internal Rework",
               assignedQC: userEmail,
               sendReworkFrom: "Raw Submission",
+              expertDeadline: assignments[index].expertDeadline[
+                assignments[index].id
+              ]
+                ? {
+                    [[assignments[index].id]]: [
+                      ...assignments[index].expertDeadline[
+                        assignments[index].id
+                      ],
+                      iso,
+                    ],
+                  }
+                : {
+                    [assignments[index].id]: [iso],
+                  },
+
+              internal_rework_date: assignments[index].internal_rework_date[
+                assignments[index].id
+              ]
+                ? {
+                    [[assignments[index].id]]: [
+                      ...assignments[index].internal_rework_date[
+                        [assignments[index].id]
+                      ],
+                      Date.now(),
+                    ],
+                  }
+                : {
+                    [assignments[index].id]: [Date.now()],
+                  },
+              internal_rework: assignments[index].internal_rework[
+                assignments[index].id
+              ]
+                ? {
+                    [[assignments[index].id]]: [
+                      ...assignments[index].internal_rework[
+                        [assignments[index].id]
+                      ],
+                      {
+                        file: fileUrl,
+                        comment: qcComments,
+                      },
+                    ],
+                  }
+                : {
+                    [assignments[index].id]: [
+                      {
+                        file: fileUrl,
+                        comment: qcComments,
+                      },
+                    ],
+                  },
+              currentState: 6,
+              order_placed_time: {
+                ...assignments[index].order_placed_time,
+                6: Date.now(),
+              },
             },
             config
           );
-
           const createNotification = await axios.post(
             apiUrl + "/notifications",
             {
               assignmentId: assignments[index].id,
-              status: "Internal Rework",
               read: false,
             },
             config
@@ -238,7 +351,7 @@ function RawSubmissionOrders({
           incrementCounter("Internal Rework");
           decrementCounter("Raw Submission");
           const responseQcMail = await axios.post(
-            localUrl + "/assignment/comments/QCToExpert",
+            apiUrl + "/assignment/comments/QCToExpert",
             {
               assignmentId: assignments[index].id,
               expertId: assignments[index].assignedExpert,
@@ -577,18 +690,26 @@ function RawSubmissionOrders({
             reference: data[index].reference,
             description: data[index].description,
             descriptionFile: data[index].descriptionFile,
+            order_placed_time: data[index].order_placed_time,
             numOfPages: data[index].numOfPages,
             paid: data[index].paid,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
               ", " +
               new Date(data[index].deadline).toDateString(),
-            expertDeadline:
-              new Date(data[index].expertDeadline).toLocaleTimeString() +
-              ", " +
-              new Date(data[index].expertDeadline).toDateString(),
-            expertDeadlineNF: data[index].expertDeadline,
+            expertDeadline: data[index].expertDeadline
+              ? data[index].expertDeadline
+              : [],
+            expertDeadlineNF: data[index].expertDeadline
+              ? data[index].expertDeadline[data[index]._id]
+              : "",
             retryCount: data[index].retryCount,
+            internal_rework_date: data[index].internal_rework_date
+              ? data[index].internal_rework_date
+              : [],
+            internal_rework: data[index].internal_rework
+              ? data[index].internal_rework
+              : [],
           });
         }
         await _fetchToken();
@@ -1050,7 +1171,13 @@ function RawSubmissionOrders({
                   {assignment.deadline}
                 </Td>
                 <Td color={"red.600"} fontWeight={"semibold"}>
-                  {assignment.expertDeadline}
+                  {assignment.expertDeadline
+                    ? new Date(
+                        assignment.expertDeadline[0]
+                      ).toLocaleTimeString() +
+                      ", " +
+                      new Date(assignment.expertDeadline[0]).toDateString()
+                    : ""}
                 </Td>
                 <Td>
                   {localStorage.getItem("userRole") === "Super Admin" ||
@@ -1169,7 +1296,15 @@ function RawSubmissionOrders({
                         <Tr>
                           <Th>Expert Deadline</Th>
                           <Td color={"red.600"} fontWeight={"semibold"}>
-                            {assignment.expertDeadline}
+                            {assignment.expertDeadline
+                              ? new Date(
+                                  assignment.expertDeadline[0]
+                                ).toLocaleTimeString() +
+                                ", " +
+                                new Date(
+                                  assignment.expertDeadline[0]
+                                ).toDateString()
+                              : ""}
                           </Td>
                         </Tr>
                         <Tr>

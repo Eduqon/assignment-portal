@@ -51,7 +51,6 @@ function AssignedExpertOrders({
   operatorExpertChat,
 }) {
   const [assignments, setAssignments] = useState([]);
-  const [showAmountAssignments, setShowAmountAssignments] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState();
   const [messages, setMessages] = useState([]);
   const [id, setId] = useState("");
@@ -68,7 +67,6 @@ function AssignedExpertOrders({
   const MessagesModalDis = useDisclosure();
   const ReplyMessageModalDis = useDisclosure();
   let assignmentList = [];
-  let amountDataList = [];
 
   let navigate = useRouter();
 
@@ -156,16 +154,16 @@ function AssignedExpertOrders({
             reference: data[index].reference,
             description: data[index].description,
             descriptionFile: data[index].descriptionFile,
+            order_placed_time: data[index].order_placed_time,
             numOfPages: data[index].numOfPages,
             paid: data[index].paid,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
               ", " +
               new Date(data[index].deadline).toDateString(),
-            expertDeadline:
-              new Date(data[index].expertDeadline).toLocaleTimeString() +
-              ", " +
-              new Date(data[index].expertDeadline).toDateString(),
+            expertDeadline: data[index].expertDeadline
+              ? data[index].expertDeadline[data[index]._id]
+              : "",
             amountStatus: data[index].amountStatus,
           });
         }
@@ -705,7 +703,13 @@ function AssignedExpertOrders({
                 fontWeight={"semibold"}
                 onClick={() => handlePopup(true, index)}
               >
-                {assignment.expertDeadline}
+                {assignment.expertDeadline
+                  ? new Date(
+                      assignment.expertDeadline[0]
+                    ).toLocaleTimeString() +
+                    ", " +
+                    new Date(assignment.expertDeadline[0]).toDateString()
+                  : ""}
               </Td>
               <Td color={"red.600"} fontWeight={"semibold"}>
                 {assignment.deadline}
@@ -803,7 +807,15 @@ function AssignedExpertOrders({
                         <Tr>
                           <Th>Expert Deadline</Th>
                           <Td color={"red.600"} fontWeight={"semibold"}>
-                            {assignment.expertDeadline}
+                            {assignment.expertDeadline
+                              ? new Date(
+                                  assignment.expertDeadline[0]
+                                ).toLocaleTimeString() +
+                                ", " +
+                                new Date(
+                                  assignment.expertDeadline[0]
+                                ).toDateString()
+                              : ""}
                           </Td>
                         </Tr>
                         <Tr>

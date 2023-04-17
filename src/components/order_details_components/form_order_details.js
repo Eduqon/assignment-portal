@@ -225,6 +225,10 @@ export function FormOrderDetails() {
                   paid: null,
                   numOfPages: pages,
                   vendorId: vendorId,
+                  currentState: 0,
+                  order_placed_time: {
+                    0: Date.now(),
+                  },
                 },
                 config
               );
@@ -268,6 +272,10 @@ export function FormOrderDetails() {
                   paid: null,
                   numOfPages: pages,
                   vendorId: vendorId,
+                  currentState: 0,
+                  order_placed_time: {
+                    0: Date.now(),
+                  },
                 },
                 config
               );
@@ -395,6 +403,10 @@ export function FormOrderDetails() {
                     paid: null,
                     numOfPages: pages,
                     vendorId: vendorId,
+                    currentState: 0,
+                    order_placed_time: {
+                      0: Date.now(),
+                    },
                   },
                   config
                 );
@@ -440,6 +452,10 @@ export function FormOrderDetails() {
                     paid: null,
                     numOfPages: pages,
                     vendorId: vendorId,
+                    currentState: 0,
+                    order_placed_time: {
+                      0: Date.now(),
+                    },
                   },
                   config
                 );
