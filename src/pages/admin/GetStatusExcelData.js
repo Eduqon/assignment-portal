@@ -357,7 +357,10 @@ function GetStatusExcelData() {
 
   return (
     <>
-      <Box padding={2} width={showData ? "10%" : "20%"}>
+      <Box
+        padding={2}
+        width={filterValue === "status" || filterValue === "id" ? "20%" : "10%"}
+      >
         <HStack display="flex" justifyContent="space-between">
           <span style={{ width: "30%" }}>Filter By:</span>
           <Select
@@ -375,7 +378,7 @@ function GetStatusExcelData() {
       </Box>
       {filterValue === "status" ? (
         <>
-          <Box padding={2} width={showData ? "10%" : "20%"}>
+          <Box padding={2} width={filterValue === "status" ? "20%" : "10%"}>
             <HStack display="flex" justifyContent="space-between">
               <span style={{ width: "30%" }}>Choose Status:</span>
               <Select
@@ -967,7 +970,7 @@ function GetStatusExcelData() {
         </>
       ) : (
         <>
-          <Box padding={2} width={showData ? "10%" : "20%"}>
+          <Box padding={2} width={filterValue === "id" ? "20%" : "10%"}>
             <HStack display="flex" justifyContent="space-between">
               <span style={{ width: "30%" }}>Enter ID:</span>
               <Input
@@ -1252,7 +1255,7 @@ function GetStatusExcelData() {
                 disabled={assignmentByID.length !== 0 && !error ? false : true}
               >
                 <CSVLink
-                  data={assignmentByID}
+                  data={excelData}
                   headers={headers}
                   filename="ExpertAssignmentData"
                 >
