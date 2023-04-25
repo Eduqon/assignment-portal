@@ -1,4 +1,5 @@
 import Calendar from "react-calendar";
+import { BellIcon } from "@chakra-ui/icons";
 import {
   HStack,
   Table,
@@ -9,6 +10,8 @@ import {
   Td,
   TableContainer,
   Link,
+  Button,
+  Tfoot,
 } from "@chakra-ui/react";
 import {
   Box,
@@ -22,6 +25,22 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { apiUrl } from "../../services/contants";
 import axios from "axios";
+
+const Checkbox = ({ obj, onChange }) => {
+  return (
+    <>
+      <input
+        type="checkbox"
+        id={`custom-checkbox-${obj.id}`}
+        checked={obj.checked}
+        onChange={() => {
+          onChange({ ...obj, checked: !obj.checked });
+        }}
+        style={{ cursor: "pointer" }}
+      />
+    </>
+  );
+};
 
 function ExpertDeadlineCalendarView() {
   const [assignments, setAssignments] = useState([]);
@@ -44,50 +63,127 @@ function ExpertDeadlineCalendarView() {
       let config = {
         headers: { Authorization: `Bearer ${userToken}` },
       };
-      let queryDate = dateValue;
-      let startQueryDate = new Date(queryDate.setHours(0, 0, 0, 0));
-      let endQueryDate = new Date(queryDate.setHours(24, 0, 0, 0));
+
+      const response = await axios.get(apiUrl + "/assignment/fetch", config);
+      let data = response.data.assignmentData;
+
+      const expertID = data.filter(
+        (data) =>
+          typeof data.expertDeadline === "object" &&
+          data.assignedExpert &&
+          new Date(
+            data.expertDeadline[data._id][
+              data.expertDeadline[data._id].length - 1
+            ]
+          ).toDateString() === dateValue.toDateString()
+      );
+      assignmentList = [];
+      expertID && expertID.length !== 0
+        ? expertID.forEach((data, index) => {
+            assignmentList.push({
+              id: data._id,
+              client_id: data.client_id,
+              assignedExpert: data.assignedExpert,
+              expert: data.assignedExpert,
+              subject: data.subject,
+              status: data.status,
+              quotation: data.quotation,
+              currencyOfQuote: data.currencyOfQuote,
+              level: data.level,
+              reference: data.reference,
+              description: data.description,
+              descriptionFile: data.descriptionFile,
+              numOfPages: data.numOfPages,
+              paid: data.paid,
+              deadline:
+                new Date(data.deadline).toLocaleTimeString() +
+                ", " +
+                new Date(data.deadline).toDateString(),
+              expertDeadline: data.expertDeadline ? data.expertDeadline : [],
+            });
+          })
+        : console.log("No Orders");
+
+      setAssignments(assignmentList);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function _sendReminder(index) {
+    let userToken = localStorage.getItem("userToken");
+    if (userToken == null) {
+      navigate.replace("/admin/login");
+    }
+
+    let config = {
+      headers: { Authorization: `Bearer ${userToken}` },
+    };
+    try {
       const response = await axios.post(
-        apiUrl + "/assignment/fetch",
+        apiUrl + "/expert/sendReminder",
         {
-          expertDeadline: {
-            $gte: startQueryDate.toISOString(),
-            $lt: endQueryDate.toISOString(),
-          },
+          expertIds: assignments[index].assignedExpert,
+          assignmentId: assignments[index].id,
         },
         config
       );
-      let data = response.data.assignmentData;
-      assignmentList = [];
-      if (data.length !== 0) {
-        for (let index = 0; index < data.length; index++) {
-          assignmentList.push({
-            id: data[index]._id,
-            client_id: data[index].client_id,
-            subject: data[index].subject,
-            status: data[index].status,
-            quotation: data[index].quotation,
-            currencyOfQuote: data[index].currencyOfQuote,
-            level: data[index].level,
-            reference: data[index].reference,
-            description: data[index].description,
-            descriptionFile: data[index].descriptionFile,
-            numOfPages: data[index].numOfPages,
-            paid: data[index].paid,
-            deadline:
-              new Date(data[index].deadline).toLocaleTimeString() +
-              ", " +
-              new Date(data[index].deadline).toDateString(),
-            expertDeadline:
-              new Date(data[index].expertDeadline).toLocaleTimeString() +
-              ", " +
-              new Date(data[index].expertDeadline).toDateString(),
-          });
-        }
-      } else {
-        console.log("No Orders");
+      // alert response data
+      let resdata = response.data;
+      if (resdata.success) {
+        window.alert("Send Reminder to Expert");
+        const updateAssignmentData = assignments.map((assignment) => {
+          return assignment.id === assignments[index].id
+            ? { ...assignment, sendReminder: true }
+            : assignment;
+        });
+        setAssignments(updateAssignmentData);
       }
-      setAssignments(assignmentList);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function _sendAllReminder() {
+    let userToken = localStorage.getItem("userToken");
+    if (userToken == null) {
+      navigate.replace("/admin/login");
+    }
+
+    let config = {
+      headers: { Authorization: `Bearer ${userToken}` },
+    };
+    try {
+      const selectedAssignments =
+        assignments &&
+        assignments.length !== 0 &&
+        assignments.filter((assignment) => assignment.checked);
+
+      const response = selectedAssignments.map(async (assignment, index) => {
+        return await axios.post(
+          apiUrl + "/expert/sendReminder",
+          {
+            expertIds: assignment.assignedExpert,
+            assignmentId: assignment.id,
+          },
+          config
+        );
+      });
+
+      // alert response data
+      let resdata = Promise.all(response);
+      let promiseData = await resdata;
+      let responseData = promiseData[promiseData.length - 1].data;
+
+      if (responseData.success) {
+        window.alert("Send Reminder to All Expert");
+        const updateAssignmentData = assignments.map((assignment) => {
+          return assignment.checked
+            ? { ...assignment, sendReminder: true }
+            : assignment;
+        });
+        setAssignments(updateAssignmentData);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -117,15 +213,39 @@ function ExpertDeadlineCalendarView() {
               <Th>Expert</Th>
               <Th>Deadline</Th>
               <Th>Expert Deadline</Th>
+              <Th>
+                <Button
+                  onClick={() => {
+                    setAssignments(
+                      assignments.flatMap((data) => [
+                        { ...data, checked: true },
+                      ])
+                    );
+                  }}
+                >
+                  Select All
+                </Button>
+              </Th>
             </Tr>
           </Thead>
           <Tbody>
-            {assignments.map((assignment) => (
+            {assignments.map((assignment, index) => (
               <Tr key={assignment.id}>
-                <Td fontWeight={"semibold"}>
+                <Td fontWeight={"semibold"} display="flex" alignItems="center">
                   <Link href={"/admin/assignment_details/" + assignment.id}>
                     {assignment.id}
                   </Link>
+                  <Button
+                    background="none"
+                    onClick={() => _sendReminder(index)}
+                    disabled={!assignment.checked}
+                  >
+                    {assignment.sendReminder ? (
+                      <BellIcon color={"red.600"} />
+                    ) : (
+                      <BellIcon />
+                    )}
+                  </Button>
                 </Td>
                 <Td>
                   {localStorage.getItem("userRole") === "Super Admin" ||
@@ -141,14 +261,42 @@ function ExpertDeadlineCalendarView() {
                   {assignment.subject}
                 </Td>
                 <Td>{assignment.paid}</Td>
-                <Td>{assignment.assignedExpert}</Td>
+                <Td>{assignment?.expert}</Td>
                 <Td fontWeight={"semibold"}>{assignment.deadline}</Td>
                 <Td color={"red.600"} fontWeight={"semibold"}>
-                  {assignment.expertDeadline}
+                  {assignment.expertDeadline
+                    ? new Date(
+                        assignment.expertDeadline[assignment.id][
+                          assignment.expertDeadline[assignment.id].length - 1
+                        ]
+                      ).toLocaleTimeString() +
+                      ", " +
+                      new Date(
+                        assignment.expertDeadline[assignment.id][
+                          assignment.expertDeadline[assignment.id].length - 1
+                        ]
+                      ).toDateString()
+                    : ""}
+                </Td>
+                <Td>
+                  <Checkbox
+                    obj={assignment}
+                    onChange={(item) => {
+                      setAssignments(
+                        assignments.map((d) => (d.id === item.id ? item : d))
+                      );
+                    }}
+                  />
                 </Td>
               </Tr>
             ))}
           </Tbody>
+          <br />
+          <Tfoot float="right">
+            {assignments.length !== 0 && (
+              <Button onClick={() => _sendAllReminder()}>Send</Button>
+            )}
+          </Tfoot>
         </Table>
       </div>
       {/* accordion for mobile version  */}
