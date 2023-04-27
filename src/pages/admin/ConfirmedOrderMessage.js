@@ -384,8 +384,16 @@ function ConfirmedOrderMessage({
                 .map((data) => {
                   return (
                     <Box bgColor="blackAlpha.100" width="100%" p={2}>
+                      {data.chat.length !== 0 &&
+                        data.chat[data.chat.length - 1].user !== "" && (
+                          <strong>
+                            From: {data.chat[data.chat.length - 1].user}
+                          </strong>
+                        )}
                       <Box display="flex" justifyContent="space-between">
                         <Box display="flex">
+                          <strong>ID:</strong>
+                          &nbsp;
                           <a
                             href={"/admin/assignment_details/" + data.id}
                             target="_blank"
