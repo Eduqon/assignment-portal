@@ -99,11 +99,13 @@ function AssignmentDetails() {
   const [assignmentFileName, setAssignmentFileName] = useState("");
   const [assignmentFileUrl, setAssignmentFileUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [tabIndex, setTabIndex] = useState(0);
   const inputRef = useRef(null);
 
   useEffect(() => {
     _fetchAssignmentDetails();
     setUserRole(localStorage.getItem("userRole"));
+    setTabIndex(Number(localStorage.getItem("tabIndex")));
   }, [navigate]);
 
   async function _fetchToken() {
@@ -400,7 +402,6 @@ function AssignmentDetails() {
         config
       );
       let data = await response.data.assignmentData;
-      console.log({ data });
       if (data.length !== 0) {
         setAssignment({
           id: data[0]._id,
@@ -482,7 +483,7 @@ function AssignmentDetails() {
         setSalesChat(doc.data().conversation);
       });
     } catch (error) {
-      //console.log(error);
+      console.log(error);
     }
   }
 
@@ -520,7 +521,7 @@ function AssignmentDetails() {
         setOperatorExpertChat(doc.data().conversation);
       });
     } catch (error) {
-      //console.log(error);
+      console.log(error);
     }
   }
 
@@ -546,7 +547,7 @@ function AssignmentDetails() {
           setOperatorExpertViewChat(doc.data().conversation);
         });
       } catch (error) {
-        //console.log(error);
+        console.log(error);
       }
     }
   }
@@ -586,7 +587,7 @@ function AssignmentDetails() {
           setQcExpertViewChat(doc.data().conversation);
         });
       } catch (error) {
-        //console.log(error);
+        console.log(error);
       }
     }
   }
@@ -937,6 +938,7 @@ function AssignmentDetails() {
             onClick={async () => {
               navigate.replace("/admin/portal");
               localStorage.setItem("backButton", true);
+              localStorage.setItem("tabIndex", tabIndex);
             }}
           >
             Back to Orders

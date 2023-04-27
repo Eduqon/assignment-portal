@@ -126,7 +126,6 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
         config
       );
       let data = await response.data.assignmentData;
-      console.warn("data fresh order", data);
       assignmentList = [];
       if (data.length !== 0) {
         for (let index = 0; index < data.length; index++) {

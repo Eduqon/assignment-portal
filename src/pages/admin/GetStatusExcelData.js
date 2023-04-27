@@ -281,7 +281,7 @@ function GetStatusExcelData() {
 
   async function _fetchExcelData(data) {
     const excelList = data.map((val) => {
-      const deliveryDate = val.deliveryDate[val._id].map((date) => {
+      const deliveryDate = val.deliveryDate[val._id]?.map((date) => {
         return date
           ? new Date(date).toLocaleTimeString() +
               " " +
@@ -313,7 +313,7 @@ function GetStatusExcelData() {
         assigned_expert: val.assigned_expert,
         assigned_qc: val.assigned_qc,
         client_deadline: val.client_deadline,
-        deliveryDate: deliveryDate.toString(),
+        deliveryDate: deliveryDate?.toString(),
         delivery_client_file: delivery_client_file.toString(),
         expertDeadline: val.expertDeadline[val._id].toString(),
         files_from_expert:

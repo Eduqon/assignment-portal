@@ -6,8 +6,6 @@ import {
   Tab,
   TabPanel,
   Heading,
-  useDisclosure,
-  Select,
   Spinner,
 } from "@chakra-ui/react";
 import AdminOrders from "./Orders";
@@ -26,34 +24,34 @@ function PortalLayout() {
   const [userRole, setUserRole] = useState("");
   const [messageCount, setMessageCount] = useState(0);
   const [loading, setLoading] = useState(true);
-
-  const dropOrder = () => {
-    var hideShow =
-      document.getElementsByClassName("dropOrder")[0].style.display;
-
-    if (hideShow === "block") {
-      document.getElementsByClassName("dropOrder")[0].style.display = "none";
-    } else {
-      document.getElementsByClassName("dropOrder")[0].style.display = "block";
-    }
-  };
+  const [tabIndex, setTabIndex] = useState(
+    (typeof window !== "undefined" &&
+      Number(localStorage.getItem("tabIndex"))) ||
+      0
+  );
 
   useEffect(() => {
     setUserRole(localStorage.getItem("userRole"));
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("tabIndex", tabIndex);
+  }, [tabIndex]);
+
   return (
     <>
       <AdminLayout />
       <Box padding={"10px"} position={"relative"}>
-        <Tabs
-          position={"absolute"}
-          orientation="vertical"
-          variant="solid-rounded"
-          display={{ base: "none", sm: "inline-flex", md: "inline-flex " }}
-        >
-          {userRole === "Sales" ? (
-            <>
+        {userRole === "Sales" ? (
+          <>
+            <Tabs
+              position={"absolute"}
+              orientation="vertical"
+              variant="solid-rounded"
+              display={{ base: "none", sm: "inline-flex", md: "inline-flex" }}
+              onChange={(index) => setTabIndex(index)}
+              index={tabIndex}
+            >
               <TabList display={{ base: "none", sm: "block", md: "block" }}>
                 <Tab>
                   <Heading fontSize={"md"}>Support</Heading>
@@ -64,16 +62,21 @@ function PortalLayout() {
               </TabList>
 
               <TabPanels>
-                <TabPanel>
-                  <AdminHome />
-                </TabPanel>
-                <TabPanel>
-                  <AdminOrders />
-                </TabPanel>
+                <TabPanel>{tabIndex === 0 && <AdminHome />}</TabPanel>
+                <TabPanel>{tabIndex === 1 && <AdminOrders />}</TabPanel>
               </TabPanels>
-            </>
-          ) : userRole === "Operator" ? (
-            <>
+            </Tabs>
+          </>
+        ) : userRole === "Operator" ? (
+          <>
+            <Tabs
+              position={"absolute"}
+              orientation="vertical"
+              variant="solid-rounded"
+              display={{ base: "none", sm: "inline-flex", md: "inline-flex" }}
+              onChange={(index) => setTabIndex(index)}
+              index={tabIndex}
+            >
               <TabList>
                 <Tab>
                   <Heading fontSize={"md"}>Calendar</Heading>
@@ -135,28 +138,35 @@ function PortalLayout() {
               </TabList>
 
               <TabPanels>
-                <TabPanel>
-                  <Calendars />
+                <TabPanel
+                  style={
+                    tabIndex === 0 ? { display: "block" } : { display: "none" }
+                  }
+                >
+                  {tabIndex === 0 && <Calendars />}
                 </TabPanel>
-                <TabPanel>
-                  <AdminOrders />
-                </TabPanel>
-                <TabPanel>
-                  <RawSubmissionOrders />
-                </TabPanel>
+                <TabPanel>{tabIndex === 1 && <AdminOrders />}</TabPanel>
+                <TabPanel>{tabIndex === 2 && <RawSubmissionOrders />}</TabPanel>
                 <TabPanel>
                   <Messages
                     setMessageCount={setMessageCount}
                     setSpinnerLoading={setLoading}
                   />
                 </TabPanel>
-                <TabPanel>
-                  <GetStatusExcelData />
-                </TabPanel>
+                <TabPanel>{tabIndex === 4 && <GetStatusExcelData />}</TabPanel>
               </TabPanels>
-            </>
-          ) : userRole === "Super Admin" || userRole === "Admin" ? (
-            <>
+            </Tabs>
+          </>
+        ) : userRole === "Super Admin" || userRole === "Admin" ? (
+          <>
+            <Tabs
+              position={"absolute"}
+              orientation="vertical"
+              variant="solid-rounded"
+              display={{ base: "none", sm: "inline-flex", md: "inline-flex" }}
+              onChange={(index) => setTabIndex(index)}
+              index={tabIndex}
+            >
               <TabList>
                 <Tab>
                   <Heading fontSize={"md"}>Admin</Heading>
@@ -176,25 +186,24 @@ function PortalLayout() {
               </TabList>
 
               <TabPanels>
-                <TabPanel>
-                  <AdminPanel />
-                </TabPanel>
-                <TabPanel>
-                  <AdminHome />
-                </TabPanel>
-                <TabPanel>
-                  <Calendars />
-                </TabPanel>
-                <TabPanel>
-                  <AdminOrders />
-                </TabPanel>
-                <TabPanel>
-                  <GetExcelData />
-                </TabPanel>
+                <TabPanel>{tabIndex === 0 && <AdminPanel />}</TabPanel>
+                <TabPanel>{tabIndex === 1 && <AdminHome />}</TabPanel>
+                <TabPanel>{tabIndex === 2 && <Calendars />}</TabPanel>
+                <TabPanel>{tabIndex === 3 && <AdminOrders />}</TabPanel>
+                <TabPanel>{tabIndex === 4 && <GetExcelData />}</TabPanel>
               </TabPanels>
-            </>
-          ) : (
-            <>
+            </Tabs>
+          </>
+        ) : (
+          <>
+            <Tabs
+              position={"absolute"}
+              orientation="vertical"
+              variant="solid-rounded"
+              display={{ base: "none", sm: "inline-flex", md: "inline-flex" }}
+              onChange={(index) => setTabIndex(index)}
+              index={tabIndex}
+            >
               <TabList display={{ base: "none", sm: "block", md: "block" }}>
                 <Tab>
                   <Heading fontSize={"md"}>Orders</Heading>
@@ -202,13 +211,11 @@ function PortalLayout() {
               </TabList>
 
               <TabPanels display={{ base: "none", sm: "block", md: "block" }}>
-                <TabPanel>
-                  <AdminOrders />
-                </TabPanel>
+                <TabPanel>{tabIndex === 0 && <AdminOrders />}</TabPanel>
               </TabPanels>
-            </>
-          )}
-        </Tabs>
+            </Tabs>
+          </>
+        )}
       </Box>
     </>
   );

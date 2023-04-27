@@ -96,7 +96,7 @@ function DeadlineCalendarView() {
   return (
     <>
       <div display={{ base: "none", sm: "block", md: "block" }}>
-        <HStack marginBottom={"20px"} justifyContent={"center"}>
+        <HStack marginBottom={"20px"}>
           <Calendar
             className="Set-H"
             onClickDay={(value) => {

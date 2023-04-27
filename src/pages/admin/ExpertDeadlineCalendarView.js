@@ -12,6 +12,7 @@ import {
   Link,
   Button,
   Tfoot,
+  Center,
 } from "@chakra-ui/react";
 import {
   Box,
@@ -192,7 +193,7 @@ function ExpertDeadlineCalendarView() {
   return (
     <>
       <div display={{ base: "none", sm: "block", md: "block" }}>
-        <HStack marginBottom={"20px"} justifyContent={"center"}>
+        <HStack marginBottom={"20px"}>
           <Calendar
             onClickDay={(value) => {
               _fetchAssignments(value);
@@ -228,69 +229,79 @@ function ExpertDeadlineCalendarView() {
               </Th>
             </Tr>
           </Thead>
-          <Tbody>
-            {assignments.map((assignment, index) => (
-              <Tr key={assignment.id}>
-                <Td fontWeight={"semibold"} display="flex" alignItems="center">
-                  <Link href={"/admin/assignment_details/" + assignment.id}>
-                    {assignment.id}
-                  </Link>
-                  <Button
-                    background="none"
-                    onClick={() => _sendReminder(index)}
-                    disabled={!assignment.checked}
+          {assignments && assignments.length !== 0 ? (
+            <Tbody>
+              {assignments.map((assignment, index) => (
+                <Tr key={assignment.id}>
+                  <Td
+                    fontWeight={"semibold"}
+                    display="flex"
+                    alignItems="center"
                   >
-                    {assignment.sendReminder ? (
-                      <BellIcon color={"red.600"} />
-                    ) : (
-                      <BellIcon />
-                    )}
-                  </Button>
-                </Td>
-                <Td>
-                  {localStorage.getItem("userRole") === "Super Admin" ||
-                  localStorage.getItem("userRole") === "Admin"
-                    ? assignment.client_id
-                    : assignment.client_id.substring(0, 2) +
-                      "****" +
-                      "@" +
-                      "****" +
-                      ".com"}
-                </Td>
-                <Td color={"green.600"} fontWeight={"semibold"}>
-                  {assignment.subject}
-                </Td>
-                <Td>{assignment.paid}</Td>
-                <Td>{assignment?.expert}</Td>
-                <Td fontWeight={"semibold"}>{assignment.deadline}</Td>
-                <Td color={"red.600"} fontWeight={"semibold"}>
-                  {assignment.expertDeadline
-                    ? new Date(
-                        assignment.expertDeadline[assignment.id][
-                          assignment.expertDeadline[assignment.id].length - 1
-                        ]
-                      ).toLocaleTimeString() +
-                      ", " +
-                      new Date(
-                        assignment.expertDeadline[assignment.id][
-                          assignment.expertDeadline[assignment.id].length - 1
-                        ]
-                      ).toDateString()
-                    : ""}
-                </Td>
-                <Td>
-                  <Checkbox
-                    obj={assignment}
-                    onChange={(item) => {
-                      setAssignments(
-                        assignments.map((d) => (d.id === item.id ? item : d))
-                      );
-                    }}
-                  />
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
+                    <Link href={"/admin/assignment_details/" + assignment.id}>
+                      {assignment.id}
+                    </Link>
+                    <Button
+                      background="none"
+                      onClick={() => _sendReminder(index)}
+                      disabled={!assignment.checked}
+                    >
+                      {assignment.sendReminder ? (
+                        <BellIcon color={"red.600"} />
+                      ) : (
+                        <BellIcon />
+                      )}
+                    </Button>
+                  </Td>
+                  <Td>
+                    {localStorage.getItem("userRole") === "Super Admin" ||
+                    localStorage.getItem("userRole") === "Admin"
+                      ? assignment.client_id
+                      : assignment.client_id.substring(0, 2) +
+                        "****" +
+                        "@" +
+                        "****" +
+                        ".com"}
+                  </Td>
+                  <Td color={"green.600"} fontWeight={"semibold"}>
+                    {assignment.subject}
+                  </Td>
+                  <Td>{assignment.paid}</Td>
+                  <Td>{assignment?.expert}</Td>
+                  <Td fontWeight={"semibold"}>{assignment.deadline}</Td>
+                  <Td color={"red.600"} fontWeight={"semibold"}>
+                    {assignment.expertDeadline
+                      ? new Date(
+                          assignment.expertDeadline[assignment.id][
+                            assignment.expertDeadline[assignment.id].length - 1
+                          ]
+                        ).toLocaleTimeString() +
+                        ", " +
+                        new Date(
+                          assignment.expertDeadline[assignment.id][
+                            assignment.expertDeadline[assignment.id].length - 1
+                          ]
+                        ).toDateString()
+                      : ""}
+                  </Td>
+                  <Td>
+                    <Checkbox
+                      obj={assignment}
+                      onChange={(item) => {
+                        setAssignments(
+                          assignments.map((d) => (d.id === item.id ? item : d))
+                        );
+                      }}
+                    />
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          ) : (
+            <Tbody display="flex">
+              <Box margin="0 auto">No Orders</Box>
+            </Tbody>
+          )}
           <br />
           <Tfoot float="right">
             {assignments.length !== 0 && (

@@ -23,6 +23,7 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { isMobile } from "react-device-detect";
 import AssignedExpertOrders from "./AssignedExpertOrders";
 import CP1DoneOrders from "./CP1DoneOrders";
 import CP1PendingOrders from "./CP1PendingOrders";
@@ -58,13 +59,22 @@ function AdminOrders() {
   const [userRole, setUserRole] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [notificationCounter, setNotificationCounter] = useState({});
+  const [tabIndex, setTabIndex] = useState(
+    (typeof window !== "undefined" &&
+      Number(localStorage.getItem("ordersTabIndex"))) ||
+      0
+  );
 
   const navigate = useRouter();
   const NotificationModalDis = useDisclosure();
 
   useEffect(async () => {
     setUserRole(localStorage.getItem("userRole"));
-  });
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("ordersTabIndex", tabIndex);
+  }, [tabIndex]);
 
   useEffect(() => {
     _fetchMessages();
@@ -466,9 +476,14 @@ function AdminOrders() {
     <>
       <NotificationModal />
       <Box padding={0}>
-        <Tabs isLazy variant="soft-rounded">
-          {userRole === "Super Admin" || userRole === "Admin" ? (
-            <>
+        {userRole === "Super Admin" || userRole === "Admin" ? (
+          <>
+            <Tabs
+              isLazy
+              variant="soft-rounded"
+              onChange={(index) => setTabIndex(index)}
+              index={tabIndex}
+            >
               <TabList>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Fresh</Heading>
@@ -674,48 +689,51 @@ function AdminOrders() {
 
               <TabPanels>
                 <TabPanel>
-                  <FreshOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                  />
+                  {tabIndex === 0 && (
+                    <FreshOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <CP1PendingOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                  />
+                  {tabIndex === 1 && (
+                    <CP1PendingOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <CP1DoneOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                  />
+                  {tabIndex === 2 && (
+                    <CP1DoneOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                    />
+                  )}
                 </TabPanel>
+                <TabPanel>{tabIndex === 3 && <ExpertAskedOrders />}</TabPanel>
                 <TabPanel>
-                  <ExpertAskedOrders />
+                  {tabIndex === 4 && <AssignedExpertOrders />}
                 </TabPanel>
+                <TabPanel>{tabIndex === 5 && <RawSubmissionOrders />}</TabPanel>
                 <TabPanel>
-                  <AssignedExpertOrders />
+                  {tabIndex === 6 && <InternalReworkOrders />}
                 </TabPanel>
-                <TabPanel>
-                  <RawSubmissionOrders />
-                </TabPanel>
-                <TabPanel>
-                  <InternalReworkOrders />
-                </TabPanel>
-                <TabPanel>
-                  <ProofReadOrders />
-                </TabPanel>
-                <TabPanel>
-                  <CP2DoneOrders />
-                </TabPanel>
-                <TabPanel>
-                  <ClientReworkOrders />
-                </TabPanel>
+                <TabPanel>{tabIndex === 7 && <ProofReadOrders />}</TabPanel>
+                <TabPanel>{tabIndex === 8 && <CP2DoneOrders />}</TabPanel>
+                <TabPanel>{tabIndex === 9 && <ClientReworkOrders />}</TabPanel>
               </TabPanels>
-            </>
-          ) : userRole === "Operator" ? (
-            <>
+            </Tabs>
+          </>
+        ) : userRole === "Operator" ? (
+          <>
+            <Tabs
+              isLazy
+              variant="soft-rounded"
+              onChange={(index) => setTabIndex(index)}
+              index={tabIndex}
+            >
               <TabList>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Fresh</Heading>
@@ -881,76 +899,99 @@ function AdminOrders() {
 
               <TabPanels>
                 <TabPanel>
-                  <FreshOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                  />
+                  {tabIndex === 0 && (
+                    <FreshOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <CP1PendingOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                  />
+                  {tabIndex === 1 && (
+                    <CP1PendingOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <CP1DoneOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                  />
+                  {tabIndex === 2 && (
+                    <CP1DoneOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <ExpertAskedOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                    inProcessOrderAssignedExpertMessages={
-                      inProcessOrderAssignedExpertMessages
-                    }
-                    operatorExpertChat={processOperatorExpertChat}
-                    inProcessOrderData={inProcessOrderData}
-                  />
+                  {tabIndex === 3 && (
+                    <ExpertAskedOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                      inProcessOrderAssignedExpertMessages={
+                        inProcessOrderAssignedExpertMessages
+                      }
+                      operatorExpertChat={processOperatorExpertChat}
+                      inProcessOrderData={inProcessOrderData}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <AssignedExpertOrders
-                    confirmOrderAssignedExpertMessages={
-                      confirmOrderAssignedExpertMessages
-                    }
-                    operatorExpertChat={confirmedOperatorExpertChat}
-                  />
+                  {tabIndex === 4 && (
+                    <AssignedExpertOrders
+                      confirmOrderAssignedExpertMessages={
+                        confirmOrderAssignedExpertMessages
+                      }
+                      operatorExpertChat={confirmedOperatorExpertChat}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <RawSubmissionOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                    confirmOrderAssignedExpertMessages={
-                      confirmOrderAssignedExpertMessages
-                    }
-                    operatorExpertChat={confirmedOperatorExpertChat}
-                  />
+                  {tabIndex === 5 && (
+                    <RawSubmissionOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                      confirmOrderAssignedExpertMessages={
+                        confirmOrderAssignedExpertMessages
+                      }
+                      operatorExpertChat={confirmedOperatorExpertChat}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <ProofReadOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                    confirmOrderAssignedExpertMessages={
-                      confirmOrderAssignedExpertMessages
-                    }
-                    operatorExpertChat={confirmedOperatorExpertChat}
-                  />
+                  {tabIndex === 6 && (
+                    <ProofReadOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                      confirmOrderAssignedExpertMessages={
+                        confirmOrderAssignedExpertMessages
+                      }
+                      operatorExpertChat={confirmedOperatorExpertChat}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <CP2DoneOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                    confirmOrderAssignedExpertMessages={
-                      confirmOrderAssignedExpertMessages
-                    }
-                    operatorExpertChat={confirmedOperatorExpertChat}
-                  />
+                  {tabIndex === 7 && (
+                    <CP2DoneOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                      confirmOrderAssignedExpertMessages={
+                        confirmOrderAssignedExpertMessages
+                      }
+                      operatorExpertChat={confirmedOperatorExpertChat}
+                    />
+                  )}
                 </TabPanel>
               </TabPanels>
-            </>
-          ) : userRole === "QC" ? (
-            <>
+            </Tabs>
+          </>
+        ) : userRole === "QC" ? (
+          <>
+            <Tabs
+              isLazy
+              variant="soft-rounded"
+              onChange={(index) => setTabIndex(index)}
+              index={tabIndex}
+            >
               <TabList>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Raw Submission</Heading>
@@ -1056,39 +1097,56 @@ function AdminOrders() {
 
               <TabPanels>
                 <TabPanel>
-                  <RawSubmissionOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                  />
+                  {tabIndex === 0 && (
+                    <RawSubmissionOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <InternalReworkOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                  />
+                  {tabIndex === 1 && (
+                    <InternalReworkOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <ProofReadOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                  />
+                  {tabIndex === 2 && (
+                    <ProofReadOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <CP2DoneOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                  />
+                  {tabIndex === 3 && (
+                    <CP2DoneOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>
-                  <ClientReworkOrders
-                    incrementCounter={incrementCounter}
-                    decrementCounter={decrementCounter}
-                  />
+                  {tabIndex === 4 && (
+                    <ClientReworkOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                    />
+                  )}
                 </TabPanel>
               </TabPanels>
-            </>
-          ) : userRole === "Sales" ? (
-            <>
+            </Tabs>
+          </>
+        ) : userRole === "Sales" ? (
+          <>
+            <Tabs
+              isLazy
+              variant="soft-rounded"
+              onChange={(index) => setTabIndex(index)}
+              index={tabIndex}
+            >
               <TabList>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Fresh</Heading>
@@ -1108,25 +1166,22 @@ function AdminOrders() {
               </TabList>
 
               <TabPanels>
-                <TabPanel>
-                  <FreshOrders />
-                </TabPanel>
-                <TabPanel>
-                  <CP1PendingOrders />
-                </TabPanel>
-                <TabPanel>
-                  <CP1DoneOrders />
-                </TabPanel>
-                <TabPanel>
-                  <ProofReadOrders />
-                </TabPanel>
-                <TabPanel>
-                  <CP2DoneOrders />
-                </TabPanel>
+                <TabPanel>{tabIndex === 0 && <FreshOrders />}</TabPanel>
+                <TabPanel>{tabIndex === 1 && <CP1PendingOrders />}</TabPanel>
+                <TabPanel>{tabIndex === 2 && <CP1DoneOrders />}</TabPanel>
+                <TabPanel>{tabIndex === 3 && <ProofReadOrders />}</TabPanel>
+                <TabPanel>{tabIndex === 4 && <CP2DoneOrders />}</TabPanel>
               </TabPanels>
-            </>
-          ) : userRole === "Vendor" ? (
-            <>
+            </Tabs>
+          </>
+        ) : userRole === "Vendor" ? (
+          <>
+            <Tabs
+              isLazy
+              variant="soft-rounded"
+              onChange={(index) => setTabIndex(index)}
+              index={tabIndex}
+            >
               <TabList>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Vendor Orders</Heading>
@@ -1134,34 +1189,34 @@ function AdminOrders() {
               </TabList>
 
               <TabPanels>
-                <TabPanel>
-                  <VendorOrders />
-                </TabPanel>
+                <TabPanel>{tabIndex === 0 && <VendorOrders />}</TabPanel>
               </TabPanels>
-            </>
-          ) : (
-            <></>
-          )}
-        </Tabs>
+            </Tabs>
+          </>
+        ) : (
+          <></>
+        )}
       </Box>
 
       {/* mobile  */}
-      <Box
-        display={{ base: "block", sm: "none", md: "none " }}
-        id="parent_tabOrder"
-      >
-        {/* <FreshOrders /> */}
-        <FreshOrders />
-        <CP1PendingOrders />
-        <CP1DoneOrders />
-        <ExpertAskedOrders />
-        <AssignedExpertOrders />
-        <RawSubmissionOrders />
-        <InternalReworkOrders />
-        <ProofReadOrders />
-        <CP2DoneOrders />
-        <ClientReworkOrders />
-      </Box>
+      {isMobile && (
+        <Box
+          display={{ base: "block", sm: "none", md: "none " }}
+          id="parent_tabOrder"
+        >
+          {/* <FreshOrders /> */}
+          <FreshOrders />
+          <CP1PendingOrders />
+          <CP1DoneOrders />
+          <ExpertAskedOrders />
+          <AssignedExpertOrders />
+          <RawSubmissionOrders />
+          <InternalReworkOrders />
+          <ProofReadOrders />
+          <CP2DoneOrders />
+          <ClientReworkOrders />
+        </Box>
+      )}
     </>
   );
 }

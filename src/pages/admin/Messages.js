@@ -125,7 +125,7 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
         });
       }
     })();
-  }, [messageData]);
+  }, [messageData, confirmedOrders, inProcessOrders]);
 
   useEffect(() => {
     (async () => {
