@@ -13,7 +13,6 @@ import AdminHome from "./Home";
 import { useEffect, useState } from "react";
 import Calendars from "./Calendars";
 import AdminPanel from "./AdminPanel";
-import RawSubmissionOrders from "./RawSubmissionOrders";
 import { ChatIcon } from "@chakra-ui/icons";
 import Messages from "./Messages";
 import AdminLayout from ".";
@@ -85,9 +84,6 @@ function PortalLayout() {
                   <Heading fontSize={"md"}>Orders</Heading>
                 </Tab>
                 <Tab>
-                  <Heading fontSize={"md"}>Raw Submission</Heading>
-                </Tab>
-                <Tab>
                   <Box display={"flex"} alignItems={"center"}>
                     <Heading fontSize={"md"}>Messages</Heading>
                     <Box
@@ -146,14 +142,13 @@ function PortalLayout() {
                   {tabIndex === 0 && <Calendars />}
                 </TabPanel>
                 <TabPanel>{tabIndex === 1 && <AdminOrders />}</TabPanel>
-                <TabPanel>{tabIndex === 2 && <RawSubmissionOrders />}</TabPanel>
                 <TabPanel>
                   <Messages
                     setMessageCount={setMessageCount}
                     setSpinnerLoading={setLoading}
                   />
                 </TabPanel>
-                <TabPanel>{tabIndex === 4 && <GetStatusExcelData />}</TabPanel>
+                <TabPanel>{tabIndex === 3 && <GetStatusExcelData />}</TabPanel>
               </TabPanels>
             </Tabs>
           </>
