@@ -30,6 +30,7 @@ import { db } from "../../services/firebase";
 import { useRouter } from "next/router";
 import { apiUrl } from "../../services/contants";
 import axios from "axios";
+import AdminAnonymousChat from "../../components/chat_components/operator_anonymous_chat";
 
 function SalesChatQueue() {
   const [users, setUsers] = useState([]);
@@ -74,10 +75,11 @@ function SalesChatQueue() {
   useEffect(() => {
     if (!listening) {
       const q = query(
-        collection(db, "sales_chat"),
+        collection(db, "anonymous_chat"),
         orderBy("time", "desc"),
         where("time", ">=", Date.now() - 1800000)
       );
+
       const unsub = onSnapshot(q, (querySnapshot) => {
         const queue = [];
         querySnapshot.forEach((doc) => {
@@ -89,6 +91,8 @@ function SalesChatQueue() {
     }
   }, [listening, users]);
 
+  const salesData =
+    users && users.filter((user) => user.data().chat_status === "Sales");
   return (
     <>
       <Table
@@ -104,40 +108,53 @@ function SalesChatQueue() {
           </Tr>
         </Thead>
         <Tbody>
-          {users.length === 0 ? (
+          {salesData.length === 0 ? (
             <></>
           ) : (
-            users.map((user, index) => (
-              <Tr
-                visibility={user.data().sales === "" ? "visible" : "collapse"}
-                key={user.id}
-              >
-                <Td fontWeight={"semibold"}>
-                  {localStorage.getItem("userRole") === "Super Admin"
-                    ? user.id
-                    : user.id.substring(0, 2) + "****" + "@" + "****" + ".com"}
-                </Td>
-                <Td>{user.data().sales}</Td>
+            salesData.map((user, index) => (
+              <Tr visibility={"visible"} key={user.data().id}>
+                <Td fontWeight={"semibold"}>{user.data().id}</Td>
+                <Td>{user.data().operator}</Td>
                 <Td>
-                  <Button
-                    onClick={async () => {
-                      await assignSales(user.id, user.data().assignment);
-                    }}
-                  >
-                    Resolve
-                  </Button>
+                  <AdminAnonymousChat
+                    isAssignedOperator={user.data().operator ? true : false}
+                    clientId={user.data().id}
+                    assignedOperator={user.data().operator}
+                  />
                 </Td>
               </Tr>
             ))
+            // users.map((user, index) => (
+            //   <Tr
+            //     visibility={user.data().sales === "" ? "visible" : "collapse"}
+            //     key={user.id}
+            //   >
+            //     <Td fontWeight={"semibold"}>
+            //       {localStorage.getItem("userRole") === "Super Admin"
+            //         ? user.id
+            //         : user.id.substring(0, 2) + "****" + "@" + "****" + ".com"}
+            //     </Td>
+            //     <Td>{user.data().sales}</Td>
+            //     <Td>
+            //       <Button
+            //         onClick={async () => {
+            //           await assignSales(user.id, user.data().assignment);
+            //         }}
+            //       >
+            //         Resolve
+            //       </Button>
+            //     </Td>
+            //   </Tr>
+            // ))
           )}
         </Tbody>
       </Table>
       {/* accordion for mobile version  */}
       <div className="ShowSideClick">
-        {users.length === 0 ? (
+        {salesData.length === 0 ? (
           <></>
         ) : (
-          users.map((user, index) => (
+          salesData.map((user, index) => (
             <Accordion
               defaultIndex={[0]}
               allowMultiple
@@ -156,42 +173,25 @@ function SalesChatQueue() {
                   <TableContainer>
                     <Table>
                       <Tbody>
-                        <Tr
-                          visibility={
-                            user.data().sales === "" ? "visible" : "collapse"
-                          }
-                          key={user.id}
-                        >
+                        <Tr visibility={"visible"} key={user.id}>
                           <Table>
                             <Tr>
                               <Th>ID</Th>
-                              <Td fontWeight={"semibold"}>
-                                {localStorage.getItem("userRole") ===
-                                "Super Admin"
-                                  ? user.id
-                                  : user.id.substring(0, 2) +
-                                    "****" +
-                                    "@" +
-                                    "****" +
-                                    ".com"}
-                              </Td>
+                              <Td fontWeight={"semibold"}>{user.data().id}</Td>
                             </Tr>
                             <Tr>
                               <Th>Assigned Sales</Th>
-                              <Td>{user.data().sales}</Td>
+                              <Td>{user.data().operator}</Td>
                             </Tr>
                           </Table>
                           <Td>
-                            <Button
-                              onClick={async () => {
-                                await assignSales(
-                                  user.id,
-                                  user.data().assignment
-                                );
-                              }}
-                            >
-                              Resolve
-                            </Button>
+                            <AdminAnonymousChat
+                              isAssignedOperator={
+                                user.data().operator ? true : false
+                              }
+                              clientId={user.data().id}
+                              assignedOperator={user.data().operator}
+                            />
                           </Td>
                         </Tr>
                       </Tbody>

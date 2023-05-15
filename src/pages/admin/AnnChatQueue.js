@@ -6,6 +6,7 @@ import {
   Th,
   Td,
   TableContainer,
+  Button,
 } from "@chakra-ui/react";
 import {
   Box,
@@ -22,6 +23,8 @@ import {
   collection,
   orderBy,
   where,
+  doc,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "../../services/firebase";
 import AdminAnonymousChat from "../../components/chat_components/operator_anonymous_chat";
@@ -48,6 +51,18 @@ function AnnChatQueue() {
     }
   }, [listening, users]);
 
+  async function assignSales(clientId) {
+    try {
+      const anon_client = await setDoc(doc(db, "anonymous_chat", clientId), {
+        operator: "Aroraharshdeep27@gmail.com",
+        time: Date.now(),
+        id: clientId,
+        chat_status: "Sales",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <>
       <Table
@@ -66,19 +81,24 @@ function AnnChatQueue() {
           {users.length === 0 ? (
             <></>
           ) : (
-            users.map((user, index) => (
-              <Tr key={user.id}>
-                <Td fontWeight={"semibold"}>{user.id}</Td>
-                <Td>{user.data().operator}</Td>
-                <Td>
-                  <AdminAnonymousChat
-                    isAssignedOperator={user.data().operator ? true : false}
-                    clientId={user.id}
-                    assignedOperator={user.data().operator}
-                  />
-                </Td>
-              </Tr>
-            ))
+            users.map((user, index) => {
+              return (
+                <Tr
+                  key={user.id}
+                  backgroundColor={
+                    user.data().chat_status === "Sales" ? "red.500" : ""
+                  }
+                >
+                  <Td fontWeight={"semibold"}>{user.id}</Td>
+                  <Td>{user.data().operator}</Td>
+                  <Td>
+                    <Button onClick={() => assignSales(user.id)}>
+                      Assign to Sales
+                    </Button>
+                  </Td>
+                </Tr>
+              );
+            })
           )}
         </Tbody>
       </Table>

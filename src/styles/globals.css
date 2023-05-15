@@ -26,6 +26,9 @@ code {
     monospace;
 }
 
+.chakra-popover__popper {
+  transform: translate3d(-10px, -7815px, 0px) !important;
+}
 /* dropdown */
 ul.drop {
   display: none;
@@ -302,7 +305,6 @@ ul.dropOrder li {
 }
 
 input:focus {
-  border-color: transparent !important;
   z-index: 2 !important;
   box-shadow: none !important;
 }

@@ -1,11 +1,4 @@
-import {
-  doc,
-  onSnapshot,
-  setDoc,
-  updateDoc,
-  arrayUnion,
-  getDoc,
-} from "firebase/firestore";
+import { doc, onSnapshot, updateDoc, arrayUnion } from "firebase/firestore";
 import { db } from "../../services/firebase";
 import { ChatIcon, AddIcon } from "@chakra-ui/icons";
 import {
@@ -21,11 +14,11 @@ import {
   Input,
   InputRightElement,
   Button,
+  Avatar,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function AdminAnonymousChat(props) {
-  const [status, setStatus] = useState("unassigned");
   const [chat, setChat] = useState([]);
   const [userId, setUserId] = useState("");
   const [input, setInput] = useState("");
@@ -34,33 +27,8 @@ export default function AdminAnonymousChat(props) {
     let userEmail = localStorage.getItem("userEmail");
     setUserId(userEmail);
     try {
-      const anon_clientRef = await getDoc(
-        doc(db, "anonymous_chat", props.clientId)
-      );
-      const anon_client = await setDoc(
-        doc(db, "anonymous_chat", props.clientId),
-        {
-          operator: userEmail,
-        }
-      );
-      if (anon_clientRef.data().operator !== "") {
-        setStatus("assigned");
-      } else {
-        const chatName = props.clientId + "_" + userEmail;
-        const chat = await setDoc(doc(db, "chat", chatName), {
-          conversation: [
-            {
-              msg: "Hi!! Please let us know how I can assist you today?",
-              time: Date.now(),
-              type: "TEXT",
-              user: userEmail,
-            },
-          ],
-        });
-        setStatus("assigned");
-      }
-
-      onSnapshot(doc(db, "chat", props.clientId + "_" + userEmail), (doc) => {
+      const chatName = props.clientId + "_" + userEmail;
+      const chat_data = onSnapshot(doc(db, "chat", chatName), (doc) => {
         setChat(doc.data().conversation);
       });
     } catch (error) {
@@ -80,40 +48,84 @@ export default function AdminAnonymousChat(props) {
           icon={<ChatIcon />}
         />
       </PopoverTrigger>
-      <PopoverContent>
-        <VStack alignItems={"start"} minH={"500px"} maxH={"500px"}>
+      <PopoverContent width={"md"} overflowY="scroll">
+        <VStack alignItems={"start"} maxH={"500px"}>
           <Box p={2} bgColor="gray.200" width={"100%"}>
-            <Heading fontSize={"xl"}>Chat with Lead</Heading>
+            <Heading fontSize={"xl"}>Chat with Client</Heading>
           </Box>
-          <VStack flexGrow={1} padding="2" width="100%" overflowY="scroll">
-            {status === "unassigned" ? (
-              <Box>
-                <Text>Connecting to an user.....</Text>
-              </Box>
-            ) : (
-              chat.map((messageItem, index) => (
+          {chat.length === 0 ? (
+            <Box>
+              <Text>Connecting with Client...</Text>
+            </Box>
+          ) : (
+            chat.map((messageItem, index) => (
+              <VStack
+                alignItems={
+                  messageItem.user === userId ? "flex-end" : "flex-start"
+                }
+                padding="2"
+                width="100%"
+                flexGrow={1}
+              >
                 <Box
-                  display={messageItem.type === "TEXT" ? "flex" : "none"}
-                  alignSelf={
+                  display={"flex"}
+                  justifyContent={
                     messageItem.user === userId ? "flex-end" : "flex-start"
                   }
-                  flexWrap={true}
-                  padding={2}
-                  borderRadius={"md"}
-                  maxWidth="70%"
-                  bgColor={
-                    messageItem.user === userId ? "blue.100" : "green.100"
-                  }
-                  key={index}
+                  flexDirection="column"
+                  width={"100%"}
                 >
-                  <VStack maxWidth="100%" overflowWrap={"break-word"}>
-                    <Text maxWidth={"100%"}>{messageItem.msg}</Text>
-                  </VStack>
+                  <span
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: `${
+                        messageItem.user === userId ? "flex-end" : "flex-start"
+                      }`,
+                    }}
+                  >
+                    {messageItem.user === userId ? (
+                      <>
+                        <Avatar
+                          bg="#dc3545"
+                          name="Sherlin"
+                          src="/assets/avtar/woman1.png"
+                          color={"#fff"}
+                          size={"sm"}
+                        />
+                        <Text marginLeft="1" color="gray.500">
+                          Sherlin
+                        </Text>
+                      </>
+                    ) : (
+                      <Avatar bg="teal.500" size={"sm"} />
+                    )}
+                  </span>
+                  <Box
+                    display={
+                      messageItem.type === "TEXT" || "MEDIA" ? "flex" : "none"
+                    }
+                    alignSelf={
+                      messageItem.user === userId ? "flex-end" : "flex-start"
+                    }
+                    flexWrap={true}
+                    padding={2}
+                    borderRadius={"md"}
+                    maxWidth="70%"
+                    bgColor={
+                      messageItem.user === userId ? "blue.100" : "green.100"
+                    }
+                    key={index}
+                  >
+                    <VStack maxWidth="100%" overflowWrap={"break-word"}>
+                      <Text maxWidth={"100%"}>{messageItem.msg}</Text>
+                    </VStack>
+                  </Box>
                 </Box>
-              ))
-            )}
-          </VStack>
-          <InputGroup p={1} display={status === "requested" ? "none" : "flex"}>
+              </VStack>
+            ))
+          )}
+          <InputGroup p={1} display={"flex"}>
             <Input
               type="text"
               id="props.clientId"
