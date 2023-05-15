@@ -234,7 +234,7 @@ export default function AnonymousChat() {
               }
             />
           </PopoverTrigger>
-          <PopoverContent width={"lg"} minH={"700px"} maxH={"700px"}>
+          <PopoverContent width={"lg"} minH={"500px"} maxH={"500px"}>
             <PopoverHeader padding={"0"}>
               <Box
                 p={3}
