@@ -26,9 +26,6 @@ code {
     monospace;
 }
 
-.chakra-popover__popper {
-  transform: translate3d(-10px, -7815px, 0px) !important;
-}
 /* dropdown */
 ul.drop {
   display: none;
