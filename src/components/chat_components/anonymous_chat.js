@@ -275,7 +275,7 @@ export default function AnonymousChat() {
               </Box>
             </PopoverHeader>
 
-            <PopoverBody padding={"1rem 0.5rem"} height="590px">
+            <PopoverBody padding={"1rem 0.5rem"} height="390px">
               <Box
                 id="scroll-view"
                 overflowY="scroll"
