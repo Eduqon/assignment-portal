@@ -1351,235 +1351,248 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
             </Tr>
           </Thead>
           <Tbody>
-            {assignments.map((assignment, index) => (
-              <Tr key={assignment.id}>
-                <Td fontWeight={"semibold"}>
-                  <Link href={"/admin/assignment_details/" + assignment.id}>
-                    {assignment.id}
-                  </Link>
-                </Td>
-                <Td>
-                  {localStorage.getItem("userRole") === "Super Admin" ||
-                  localStorage.getItem("userRole") === "Admin"
-                    ? assignment.client_id
-                    : assignment.client_id.substring(0, 2) +
-                      "****" +
-                      "@" +
-                      "****" +
-                      ".com"}
-                </Td>
-                <Td color={"green.600"} fontWeight={"semibold"}>
-                  {assignment.subject}
-                </Td>
-                <Td
-                  fontWeight={"bold"}
-                  color={
-                    assignment.cp1PaymentId === "External Payment"
-                      ? "red"
-                      : "green"
-                  }
-                >
-                  {assignment &&
-                  assignment.quoteAmountStatus &&
-                  assignment.quoteAmountStatus[userID] === "Approved" ? (
+            {assignments.length === 0 ? (
+              <>No Orders</>
+            ) : (
+              assignments.map((assignment, index) => (
+                <Tr key={assignment.id}>
+                  <Td fontWeight={"semibold"}>
+                    <Link href={"/admin/assignment_details/" + assignment.id}>
+                      {assignment.id}
+                    </Link>
                     <Button
-                      onClick={async () => {
-                        try {
-                          const response = await axios.get(
-                            apiUrl +
-                              `/expert/assignment/showQuoteAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
-                                assignment["id"]
-                              }&operatorID=${userID}`
-                          );
-                          let resdata = response.data;
-                          if (resdata.success) {
-                            _fetchAssignments();
-                          }
-                        } catch (err) {
-                          console.log(err);
-                        }
-                      }}
-                      background="none"
-                      _hover={{
-                        background: "none",
-                      }}
-                      _focus={{
-                        boxShadow: "none",
-                      }}
+                      background={"none"}
+                      _focus={{ outline: "none" }}
+                      _hover={{ background: "none" }}
+                      color={"#dc3545"}
+                      onClick={() => _calling(assignment.contact_no)}
                     >
-                      {assignment.quotation}
+                      <PhoneIcon />
                     </Button>
-                  ) : (
-                    <Button
-                      onClick={async () => {
-                        let userToken = localStorage.getItem("userToken");
-                        if (userToken == null) {
-                          navigate.replace("/admin/login");
-                        }
+                  </Td>
+                  <Td>
+                    {localStorage.getItem("userRole") === "Super Admin" ||
+                    localStorage.getItem("userRole") === "Admin"
+                      ? assignment.client_id
+                      : assignment.client_id.substring(0, 2) +
+                        "****" +
+                        "@" +
+                        "****" +
+                        ".com"}
+                  </Td>
+                  <Td color={"green.600"} fontWeight={"semibold"}>
+                    {assignment.subject}
+                  </Td>
+                  <Td
+                    fontWeight={"bold"}
+                    color={
+                      assignment.cp1PaymentId === "External Payment"
+                        ? "red"
+                        : "green"
+                    }
+                  >
+                    {assignment &&
+                    assignment.quoteAmountStatus &&
+                    assignment.quoteAmountStatus[userID] === "Approved" ? (
+                      <Button
+                        onClick={async () => {
+                          try {
+                            const response = await axios.get(
+                              apiUrl +
+                                `/expert/assignment/showQuoteAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
+                                  assignment["id"]
+                                }&operatorID=${userID}`
+                            );
+                            let resdata = response.data;
+                            if (resdata.success) {
+                              _fetchAssignments();
+                            }
+                          } catch (err) {
+                            console.log(err);
+                          }
+                        }}
+                        background="none"
+                        _hover={{
+                          background: "none",
+                        }}
+                        _focus={{
+                          boxShadow: "none",
+                        }}
+                      >
+                        {assignment.quotation}
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={async () => {
+                          let userToken = localStorage.getItem("userToken");
+                          if (userToken == null) {
+                            navigate.replace("/admin/login");
+                          }
 
-                        let config = {
-                          headers: { Authorization: `Bearer ${userToken}` },
-                        };
-                        try {
-                          const response = await axios.post(
-                            apiUrl + "/expert/assignment/showQuoteAmount",
-                            {
-                              assignmentId: assignment.id,
-                            },
-                            config
-                          );
-                          let resdata = response.data;
-                          if (resdata.success) {
-                            window.alert("Show Quote Amount Asked");
+                          let config = {
+                            headers: { Authorization: `Bearer ${userToken}` },
+                          };
+                          try {
+                            const response = await axios.post(
+                              apiUrl + "/expert/assignment/showQuoteAmount",
+                              {
+                                assignmentId: assignment.id,
+                              },
+                              config
+                            );
+                            let resdata = response.data;
+                            if (resdata.success) {
+                              window.alert("Show Quote Amount Asked");
+                            }
+                          } catch (err) {
+                            console.log(err);
                           }
-                        } catch (err) {
-                          console.log(err);
-                        }
-                      }}
-                      background="none"
-                      _hover={{
-                        background: "none",
-                      }}
-                      _focus={{
-                        boxShadow: "none",
-                      }}
-                    >
-                      <ViewOffIcon />
-                    </Button>
-                  )}
-                </Td>
-                <Td
-                  fontWeight={"bold"}
-                  color={
-                    assignment.cp1PaymentId === "External Payment"
-                      ? "red"
-                      : "green"
-                  }
-                >
-                  {assignment &&
-                  assignment.amountStatus &&
-                  assignment.amountStatus[userID] === "Approved" ? (
-                    <Button
-                      onClick={async () => {
-                        try {
-                          const response = await axios.get(
-                            apiUrl +
-                              `/expert/assignment/showAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
-                                assignment["id"]
-                              }&operatorID=${userID}`
-                          );
-                          let resdata = response.data;
-                          if (resdata.success) {
-                            _fetchAssignments();
+                        }}
+                        background="none"
+                        _hover={{
+                          background: "none",
+                        }}
+                        _focus={{
+                          boxShadow: "none",
+                        }}
+                      >
+                        <ViewOffIcon />
+                      </Button>
+                    )}
+                  </Td>
+                  <Td
+                    fontWeight={"bold"}
+                    color={
+                      assignment.cp1PaymentId === "External Payment"
+                        ? "red"
+                        : "green"
+                    }
+                  >
+                    {assignment &&
+                    assignment.amountStatus &&
+                    assignment.amountStatus[userID] === "Approved" ? (
+                      <Button
+                        onClick={async () => {
+                          try {
+                            const response = await axios.get(
+                              apiUrl +
+                                `/expert/assignment/showAmount/reply?approved=${false}&expertId=Arnabgoswami1193@gmail.com&assignmentId=${
+                                  assignment["id"]
+                                }&operatorID=${userID}`
+                            );
+                            let resdata = response.data;
+                            if (resdata.success) {
+                              _fetchAssignments();
+                            }
+                          } catch (err) {
+                            console.log(err);
                           }
-                        } catch (err) {
-                          console.log(err);
-                        }
-                      }}
-                      background="none"
-                      _hover={{
-                        background: "none",
-                      }}
-                      _focus={{
-                        boxShadow: "none",
-                      }}
-                    >
-                      {assignment.paid}
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={async () => {
-                        let userToken = localStorage.getItem("userToken");
-                        if (userToken == null) {
-                          navigate.replace("/admin/login");
-                        }
+                        }}
+                        background="none"
+                        _hover={{
+                          background: "none",
+                        }}
+                        _focus={{
+                          boxShadow: "none",
+                        }}
+                      >
+                        {assignment.paid}
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={async () => {
+                          let userToken = localStorage.getItem("userToken");
+                          if (userToken == null) {
+                            navigate.replace("/admin/login");
+                          }
 
-                        let config = {
-                          headers: { Authorization: `Bearer ${userToken}` },
-                        };
-                        try {
-                          const response = await axios.post(
-                            apiUrl + "/expert/assignment/showAmount",
-                            {
-                              assignmentId: assignment.id,
-                            },
-                            config
-                          );
-                          let resdata = response.data;
-                          if (resdata.success) {
-                            window.alert("Show Amount Asked");
+                          let config = {
+                            headers: { Authorization: `Bearer ${userToken}` },
+                          };
+                          try {
+                            const response = await axios.post(
+                              apiUrl + "/expert/assignment/showAmount",
+                              {
+                                assignmentId: assignment.id,
+                              },
+                              config
+                            );
+                            let resdata = response.data;
+                            if (resdata.success) {
+                              window.alert("Show Amount Asked");
+                            }
+                          } catch (err) {
+                            console.log(err);
                           }
-                        } catch (err) {
-                          console.log(err);
+                        }}
+                        background="none"
+                        _hover={{
+                          background: "none",
+                        }}
+                        _focus={{
+                          boxShadow: "none",
+                        }}
+                      >
+                        <ViewOffIcon />
+                      </Button>
+                    )}
+                  </Td>
+                  <Td color={"red.600"} fontWeight={"semibold"}>
+                    {assignment.expertDeadline
+                      ? new Date(
+                          assignment.expertDeadline[0]
+                        ).toLocaleTimeString() +
+                        ", " +
+                        new Date(assignment.expertDeadline[0]).toDateString()
+                      : ""}
+                  </Td>
+                  <Td color={"red.600"} fontWeight={"semibold"}>
+                    {assignment.deadline}
+                  </Td>
+                  <Td fontWeight={"semibold"}>{assignment.assignedQC}</Td>
+                  <Td>
+                    <HStack>
+                      <Button
+                        display={
+                          localStorage.getItem("userRole") === "Super Admin" ||
+                          localStorage.getItem("userRole") === "Operator" ||
+                          localStorage.getItem("userRole") === "Admin"
+                            ? "flex"
+                            : "none"
                         }
-                      }}
-                      background="none"
-                      _hover={{
-                        background: "none",
-                      }}
-                      _focus={{
-                        boxShadow: "none",
-                      }}
-                    >
-                      <ViewOffIcon />
-                    </Button>
-                  )}
-                </Td>
-                <Td color={"red.600"} fontWeight={"semibold"}>
-                  {assignment.expertDeadline
-                    ? new Date(
-                        assignment.expertDeadline[0]
-                      ).toLocaleTimeString() +
-                      ", " +
-                      new Date(assignment.expertDeadline[0]).toDateString()
-                    : ""}
-                </Td>
-                <Td color={"red.600"} fontWeight={"semibold"}>
-                  {assignment.deadline}
-                </Td>
-                <Td fontWeight={"semibold"}>{assignment.assignedQC}</Td>
-                <Td>
-                  <HStack>
-                    <Button
-                      display={
-                        localStorage.getItem("userRole") === "Super Admin" ||
-                        localStorage.getItem("userRole") === "Operator" ||
-                        localStorage.getItem("userRole") === "Admin"
-                          ? "flex"
-                          : "none"
-                      }
-                      onClick={async () => openQcModal(index)}
-                    >
-                      Assign QC
-                    </Button>
-                    <Button
-                      display={
-                        localStorage.getItem("userRole") === "Super Admin" ||
-                        localStorage.getItem("userRole") === "Operator" ||
-                        localStorage.getItem("userRole") === "Admin"
-                          ? "flex"
-                          : "none"
-                      }
-                      onClick={async () => openExpertModal(index)}
-                    >
-                      Assign Expert
-                    </Button>
-                    <Button
-                      display={
-                        localStorage.getItem("userRole") === "Operator" ||
-                        localStorage.getItem("userRole") === "Super Admin" ||
-                        localStorage.getItem("userRole") === "Admin"
-                          ? "flex"
-                          : "none"
-                      }
-                      onClick={async () => openQuotesModal(index)}
-                    >
-                      Quotation Responses
-                    </Button>
-                  </HStack>
-                </Td>
-              </Tr>
-            ))}
+                        onClick={async () => openQcModal(index)}
+                      >
+                        Assign QC
+                      </Button>
+                      <Button
+                        display={
+                          localStorage.getItem("userRole") === "Super Admin" ||
+                          localStorage.getItem("userRole") === "Operator" ||
+                          localStorage.getItem("userRole") === "Admin"
+                            ? "flex"
+                            : "none"
+                        }
+                        onClick={async () => openExpertModal(index)}
+                      >
+                        Assign Expert
+                      </Button>
+                      <Button
+                        display={
+                          localStorage.getItem("userRole") === "Operator" ||
+                          localStorage.getItem("userRole") === "Super Admin" ||
+                          localStorage.getItem("userRole") === "Admin"
+                            ? "flex"
+                            : "none"
+                        }
+                        onClick={async () => openQuotesModal(index)}
+                      >
+                        Quotation Responses
+                      </Button>
+                    </HStack>
+                  </Td>
+                </Tr>
+              ))
+            )}
           </Tbody>
         </Table>
       </div>

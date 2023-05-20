@@ -39,8 +39,8 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-import { apiUrl } from "../../services/contants";
-import { RepeatIcon } from "@chakra-ui/icons";
+import { apiUrl, callingUrl } from "../../services/contants";
+import { RepeatIcon, PhoneIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 
 function FreshOrders({ incrementCounter, decrementCounter }) {
@@ -143,6 +143,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
             order_placed_time: data[index].order_placed_time,
             numOfPages: data[index].numOfPages,
             paid: data[index].paid,
+            contact_no: data[index].contact_no,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
               ", " +
@@ -1175,6 +1176,22 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
     date.value = new Date().toLocaleDateString("en-ca");
   }
 
+  async function _calling(client_number) {
+    console.log({ client_number });
+    try {
+      const response = await axios.post(callingUrl, {
+        From: 7986021317,
+        to: client_number,
+        CallerId: 9988776632,
+      });
+      console.log({ response });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  console.log({ assignments });
+
   return (
     <>
       <div display={{ base: "none", sm: "block", md: "block" }}>
@@ -1211,14 +1228,29 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
           </Thead>
           <Tbody>
             {assignments.length === 0 ? (
-              <></>
+              <>No Orders</>
             ) : (
               assignments.map((assignment, index) => (
                 <Tr key={assignment.id}>
-                  <Td fontWeight={"semibold"}>
-                    <Link href={"/admin/assignment_details/" + assignment.id}>
-                      {assignment.id}
-                    </Link>
+                  <Td fontWeight={"semibold"} padding={0}>
+                    <Box
+                      display={"flex"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                    >
+                      <Link href={"/admin/assignment_details/" + assignment.id}>
+                        {assignment.id}
+                      </Link>
+                      <Button
+                        background={"none"}
+                        _focus={{ outline: "none" }}
+                        _hover={{ background: "none" }}
+                        color={"#dc3545"}
+                        onClick={() => _calling(assignment.contact_no)}
+                      >
+                        <PhoneIcon />
+                      </Button>
+                    </Box>
                   </Td>
                   <Td>
                     {localStorage.getItem("userRole") === "Super Admin" ||

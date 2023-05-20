@@ -226,6 +226,7 @@ export function FormOrderDetails() {
                   numOfPages: pages,
                   vendorId: vendorId,
                   currentState: 0,
+                  contact_no: number.value,
                   order_placed_time: {
                     0: Date.now(),
                   },
@@ -273,6 +274,7 @@ export function FormOrderDetails() {
                   numOfPages: pages,
                   vendorId: vendorId,
                   currentState: 0,
+                  contact_no: number.value,
                   order_placed_time: {
                     0: Date.now(),
                   },
@@ -404,6 +406,7 @@ export function FormOrderDetails() {
                     numOfPages: pages,
                     vendorId: vendorId,
                     currentState: 0,
+                    contact_no: number.value,
                     order_placed_time: {
                       0: Date.now(),
                     },
@@ -453,6 +456,7 @@ export function FormOrderDetails() {
                     numOfPages: pages,
                     vendorId: vendorId,
                     currentState: 0,
+                    contact_no: number.value,
                     order_placed_time: {
                       0: Date.now(),
                     },
@@ -1349,7 +1353,12 @@ export function FormOrderDetails() {
                 <Box flexGrow={1}>
                   <FormControl id="number">
                     <FormLabel>Phone Number</FormLabel>
-                    <Input type="text" maxLength={10} />
+                    <Input
+                      type="number"
+                      onInput={(e) =>
+                        (e.target.value = e.target.value.slice(0, 10))
+                      }
+                    />
                   </FormControl>
                 </Box>
               </HStack>

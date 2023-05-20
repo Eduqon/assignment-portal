@@ -1099,137 +1099,141 @@ function RawSubmissionOrders({
             </Tr>
           </Thead>
           <Tbody>
-            {assignments.map((assignment, index) => (
-              <Tr key={assignment.id}>
-                <Td fontWeight={"semibold"} paddingTop={9}>
-                  <Box display={"flex"}>
-                    <Link href={"/admin/assignment_details/" + assignment.id}>
-                      {assignment.id}&nbsp;
-                    </Link>
-                    {confirmOrderAssignedExpertMessages &&
-                      confirmOrderAssignedExpertMessages.length !== 0 &&
-                      confirmOrderAssignedExpertMessages.map((data) => {
-                        if (data.id === assignment.id) {
-                          if (
-                            data.chat &&
-                            data.chat[data.chat.length - 1].newMessageCount !==
-                              0
-                          ) {
-                            return (
-                              <Box
-                                display="flex"
-                                alignItems={"center"}
-                                position="relative"
-                                marginLeft={2}
-                                cursor={"pointer"}
-                                onClick={async () => openMessageModal(index)}
-                              >
-                                <ChatIcon width={"1.5em"} height={"1.5em"} />
+            {assignments.length === 0 ? (
+              <>No Orders</>
+            ) : (
+              assignments.map((assignment, index) => (
+                <Tr key={assignment.id}>
+                  <Td fontWeight={"semibold"} paddingTop={9}>
+                    <Box display={"flex"}>
+                      <Link href={"/admin/assignment_details/" + assignment.id}>
+                        {assignment.id}&nbsp;
+                      </Link>
+                      {confirmOrderAssignedExpertMessages &&
+                        confirmOrderAssignedExpertMessages.length !== 0 &&
+                        confirmOrderAssignedExpertMessages.map((data) => {
+                          if (data.id === assignment.id) {
+                            if (
+                              data.chat &&
+                              data.chat[data.chat.length - 1]
+                                .newMessageCount !== 0
+                            ) {
+                              return (
                                 <Box
-                                  display={"flex"}
+                                  display="flex"
                                   alignItems={"center"}
-                                  justifyContent={"center"}
-                                  borderRadius={15}
-                                  backgroundColor={"rgb(201, 105, 105)"}
+                                  position="relative"
                                   marginLeft={2}
-                                  width={5}
-                                  height={5}
-                                  color={"white"}
-                                  position={"absolute"}
-                                  right={"-10px"}
-                                  top={"-5px"}
+                                  cursor={"pointer"}
+                                  onClick={async () => openMessageModal(index)}
                                 >
-                                  {data.chat &&
-                                    data.chat[data.chat.length - 1]
-                                      .newMessageCount}
+                                  <ChatIcon width={"1.5em"} height={"1.5em"} />
+                                  <Box
+                                    display={"flex"}
+                                    alignItems={"center"}
+                                    justifyContent={"center"}
+                                    borderRadius={15}
+                                    backgroundColor={"rgb(201, 105, 105)"}
+                                    marginLeft={2}
+                                    width={5}
+                                    height={5}
+                                    color={"white"}
+                                    position={"absolute"}
+                                    right={"-10px"}
+                                    top={"-5px"}
+                                  >
+                                    {data.chat &&
+                                      data.chat[data.chat.length - 1]
+                                        .newMessageCount}
+                                  </Box>
                                 </Box>
-                              </Box>
-                            );
+                              );
+                            }
                           }
-                        }
-                      })}
-                    {assignment.retryCount > 1 && (
-                      <div
-                        className="d-flex align-items-center justify-content-center border-set"
-                        style={{
-                          width: "20px",
-                          height: "20px",
-                          border: "1px solid",
-                          borderRadius: "50px",
-                          fontSize: "12px",
-                        }}
-                      >
-                        R{assignment.retryCount - 1}
-                      </div>
-                    )}
-                  </Box>
-                </Td>
-                <Td color={"green.600"} fontWeight={"semibold"}>
-                  {assignment.subject}
-                </Td>
-                <Td color={"red.600"} fontWeight={"semibold"}>
-                  {assignment.deadline}
-                </Td>
-                <Td color={"red.600"} fontWeight={"semibold"}>
-                  {assignment.expertDeadline
-                    ? new Date(
-                        assignment.expertDeadline[0]
-                      ).toLocaleTimeString() +
-                      ", " +
-                      new Date(assignment.expertDeadline[0]).toDateString()
-                    : ""}
-                </Td>
-                <Td>
-                  {localStorage.getItem("userRole") === "Super Admin" ||
-                  localStorage.getItem("userRole") === "Admin"
-                    ? assignment.assignedExpert
-                    : assignment.assignedExpert.substring(0, 2) +
-                      "****" +
-                      "@" +
-                      "****" +
-                      ".com"}
-                </Td>
-                <Td>
-                  {localStorage.getItem("userRole") === "Super Admin" ||
-                  localStorage.getItem("userRole") === "Admin"
-                    ? assignment.assignedQC
-                    : assignment.assignedQC?.substring(0, 2) +
-                      "****" +
-                      "@" +
-                      "****" +
-                      ".com"}
-                </Td>
-                <Td>
-                  <HStack>
-                    <Button onClick={async () => openSubmissionsModal(index)}>
-                      Submissions from Experts
-                    </Button>
-                    <Button onClick={async () => markAsProofRead(index)}>
-                      Mark as Proof Read
-                    </Button>
-                    <Flex>
-                      <HStack flexDirection="column" gap={2}>
-                        <Button
-                          color={"red"}
-                          onClick={async () => openReworkModal(index)}
-                          disabled={sendRework.has(assignment.id)}
+                        })}
+                      {assignment.retryCount > 1 && (
+                        <div
+                          className="d-flex align-items-center justify-content-center border-set"
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                            border: "1px solid",
+                            borderRadius: "50px",
+                            fontSize: "12px",
+                          }}
                         >
-                          {sendRework.has(assignment.id)
-                            ? "Asked for Rework"
-                            : "Send for Rework"}
-                        </Button>
-                      </HStack>
-                    </Flex>
-                    <Button
-                      color={"red"}
-                      onClick={async () => removeExpert(index)}
-                    >
-                      Remove Expert
-                    </Button>
-                  </HStack>
-                </Td>
-              </Tr>
-            ))}
+                          R{assignment.retryCount - 1}
+                        </div>
+                      )}
+                    </Box>
+                  </Td>
+                  <Td color={"green.600"} fontWeight={"semibold"}>
+                    {assignment.subject}
+                  </Td>
+                  <Td color={"red.600"} fontWeight={"semibold"}>
+                    {assignment.deadline}
+                  </Td>
+                  <Td color={"red.600"} fontWeight={"semibold"}>
+                    {assignment.expertDeadline
+                      ? new Date(
+                          assignment.expertDeadline[0]
+                        ).toLocaleTimeString() +
+                        ", " +
+                        new Date(assignment.expertDeadline[0]).toDateString()
+                      : ""}
+                  </Td>
+                  <Td>
+                    {localStorage.getItem("userRole") === "Super Admin" ||
+                    localStorage.getItem("userRole") === "Admin"
+                      ? assignment.assignedExpert
+                      : assignment.assignedExpert.substring(0, 2) +
+                        "****" +
+                        "@" +
+                        "****" +
+                        ".com"}
+                  </Td>
+                  <Td>
+                    {localStorage.getItem("userRole") === "Super Admin" ||
+                    localStorage.getItem("userRole") === "Admin"
+                      ? assignment.assignedQC
+                      : assignment.assignedQC?.substring(0, 2) +
+                        "****" +
+                        "@" +
+                        "****" +
+                        ".com"}
+                  </Td>
+                  <Td>
+                    <HStack>
+                      <Button onClick={async () => openSubmissionsModal(index)}>
+                        Submissions from Experts
+                      </Button>
+                      <Button onClick={async () => markAsProofRead(index)}>
+                        Mark as Proof Read
+                      </Button>
+                      <Flex>
+                        <HStack flexDirection="column" gap={2}>
+                          <Button
+                            color={"red"}
+                            onClick={async () => openReworkModal(index)}
+                            disabled={sendRework.has(assignment.id)}
+                          >
+                            {sendRework.has(assignment.id)
+                              ? "Asked for Rework"
+                              : "Send for Rework"}
+                          </Button>
+                        </HStack>
+                      </Flex>
+                      <Button
+                        color={"red"}
+                        onClick={async () => removeExpert(index)}
+                      >
+                        Remove Expert
+                      </Button>
+                    </HStack>
+                  </Td>
+                </Tr>
+              ))
+            )}
           </Tbody>
         </Table>
       </div>

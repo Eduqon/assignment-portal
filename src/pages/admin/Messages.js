@@ -137,9 +137,10 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
     try {
       const response = await axios.get(apiUrl + "/messages");
       let data = await response.data;
-
       if (data.success) {
-        setMessageData(data.result);
+        data.result.length !== 0
+          ? setMessageData(data.result)
+          : setLoading(false);
       }
     } catch (err) {
       console.log(err);
@@ -347,6 +348,8 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
           }
         }, 0);
       setMessageCount(totalMessageCount);
+      setSpinnerLoading(false);
+    } else {
       setSpinnerLoading(false);
     }
   }, [confirmedOperatorExpertChat, processOperatorExpertChat]);
