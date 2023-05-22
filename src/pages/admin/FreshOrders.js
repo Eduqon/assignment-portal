@@ -39,7 +39,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-import { apiUrl, callingUrl } from "../../services/contants";
+import { apiUrl } from "../../services/contants";
 import { RepeatIcon, PhoneIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 
@@ -1177,20 +1177,14 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
   }
 
   async function _calling(client_number) {
-    console.log({ client_number });
     try {
-      const response = await axios.post(callingUrl, {
-        From: 7986021317,
-        to: client_number,
-        CallerId: 9988776632,
+      const response = await axios.post(apiUrl + "/calling", {
+        clientNumber: client_number,
       });
-      console.log({ response });
     } catch (err) {
       console.log(err);
     }
   }
-
-  console.log({ assignments });
 
   return (
     <>

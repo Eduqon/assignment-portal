@@ -7,8 +7,6 @@ export const localUrl = "http://localhost:8080";
 export const frontEndUrl = "https://www.assignmentsanta.com";
 export const strapiUrl = "https://assignmentsantastrapi.fly.dev";
 export const mediaUrl = "https://assignmentsantastrapi.fly.dev/api";
-export const callingUrl =
-  "https://298b1b12259832778dde0ceffc4aa71bb45e82d230aa2188:a078e02b8f9663b85a16b737a8c67b76b072a684da979c1d@api.exotel.com/v1/Accounts/humanitytechnicalsolutions1/Calls/connect";
 export const SERVICES = gql`
   query {
     services(pagination: { limit: 100 }) {
