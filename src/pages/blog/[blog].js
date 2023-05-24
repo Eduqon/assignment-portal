@@ -196,7 +196,7 @@ export default function NavService({ blogsdata, services, faqschemas }) {
     blogsdata &&
     getURL &&
     apiData.filter((data) => data.name === blogsdata.data[0].attributes.Slug);
-
+  console.log({ blogsdata });
   return (
     <>
       {getURL ? (
@@ -262,11 +262,7 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                   <br />
                 </>
               )}
-              <Box
-                mt="1rem"
-                className="service-body"
-                style={{ whiteSpace: "pre-line", padding: "0 1rem" }}
-              >
+              <Box mt="1rem" className="service-body">
                 <ReactMarkdown>
                   {blogsdata &&
                     blogsdata.data[0].attributes.body.split("<br/>").join("\n")}
@@ -291,8 +287,12 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                   <Avatar />
                 </Box>
                 <Box id="user_info" w="90%">
-                  <Heading>{blogsdata.data[0].attributes.Author}</Heading>
-                  <p>{blogsdata.data[0].attributes.Author_BIO}</p>
+                  <Heading fontSize={"3xl"} paddingBottom="0.5rem">
+                    {blogsdata.data[0].attributes.Author}
+                  </Heading>
+                  <ReactMarkdown>
+                    {blogsdata.data[0].attributes.Author_BIO}
+                  </ReactMarkdown>
                 </Box>
               </Box>
               <br />
@@ -411,7 +411,6 @@ export default function NavService({ blogsdata, services, faqschemas }) {
           </Box>
 
           <FooterHome className="w-100" />
-          <AnonymousChat />
         </>
       ) : (
         <Custom404 />

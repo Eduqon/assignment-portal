@@ -512,7 +512,6 @@ export default function NavService({ servicesdata, services, faqschemas }) {
           </Box>
           <Testomonial />
           <FooterHome className="w-100" />
-          <AnonymousChat />
         </>
       ) : (
         <Custom404 />

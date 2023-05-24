@@ -4,6 +4,7 @@ import {
   ArrowForwardIcon,
   AttachmentIcon,
   ViewOffIcon,
+  PhoneIcon,
 } from "@chakra-ui/icons";
 import {
   Table,

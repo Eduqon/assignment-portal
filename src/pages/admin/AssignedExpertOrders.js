@@ -6,6 +6,7 @@ import {
   AttachmentIcon,
   ViewOffIcon,
   ViewIcon,
+  PhoneIcon,
 } from "@chakra-ui/icons";
 import {
   Table,

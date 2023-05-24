@@ -1,4 +1,10 @@
-import { AddIcon, MinusIcon, RepeatIcon, ViewOffIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  MinusIcon,
+  PhoneIcon,
+  RepeatIcon,
+  ViewOffIcon,
+} from "@chakra-ui/icons";
 import {
   Table,
   Thead,

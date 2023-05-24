@@ -75,6 +75,9 @@ export default function Blog({ services, seotags, blogs, blogsdata }) {
                 p="6"
                 borderRadius="15px"
                 mt="1rem"
+                display={"flex"}
+                justifyContent={"space-between"}
+                flexDirection={"column"}
               >
                 {blogImage && blogImage.length !== 0 && (
                   <Box
@@ -103,8 +106,10 @@ export default function Blog({ services, seotags, blogs, blogsdata }) {
                       {new Date(blog.attributes.createdAt).toLocaleDateString()}
                     </span>
                   </HStack>
-                  <Heading my="4" size="lg">
-                    {blog.attributes.Heading}
+                  <Heading my="4" size="lg" cursor={"pointer"}>
+                    <Link href={`/blog/${blog.attributes.Slug}`}>
+                      {blog.attributes.Heading}
+                    </Link>
                   </Heading>
                   <Text>
                     {blog.attributes.body
@@ -114,27 +119,22 @@ export default function Blog({ services, seotags, blogs, blogsdata }) {
                     [...]
                   </Text>
                 </Box>
-                <Divider
-                  mt="1rem"
-                  mb="1rem"
-                  w="90%"
-                  margin="15px auto"
-                  borderColor="gray.500"
-                />
+
                 <HStack
                   px="1rem"
                   display="flex"
                   alignItems="center"
                   justifyContent="space-between"
                 >
-                  <Box>
+                  <Box width={"100%"}>
+                    <Divider
+                      mt="1rem"
+                      mb="1rem"
+                      margin="15px auto"
+                      borderColor="gray.500"
+                    />
                     <i class="fa fa-thumbs-up" aria-hidden="true"></i>
                     <Button variant="link">Like</Button>
-                  </Box>
-                  <Box>
-                    <Link href={`/blog/${blog.attributes.Slug}`}>
-                      <a>Read more</a>
-                    </Link>
                   </Box>
                 </HStack>
               </Box>
@@ -142,7 +142,6 @@ export default function Blog({ services, seotags, blogs, blogsdata }) {
           })}
       </Box>
       <FooterHome />
-      <AnonymousChat />
     </>
   );
 }

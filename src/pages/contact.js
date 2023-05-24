@@ -151,7 +151,6 @@ export default function Contact({ services, seotags }) {
       </div>
 
       <FooterHome />
-      <AnonymousChat />
     </>
   );
 }

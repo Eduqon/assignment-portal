@@ -382,7 +382,6 @@ export default function Samples({ services, seotags }) {
       </div>
 
       <FooterHome />
-      <AnonymousChat />
     </>
   );
 }

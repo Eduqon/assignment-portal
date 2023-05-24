@@ -24,7 +24,6 @@ export default function Review({ services, seotags }) {
       </div>
       <Testomonial />
       <FooterHome />
-      <AnonymousChat />
     </>
   );
 }

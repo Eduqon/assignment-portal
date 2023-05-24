@@ -295,7 +295,6 @@ const Custom404 = ({ services }) => {
         </div>
       </div>
       <FooterHome />
-      <AnonymousChat />
     </>
   );
 };

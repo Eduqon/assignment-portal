@@ -196,7 +196,6 @@ export default function AllhomePageForservie() {
   return (
     <>
       <br />
-      <AnonymousChat />
       <Link to="/">
         <img src={View} alt="" className="view" />
       </Link>

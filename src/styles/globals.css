@@ -1340,8 +1340,13 @@ h1.set-contact {
 .service-body img {
   margin: 0 auto;
 }
-.service-body ul {
-  padding: 0 1rem;
+.service-body ul,
+.service-body ol {
+  padding: 0.5rem 2rem;
+}
+.service-body ul li,
+.service-body ol li {
+  margin: 0 0 0.5rem 0;
 }
 #bottom-section ul,
 #bottom-section ol {
