@@ -5,6 +5,7 @@ import {
   AttachmentIcon,
   ChatIcon,
   ArrowForwardIcon,
+  PhoneIcon,
 } from "@chakra-ui/icons";
 import {
   Table,
@@ -64,6 +65,8 @@ function RawSubmissionOrders({
   const [id, setId] = useState("");
   const inputFileOperatorExpert = useRef(null);
   const [messageData, setMessageData] = useState([]);
+  const [experts, setExperts] = useState([]);
+  const [qcs, setQcs] = useState([]);
 
   const [token, setToken] = useState("");
   const inputRef = useRef(null);
@@ -76,11 +79,19 @@ function RawSubmissionOrders({
 
   const MessagesModalDis = useDisclosure();
   const ReplyMessageModalDis = useDisclosure();
+  let expertsList = [];
+  let qcList = [];
 
   let assignmentList = [];
   let submissionsList = [];
 
   let navigate = useRouter();
+
+  useEffect(() => {
+    _fetchAssignments();
+    _fetchExperts();
+    _fetchQcs();
+  }, []);
 
   //---> ask remove expert
   async function removeExpert(index) {
@@ -655,10 +666,6 @@ function RawSubmissionOrders({
     );
   }
 
-  useEffect(() => {
-    _fetchAssignments();
-  }, []);
-
   async function _fetchAssignments() {
     try {
       let userToken = localStorage.getItem("userToken");
@@ -693,6 +700,7 @@ function RawSubmissionOrders({
             order_placed_time: data[index].order_placed_time,
             numOfPages: data[index].numOfPages,
             paid: data[index].paid,
+            contact_no: data[index].contact_no,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
               ", " +
@@ -1058,6 +1066,125 @@ function RawSubmissionOrders({
     );
   }
 
+  async function _fetchQcs() {
+    try {
+      let userToken = localStorage.getItem("userToken");
+      if (userToken == null) {
+        navigate.replace("/admin/login");
+      }
+
+      let config = {
+        headers: { Authorization: `Bearer ${userToken}` },
+      };
+      const response = await axios.post(
+        apiUrl + "/user/fetch",
+        {
+          role: "QC",
+        },
+        config
+      );
+      let data = response.data.res;
+      qcList = [];
+      if (data.length !== 0) {
+        for (let index = 0; index < data.length; index++) {
+          qcList.push({
+            id: data[index]._id,
+            name: data[index].name,
+            contact_no: data[index].contact_no,
+          });
+        }
+      } else {
+        console.log("No QC");
+      }
+      setQcs(qcList);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function _fetchExperts() {
+    try {
+      let userToken = localStorage.getItem("userToken");
+      if (userToken == null) {
+        navigate.replace("/admin/login");
+      }
+
+      let config = {
+        headers: { Authorization: `Bearer ${userToken}` },
+      };
+      const response = await axios.post(apiUrl + "/expert/fetch", config);
+      let data = response.data.res;
+      expertsList = [];
+      if (data.length !== 0) {
+        for (let index = 0; index < data.length; index++) {
+          expertsList.push({
+            id: data[index]._id,
+            name: data[index].name,
+            contact_no: data[index].contact_no,
+            subject: data[index].subject,
+          });
+        }
+      } else {
+        console.log("No Experts");
+      }
+      setExperts(expertsList);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function _calling(client_number, id) {
+    const updateAssignment = assignments.map((assignment) =>
+      assignment.id === id ? { ...assignment, client_call: true } : assignment
+    );
+    try {
+      const response = await axios.post(apiUrl + "/calling", {
+        clientNumber: client_number,
+      });
+      if (response.status === 200) {
+        setAssignments(updateAssignment);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function _expertCalling(assignedExpert, id) {
+    const expert_number = experts.find(
+      (expert) => expert.id === assignedExpert
+    ).contact_no;
+    const updateAssignment = assignments.map((assignment) =>
+      assignment.id === id ? { ...assignment, expert_call: true } : assignment
+    );
+    try {
+      const response = await axios.post(apiUrl + "/calling", {
+        clientNumber: Number(expert_number),
+      });
+      if (response.status === 200) {
+        setAssignments(updateAssignment);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function _qcCalling(assignedQc, id) {
+    const qc_number = qcs.find((qc) => qc.id === assignedQc).contact_no;
+    const updateAssignment = assignments.map((assignment) =>
+      assignment.id === id ? { ...assignment, qc_call: true } : assignment
+    );
+    try {
+      const response = await axios.post(apiUrl + "/calling", {
+        clientNumber: Number(qc_number),
+      });
+      if (response.status === 200) {
+        setAssignments(updateAssignment);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <div display={{ base: "none", sm: "block", md: "block" }}>
@@ -1104,11 +1231,34 @@ function RawSubmissionOrders({
             ) : (
               assignments.map((assignment, index) => (
                 <Tr key={assignment.id}>
-                  <Td fontWeight={"semibold"} paddingTop={9}>
-                    <Box display={"flex"}>
+                  <Td fontWeight={"semibold"} padding={0}>
+                    <Box display={"flex"} alignItems="center">
                       <Link href={"/admin/assignment_details/" + assignment.id}>
                         {assignment.id}&nbsp;
                       </Link>
+                      {!assignment.client_call ? (
+                        <Button
+                          background={"none"}
+                          _focus={{ outline: "none" }}
+                          _hover={{ background: "none" }}
+                          color={"#dc3545"}
+                          onClick={() =>
+                            _calling(assignment.contact_no, assignment.id)
+                          }
+                        >
+                          <PhoneIcon />
+                        </Button>
+                      ) : (
+                        <i
+                          class="fa fa-phone-square"
+                          aria-hidden="true"
+                          style={{
+                            fontSize: "1.5rem",
+                            color: "#dc3545",
+                            marginLeft: "1rem",
+                          }}
+                        />
+                      )}
                       {confirmOrderAssignedExpertMessages &&
                         confirmOrderAssignedExpertMessages.length !== 0 &&
                         confirmOrderAssignedExpertMessages.map((data) => {
@@ -1176,31 +1326,90 @@ function RawSubmissionOrders({
                   <Td color={"red.600"} fontWeight={"semibold"}>
                     {assignment.expertDeadline
                       ? new Date(
-                          assignment.expertDeadline[0]
+                          assignment.expertDeadline[assignment.id][
+                            assignment.expertDeadline[assignment.id].length - 1
+                          ]
                         ).toLocaleTimeString() +
                         ", " +
-                        new Date(assignment.expertDeadline[0]).toDateString()
+                        new Date(
+                          assignment.expertDeadline[assignment.id][
+                            assignment.expertDeadline[assignment.id].length - 1
+                          ]
+                        ).toDateString()
                       : ""}
                   </Td>
                   <Td>
-                    {localStorage.getItem("userRole") === "Super Admin" ||
-                    localStorage.getItem("userRole") === "Admin"
-                      ? assignment.assignedExpert
-                      : assignment.assignedExpert.substring(0, 2) +
-                        "****" +
-                        "@" +
-                        "****" +
-                        ".com"}
+                    <Box display="flex" alignItems="center">
+                      {localStorage.getItem("userRole") === "Super Admin" ||
+                      localStorage.getItem("userRole") === "Admin"
+                        ? assignment.assignedExpert
+                        : assignment.assignedExpert.substring(0, 2) +
+                          "****" +
+                          "@" +
+                          "****" +
+                          ".com"}
+                      {!assignment.expert_call ? (
+                        <Button
+                          background={"none"}
+                          _focus={{ outline: "none" }}
+                          _hover={{ background: "none" }}
+                          color={"#dc3545"}
+                          onClick={() =>
+                            _expertCalling(
+                              assignment.assignedExpert,
+                              assignment.id
+                            )
+                          }
+                        >
+                          <PhoneIcon />
+                        </Button>
+                      ) : (
+                        <i
+                          class="fa fa-phone-square"
+                          aria-hidden="true"
+                          style={{
+                            fontSize: "1.5rem",
+                            color: "#dc3545",
+                            marginLeft: "1rem",
+                          }}
+                        />
+                      )}
+                    </Box>
                   </Td>
                   <Td>
-                    {localStorage.getItem("userRole") === "Super Admin" ||
-                    localStorage.getItem("userRole") === "Admin"
-                      ? assignment.assignedQC
-                      : assignment.assignedQC?.substring(0, 2) +
-                        "****" +
-                        "@" +
-                        "****" +
-                        ".com"}
+                    <Box display="flex" alignItems="center">
+                      {localStorage.getItem("userRole") === "Super Admin" ||
+                      localStorage.getItem("userRole") === "Admin"
+                        ? assignment.assignedQC
+                        : assignment.assignedQC?.substring(0, 2) +
+                          "****" +
+                          "@" +
+                          "****" +
+                          ".com"}
+                      {!assignment.qc_call ? (
+                        <Button
+                          background={"none"}
+                          _focus={{ outline: "none" }}
+                          _hover={{ background: "none" }}
+                          color={"#dc3545"}
+                          onClick={() =>
+                            _qcCalling(assignment.assignedQC, assignment.id)
+                          }
+                        >
+                          <PhoneIcon />
+                        </Button>
+                      ) : (
+                        <i
+                          class="fa fa-phone-square"
+                          aria-hidden="true"
+                          style={{
+                            fontSize: "1.5rem",
+                            color: "#dc3545",
+                            marginLeft: "1rem",
+                          }}
+                        />
+                      )}
+                    </Box>
                   </Td>
                   <Td>
                     <HStack>
@@ -1313,7 +1522,7 @@ function RawSubmissionOrders({
                         </Tr>
                         <Tr>
                           <Th>Assigned Expert</Th>
-                          <Td>
+                          <Td display={"flex"} alignItems="center">
                             {localStorage.getItem("userRole") ===
                               "Super Admin" ||
                             localStorage.getItem("userRole") === "Admin"
@@ -1323,6 +1532,17 @@ function RawSubmissionOrders({
                                 "@" +
                                 "****" +
                                 ".com"}
+                            <Button
+                              background={"none"}
+                              _focus={{ outline: "none" }}
+                              _hover={{ background: "none" }}
+                              color={"#dc3545"}
+                              onClick={() =>
+                                _expertCalling(assignment.assignedExpert)
+                              }
+                            >
+                              <PhoneIcon />
+                            </Button>
                           </Td>
                         </Tr>
                         <Tr>

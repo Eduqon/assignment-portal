@@ -57,11 +57,13 @@ function ProofReadOrders({
   const { onOpen, onClose } = useDisclosure();
   const [token, setToken] = useState("");
   const [userID, setUserID] = useState("");
+  const [qcs, setQcs] = useState([]);
 
   const MessagesModalDis = useDisclosure();
   const ReplyMessageModalDis = useDisclosure();
 
   let assignmentList = [];
+  let qcList = [];
 
   let navigate = useRouter();
 
@@ -73,6 +75,7 @@ function ProofReadOrders({
 
   useEffect(() => {
     _fetchAssignments();
+    _fetchQcs();
   }, []);
 
   async function _fetchAssignments() {
@@ -109,6 +112,7 @@ function ProofReadOrders({
             descriptionFile: data[index].descriptionFile,
             numOfPages: data[index].numOfPages,
             paid: data[index].paid,
+            contact_no: data[index].contact_no,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
               ", " +
@@ -491,6 +495,75 @@ function ProofReadOrders({
     );
   }
 
+  async function _fetchQcs() {
+    try {
+      let userToken = localStorage.getItem("userToken");
+      if (userToken == null) {
+        navigate.replace("/admin/login");
+      }
+
+      let config = {
+        headers: { Authorization: `Bearer ${userToken}` },
+      };
+      const response = await axios.post(
+        apiUrl + "/user/fetch",
+        {
+          role: "QC",
+        },
+        config
+      );
+      let data = response.data.res;
+      qcList = [];
+      if (data.length !== 0) {
+        for (let index = 0; index < data.length; index++) {
+          qcList.push({
+            id: data[index]._id,
+            name: data[index].name,
+            contact_no: data[index].contact_no,
+          });
+        }
+      } else {
+        console.log("No QC");
+      }
+      setQcs(qcList);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function _calling(client_number, id) {
+    const updateAssignment = assignments.map((assignment) =>
+      assignment.id === id ? { ...assignment, client_call: true } : assignment
+    );
+    try {
+      const response = await axios.post(apiUrl + "/calling", {
+        clientNumber: client_number,
+      });
+      if (response.status === 200) {
+        setAssignments(updateAssignment);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function _qcCalling(assignedQc, id) {
+    const qc_number = qcs.find((qc) => qc.id === assignedQc).contact_no;
+    const updateAssignment = assignments.map((assignment) =>
+      assignment.id === id ? { ...assignment, qc_call: true } : assignment
+    );
+    try {
+      const response = await axios.post(apiUrl + "/calling", {
+        clientNumber: Number(qc_number),
+      });
+      if (response.status === 200) {
+        setAssignments(updateAssignment);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <MessageModal />
@@ -528,20 +601,34 @@ function ProofReadOrders({
           ) : (
             assignments.map((assignment, index) => (
               <Tr key={assignment.id}>
-                <Td fontWeight={"semibold"} paddingTop={9}>
-                  <Box display={"flex"}>
+                <Td fontWeight={"semibold"} padding={0}>
+                  <Box display={"flex"} alignItems="center">
                     <Link href={"/admin/assignment_details/" + assignment.id}>
                       {assignment.id}
                     </Link>
-                    <Button
-                      background={"none"}
-                      _focus={{ outline: "none" }}
-                      _hover={{ background: "none" }}
-                      color={"#dc3545"}
-                      onClick={() => _calling(assignment.contact_no)}
-                    >
-                      <PhoneIcon />
-                    </Button>
+                    {!assignment.client_call ? (
+                      <Button
+                        background={"none"}
+                        _focus={{ outline: "none" }}
+                        _hover={{ background: "none" }}
+                        color={"#dc3545"}
+                        onClick={() =>
+                          _calling(assignment.contact_no, assignment.id)
+                        }
+                      >
+                        <PhoneIcon />
+                      </Button>
+                    ) : (
+                      <i
+                        class="fa fa-phone-square"
+                        aria-hidden="true"
+                        style={{
+                          fontSize: "1.5rem",
+                          color: "#dc3545",
+                          marginLeft: "1rem",
+                        }}
+                      />
+                    )}
                     {confirmOrderAssignedExpertMessages &&
                       confirmOrderAssignedExpertMessages.length !== 0 &&
                       confirmOrderAssignedExpertMessages.map((data) => {
@@ -760,7 +847,7 @@ function ProofReadOrders({
                 <Td color={"red.600"} fontWeight={"semibold"}>
                   {assignment.deadline}
                 </Td>
-                <Td>
+                <Td display={"flex"} alignItems="center">
                   {localStorage.getItem("userRole") === "Super Admin" ||
                   localStorage.getItem("userRole") === "Admin"
                     ? assignment.assignedQC
@@ -770,6 +857,29 @@ function ProofReadOrders({
                         "@" +
                         "****" +
                         ".com"}
+                  {!assignment.qc_call ? (
+                    <Button
+                      background={"none"}
+                      _focus={{ outline: "none" }}
+                      _hover={{ background: "none" }}
+                      color={"#dc3545"}
+                      onClick={() =>
+                        _qcCalling(assignment.assignedQC, assignment.id)
+                      }
+                    >
+                      <PhoneIcon />
+                    </Button>
+                  ) : (
+                    <i
+                      class="fa fa-phone-square"
+                      aria-hidden="true"
+                      style={{
+                        fontSize: "1.5rem",
+                        color: "#dc3545",
+                        marginLeft: "1rem",
+                      }}
+                    />
+                  )}
                 </Td>
                 {/* <Td><Button>Choose Expert</Button></Td> */}
               </Tr>

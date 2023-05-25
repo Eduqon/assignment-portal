@@ -131,6 +131,7 @@ function ExpertAskedOrders({
             order_placed_time: data[index].order_placed_time,
             numOfPages: data[index].numOfPages,
             paid: data[index].paid,
+            contact_no: data[index].contact_no,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
               ", " +
@@ -546,6 +547,22 @@ function ExpertAskedOrders({
     }
   };
 
+  async function _calling(client_number, id) {
+    const updateAssignment = assignments.map((assignment) =>
+      assignment.id === id ? { ...assignment, client_call: true } : assignment
+    );
+    try {
+      const response = await axios.post(apiUrl + "/calling", {
+        clientNumber: client_number,
+      });
+      if (response.status === 200) {
+        setAssignments(updateAssignment);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <MessageModal />
@@ -581,20 +598,34 @@ function ExpertAskedOrders({
           ) : (
             assignments.map((assignment, index) => (
               <Tr key={assignment.id}>
-                <Td fontWeight={"semibold"} paddingTop={9}>
-                  <Box display={"flex"}>
+                <Td fontWeight={"semibold"} padding={0}>
+                  <Box display={"flex"} alignItems="center">
                     <Link href={"/admin/assignment_details/" + assignment.id}>
                       {assignment.id}
                     </Link>
-                    <Button
-                      background={"none"}
-                      _focus={{ outline: "none" }}
-                      _hover={{ background: "none" }}
-                      color={"#dc3545"}
-                      onClick={() => _calling(assignment.contact_no)}
-                    >
-                      <PhoneIcon />
-                    </Button>
+                    {!assignment.client_call ? (
+                      <Button
+                        background={"none"}
+                        _focus={{ outline: "none" }}
+                        _hover={{ background: "none" }}
+                        color={"#dc3545"}
+                        onClick={() =>
+                          _calling(assignment.contact_no, assignment.id)
+                        }
+                      >
+                        <PhoneIcon />
+                      </Button>
+                    ) : (
+                      <i
+                        class="fa fa-phone-square"
+                        aria-hidden="true"
+                        style={{
+                          fontSize: "1.5rem",
+                          color: "#dc3545",
+                          marginLeft: "1rem",
+                        }}
+                      />
+                    )}
                     {inProcessOrderDataMessageCount &&
                       inProcessOrderDataMessageCount.length !== 0 &&
                       inProcessOrderDataMessageCount.map((data) => {

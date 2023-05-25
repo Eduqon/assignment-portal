@@ -50,6 +50,8 @@ import DeadlinePopup from "./DeadlinePopup";
 function AssignedExpertOrders({
   confirmOrderAssignedExpertMessages,
   operatorExpertChat,
+  incrementCounter,
+  decrementCounter,
 }) {
   const [assignments, setAssignments] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState();
@@ -67,6 +69,8 @@ function AssignedExpertOrders({
   const [expertdeadlineDate, setExpertdeadlineDate] = useState("");
   const MessagesModalDis = useDisclosure();
   const ReplyMessageModalDis = useDisclosure();
+  const [experts, setExperts] = useState([]);
+  let expertsList = [];
   let assignmentList = [];
 
   let navigate = useRouter();
@@ -79,6 +83,7 @@ function AssignedExpertOrders({
 
   useEffect(() => {
     _fetchAssignments();
+    _fetchExperts();
   }, []);
 
   async function _fetchToken() {
@@ -91,6 +96,46 @@ function AssignedExpertOrders({
       let data = response.data;
       if (data.success) {
         setToken(data.SASToken);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function readNotification(Id) {
+    try {
+      let userToken = localStorage.getItem("userToken");
+      if (userToken == null) {
+        navigate.replace("/admin/login");
+      }
+
+      let config = {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      };
+
+      const response = await axios.put(
+        apiUrl + "/notifications/read",
+        {
+          assignmentId: Id,
+        },
+        config
+      );
+
+      const createNotification = await axios.post(
+        apiUrl + "/notifications",
+        {
+          assignmentId: Id,
+          status: "CP1 Done",
+          read: false,
+        },
+        config
+      );
+
+      if (response.data.success) {
+        decrementCounter("Expert Assigned");
+        incrementCounter("CP1 Done");
       }
     } catch (err) {
       console.log(err);
@@ -115,8 +160,9 @@ function AssignedExpertOrders({
         config
       );
       _fetchAssignments();
+      readNotification(assignments[index].id);
     } catch (error) {
-      //console.log(error);
+      console.log(error);
     }
   }
   function handlePopup(flag, index) {
@@ -158,6 +204,7 @@ function AssignedExpertOrders({
             order_placed_time: data[index].order_placed_time,
             numOfPages: data[index].numOfPages,
             paid: data[index].paid,
+            contact_no: data[index].contact_no,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
               ", " +
@@ -173,6 +220,37 @@ function AssignedExpertOrders({
       }
       setUserID(userEmail);
       setAssignments(assignmentList);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function _fetchExperts() {
+    try {
+      let userToken = localStorage.getItem("userToken");
+      if (userToken == null) {
+        navigate.replace("/admin/login");
+      }
+
+      let config = {
+        headers: { Authorization: `Bearer ${userToken}` },
+      };
+      const response = await axios.post(apiUrl + "/expert/fetch", config);
+      let data = response.data.res;
+      expertsList = [];
+      if (data.length !== 0) {
+        for (let index = 0; index < data.length; index++) {
+          expertsList.push({
+            id: data[index]._id,
+            name: data[index].name,
+            contact_no: data[index].contact_no,
+            subject: data[index].subject,
+          });
+        }
+      } else {
+        console.log("No Experts");
+      }
+      setExperts(expertsList);
     } catch (err) {
       console.log(err);
     }
@@ -522,6 +600,41 @@ function AssignedExpertOrders({
     );
   }
 
+  async function _calling(client_number, id) {
+    const updateAssignment = assignments.map((assignment) =>
+      assignment.id === id ? { ...assignment, client_call: true } : assignment
+    );
+    try {
+      const response = await axios.post(apiUrl + "/calling", {
+        clientNumber: client_number,
+      });
+      if (response.status === 200) {
+        setAssignments(updateAssignment);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function _expertCalling(assignedExpert, id) {
+    const expert_number = experts.find(
+      (expert) => expert.id === assignedExpert
+    ).contact_no;
+    const updateAssignment = assignments.map((assignment) =>
+      assignment.id === id ? { ...assignment, expert_call: true } : assignment
+    );
+    try {
+      const response = await axios.post(apiUrl + "/calling", {
+        clientNumber: Number(expert_number),
+      });
+      if (response.status === 200) {
+        setAssignments(updateAssignment);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <MessageModal />
@@ -560,20 +673,34 @@ function AssignedExpertOrders({
           ) : (
             assignments.map((assignment, index) => (
               <Tr key={index}>
-                <Td fontWeight={"semibold"} paddingTop={9}>
-                  <Box display={"flex"}>
+                <Td fontWeight={"semibold"} padding={0}>
+                  <Box display={"flex"} alignItems="center">
                     <Link href={"/admin/assignment_details/" + assignment.id}>
                       {assignment.id}
                     </Link>
-                    <Button
-                      background={"none"}
-                      _focus={{ outline: "none" }}
-                      _hover={{ background: "none" }}
-                      color={"#dc3545"}
-                      onClick={() => _calling(assignment.contact_no)}
-                    >
-                      <PhoneIcon />
-                    </Button>
+                    {!assignment.client_call ? (
+                      <Button
+                        background={"none"}
+                        _focus={{ outline: "none" }}
+                        _hover={{ background: "none" }}
+                        color={"#dc3545"}
+                        onClick={() =>
+                          _calling(assignment.contact_no, assignment.id)
+                        }
+                      >
+                        <PhoneIcon />
+                      </Button>
+                    ) : (
+                      <i
+                        class="fa fa-phone-square"
+                        aria-hidden="true"
+                        style={{
+                          fontSize: "1.5rem",
+                          color: "#dc3545",
+                          marginLeft: "1rem",
+                        }}
+                      />
+                    )}
                     {confirmOrderAssignedExpertMessages &&
                       confirmOrderAssignedExpertMessages.length !== 0 &&
                       confirmOrderAssignedExpertMessages.map((data) => {
@@ -702,7 +829,7 @@ function AssignedExpertOrders({
                     </Button>
                   )}
                 </Td>
-                <Td>
+                <Td display={"flex"} alignItems="center">
                   {localStorage.getItem("userRole") === "Super Admin" ||
                   localStorage.getItem("userRole") === "Admin"
                     ? assignment.assignedExpert
@@ -711,6 +838,29 @@ function AssignedExpertOrders({
                       "@" +
                       "****" +
                       ".com"}
+                  {!assignment.expert_call ? (
+                    <Button
+                      background={"none"}
+                      _focus={{ outline: "none" }}
+                      _hover={{ background: "none" }}
+                      color={"#dc3545"}
+                      onClick={() =>
+                        _expertCalling(assignment.assignedExpert, assignment.id)
+                      }
+                    >
+                      <PhoneIcon />
+                    </Button>
+                  ) : (
+                    <i
+                      class="fa fa-phone-square"
+                      aria-hidden="true"
+                      style={{
+                        fontSize: "1.5rem",
+                        color: "#dc3545",
+                        marginLeft: "1rem",
+                      }}
+                    />
+                  )}
                 </Td>
                 <Td
                   color={"red.600"}

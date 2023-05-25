@@ -1020,6 +1020,7 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
             cp2PaymentId: data[index].cp2PaymentId,
             deadline_quote: data[index].deadline,
             order_placed_time: data[index].order_placed_time,
+            contact_no: data[index].contact_no,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
               ", " +
@@ -1321,6 +1322,23 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
     );
   }
 
+  async function _calling(client_number, id) {
+    const updateAssignment = assignments.map((assignment) =>
+      assignment.id === id ? { ...assignment, client_call: true } : assignment
+    );
+
+    try {
+      const response = await axios.post(apiUrl + "/calling", {
+        clientNumber: client_number,
+      });
+      if (response.status === 200) {
+        setAssignments(updateAssignment);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <div display={{ base: "none", sm: "block", md: "block" }}>
@@ -1341,9 +1359,7 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
               <Th>Subject</Th>
               <Th>Order Quote</Th>
               <Th>Amount Paid</Th>
-              <Th>Expert Deadline</Th>
               <Th>Deadline</Th>
-              <Th>Assigned QC</Th>
               <Th>
                 <Button
                   leftIcon={<RepeatIcon />}
@@ -1362,19 +1378,39 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
             ) : (
               assignments.map((assignment, index) => (
                 <Tr key={assignment.id}>
-                  <Td fontWeight={"semibold"}>
-                    <Link href={"/admin/assignment_details/" + assignment.id}>
-                      {assignment.id}
-                    </Link>
-                    <Button
-                      background={"none"}
-                      _focus={{ outline: "none" }}
-                      _hover={{ background: "none" }}
-                      color={"#dc3545"}
-                      onClick={() => _calling(assignment.contact_no)}
+                  <Td fontWeight={"semibold"} padding={0}>
+                    <Box
+                      display={"flex"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
                     >
-                      <PhoneIcon />
-                    </Button>
+                      <Link href={"/admin/assignment_details/" + assignment.id}>
+                        {assignment.id}
+                      </Link>
+                      {!assignment.client_call ? (
+                        <Button
+                          background={"none"}
+                          _focus={{ outline: "none" }}
+                          _hover={{ background: "none" }}
+                          color={"#dc3545"}
+                          onClick={() =>
+                            _calling(assignment.contact_no, assignment.id)
+                          }
+                        >
+                          <PhoneIcon />
+                        </Button>
+                      ) : (
+                        <i
+                          class="fa fa-phone-square"
+                          aria-hidden="true"
+                          style={{
+                            fontSize: "1.5rem",
+                            color: "#dc3545",
+                            marginLeft: "1rem",
+                          }}
+                        />
+                      )}
+                    </Box>
                   </Td>
                   <Td>
                     {localStorage.getItem("userRole") === "Super Admin" ||
@@ -1544,18 +1580,8 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                     )}
                   </Td>
                   <Td color={"red.600"} fontWeight={"semibold"}>
-                    {assignment.expertDeadline
-                      ? new Date(
-                          assignment.expertDeadline[0]
-                        ).toLocaleTimeString() +
-                        ", " +
-                        new Date(assignment.expertDeadline[0]).toDateString()
-                      : ""}
-                  </Td>
-                  <Td color={"red.600"} fontWeight={"semibold"}>
                     {assignment.deadline}
                   </Td>
-                  <Td fontWeight={"semibold"}>{assignment.assignedQC}</Td>
                   <Td>
                     <HStack>
                       <Button

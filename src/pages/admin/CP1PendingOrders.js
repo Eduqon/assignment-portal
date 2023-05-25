@@ -90,6 +90,7 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
             numOfPages: data[index].numOfPages,
             order_placed_time: data[index].order_placed_time,
             paid: data[index].paid,
+            contact_no: data[index].contact_no,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
               ", " +
@@ -138,15 +139,32 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
         },
         config
       );
-      incrementCounter("CP1 Done");
+
       if (response.success) {
         _fetchAssignments();
+        incrementCounter("CP1 Done");
         onClose();
       }
     } else {
       alert("Please Fill the Amount Paid Field");
     }
   };
+
+  async function _calling(client_number, id) {
+    const updateAssignment = assignments.map((assignment) =>
+      assignment.id === id ? { ...assignment, client_call: true } : assignment
+    );
+    try {
+      const response = await axios.post(apiUrl + "/calling", {
+        clientNumber: client_number,
+      });
+      if (response.status === 200) {
+        setAssignments(updateAssignment);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <>
@@ -200,8 +218,6 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
             <Th>Student Email</Th>
             <Th>Subject</Th>
             <Th>Order Quote</Th>
-            <Th>Amount Paid</Th>
-            <Th>Expert Deadline </Th>
             <Th>Deadline</Th>
             <Th>Status</Th>
             <Th>
@@ -222,19 +238,39 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
           ) : (
             assignments.map((assignment, index) => (
               <Tr key={assignment.id}>
-                <Td fontWeight={"semibold"}>
-                  <Link href={"/admin/assignment_details/" + assignment.id}>
-                    {assignment.id}
-                  </Link>
-                  <Button
-                    background={"none"}
-                    _focus={{ outline: "none" }}
-                    _hover={{ background: "none" }}
-                    color={"#dc3545"}
-                    onClick={() => _calling(assignment.contact_no)}
+                <Td fontWeight={"semibold"} padding={0}>
+                  <Box
+                    display={"flex"}
+                    alignItems={"center"}
+                    justifyContent={"space-between"}
                   >
-                    <PhoneIcon />
-                  </Button>
+                    <Link href={"/admin/assignment_details/" + assignment.id}>
+                      {assignment.id}
+                    </Link>
+                    {!assignment.client_call ? (
+                      <Button
+                        background={"none"}
+                        _focus={{ outline: "none" }}
+                        _hover={{ background: "none" }}
+                        color={"#dc3545"}
+                        onClick={() =>
+                          _calling(assignment.contact_no, assignment.id)
+                        }
+                      >
+                        <PhoneIcon />
+                      </Button>
+                    ) : (
+                      <i
+                        class="fa fa-phone-square"
+                        aria-hidden="true"
+                        style={{
+                          fontSize: "1.5rem",
+                          color: "#dc3545",
+                          marginLeft: "1rem",
+                        }}
+                      />
+                    )}
+                  </Box>
                 </Td>
                 <Td>
                   {localStorage.getItem("userRole") === "Super Admin" ||
@@ -318,16 +354,6 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
                       <ViewOffIcon />
                     </Button>
                   )}
-                </Td>
-                <Td>{assignment.paid}</Td>
-                <Td color={"red.600"} fontWeight={"semibold"}>
-                  {assignment.expertDeadline
-                    ? new Date(
-                        assignment.expertDeadline[0]
-                      ).toLocaleTimeString() +
-                      ", " +
-                      new Date(assignment.expertDeadline[0]).toDateString()
-                    : ""}
                 </Td>
                 <Td color={"red.600"} fontWeight={"semibold"}>
                   {assignment.deadline}

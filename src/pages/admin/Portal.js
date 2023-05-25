@@ -18,6 +18,8 @@ import Messages from "./Messages";
 import AdminLayout from ".";
 import GetExcelData from "./GetExcelData";
 import GetStatusExcelData from "./GetStatusExcelData";
+import ExpertList from "./ExpertList";
+import QcList from "./QcList";
 
 function PortalLayout() {
   const [userRole, setUserRole] = useState("");
@@ -131,6 +133,12 @@ function PortalLayout() {
                 <Tab>
                   <Heading fontSize={"md"}>Data</Heading>
                 </Tab>
+                <Tab>
+                  <Heading fontSize={"md"}>Expert Data</Heading>
+                </Tab>
+                <Tab>
+                  <Heading fontSize={"md"}>QCs Data</Heading>
+                </Tab>
               </TabList>
 
               <TabPanels>
@@ -149,6 +157,8 @@ function PortalLayout() {
                   />
                 </TabPanel>
                 <TabPanel>{tabIndex === 3 && <GetStatusExcelData />}</TabPanel>
+                <TabPanel>{tabIndex === 4 && <ExpertList />}</TabPanel>
+                <TabPanel>{tabIndex === 5 && <QcList />}</TabPanel>
               </TabPanels>
             </Tabs>
           </>

@@ -714,7 +714,12 @@ function AdminOrders() {
                 </TabPanel>
                 <TabPanel>{tabIndex === 3 && <ExpertAskedOrders />}</TabPanel>
                 <TabPanel>
-                  {tabIndex === 4 && <AssignedExpertOrders />}
+                  {tabIndex === 4 && (
+                    <AssignedExpertOrders
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
+                    />
+                  )}
                 </TabPanel>
                 <TabPanel>{tabIndex === 5 && <RawSubmissionOrders />}</TabPanel>
                 <TabPanel>
@@ -942,6 +947,8 @@ function AdminOrders() {
                         confirmOrderAssignedExpertMessages
                       }
                       operatorExpertChat={confirmedOperatorExpertChat}
+                      incrementCounter={incrementCounter}
+                      decrementCounter={decrementCounter}
                     />
                   )}
                 </TabPanel>
