@@ -12,10 +12,14 @@ import {
   Stack,
   Button,
   Heading,
-  Text,
   useColorModeValue,
   InputLeftElement,
-  Center,
+  // TableContainer,
+  // Table,
+  // TableCaption,
+  // Tr,
+  // Td,
+  // Tbody,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { AddIcon, MinusIcon, Search2Icon } from "@chakra-ui/icons";
@@ -388,6 +392,83 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                   <br />
                 </>
               )}
+              {/* <Box
+                display={"flex"}
+                alignItems="center"
+                flexDirection={"column"}
+                width="90%"
+              >
+                <Box
+                  width={"90%"}
+                  textAlign="center"
+                  border={"1px solid #eee"}
+                  padding="1rem"
+                  fontSize={"1.5rem"}
+                  fontWeight="bold"
+                >
+                  Checkout Our Samples
+                </Box>
+                <Box
+                  display={"grid"}
+                  width="90%"
+                  gridTemplateColumns={
+                    Tabular_data.length <= 10 ? "auto auto" : "auto auto auto"
+                  }
+                  color={"#dc3545"}
+                  fontWeight="bold"
+                >
+                  {Tabular_data.map((data) => {
+                    return (
+                      <Box
+                        border={"1px solid #eee"}
+                        padding="2rem"
+                        fontSize={"1rem"}
+                        textAlign="center"
+                      >
+                        {data}
+                      </Box>
+                    );
+                  })}
+                </Box>
+              </Box> */}
+
+              {/* <TableContainer
+                width={"90%"}
+                border="1px solid #eee"
+                borderRadius={"15px"}
+              >
+                <Table variant="simple">
+                  <TableCaption
+                    style={{
+                      captionSide: "top",
+                      marginTop: "0",
+                      padding: "1.5rem",
+                      fontSize: "1.5rem",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Checkout Our Samples
+                  </TableCaption>
+                  <Tbody borderTopWidth={"1px"}>
+                    <Tr>
+                      <Td>inches</Td>
+                      <Td>millimetres (mm)</Td>
+                      <Td isNumeric>25.4</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>feet</Td>
+                      <Td>centimetres (cm)</Td>
+                      <Td isNumeric>30.48</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>yards</Td>
+                      <Td>metres (m)</Td>
+                      <Td isNumeric>0.91444</Td>
+                    </Tr>
+                  </Tbody>
+                </Table>
+              </TableContainer>
+              <br /> */}
               {servicesdata && servicesdata.data[0].attributes.body_2 && (
                 <Box
                   className="service-body"

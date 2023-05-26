@@ -1343,6 +1343,7 @@ h1.set-contact {
 .service-body ul,
 .service-body ol {
   padding: 0.5rem 2rem;
+  white-space: normal !important;
 }
 .service-body ul li,
 .service-body ol li {
@@ -1351,17 +1352,18 @@ h1.set-contact {
 #bottom-section ul,
 #bottom-section ol {
   padding: 0px 25px !important;
+  white-space: normal !important;
 }
 
 /* for mobile */
 @media screen and (max-width: 767px) {
   .whatsapp-icon {
-    margin-top: 10px;
+    margin-top: 5px;
   }
 
   .whatsapp_float {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     bottom: 20px;
     right: 10px;
     font-size: 22px;

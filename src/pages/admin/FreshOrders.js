@@ -1180,12 +1180,20 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
     const updateAssignment = assignments.map((assignment) =>
       assignment.id === id ? { ...assignment, client_call: true } : assignment
     );
+    const assignment_data = assignments.map((assignment) =>
+      assignment.client_call
+        ? { ...assignment, client_call: false }
+        : assignment
+    );
     try {
       const response = await axios.post(apiUrl + "/calling", {
         clientNumber: client_number,
       });
       if (response.status === 200) {
         setAssignments(updateAssignment);
+        setTimeout(() => {
+          setAssignments(assignment_data);
+        }, 2000);
       }
     } catch (err) {
       console.log(err);

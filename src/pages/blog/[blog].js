@@ -61,6 +61,25 @@ export default function NavService({ blogsdata, services, faqschemas }) {
     }
   }, []);
 
+  const useCheckMobileScreen = () => {
+    const [width, setWidth] = useState(
+      typeof window !== "undefined" && window.innerWidth
+    );
+    const handleWindowSizeChange = () => {
+      setWidth(window.innerWidth);
+    };
+
+    useEffect(() => {
+      window.addEventListener("resize", handleWindowSizeChange);
+      return () => {
+        window.removeEventListener("resize", handleWindowSizeChange);
+      };
+    }, []);
+
+    return width <= 768;
+  };
+  const isMobileView = useCheckMobileScreen();
+
   const getURL =
     blogsdata && blogsdata.data.some((val) => val.attributes.Slug === blog);
 
@@ -196,7 +215,7 @@ export default function NavService({ blogsdata, services, faqschemas }) {
     blogsdata &&
     getURL &&
     apiData.filter((data) => data.name === blogsdata.data[0].attributes.Slug);
-  console.log({ blogsdata });
+  console.log({ blogsdata, isMobileView });
   return (
     <>
       {getURL ? (
@@ -218,17 +237,24 @@ export default function NavService({ blogsdata, services, faqschemas }) {
             margin="15px auto"
             display="flex"
             justifyContent="space-around"
+            flexDirection={["column", "row"]}
           >
             <Box
               id="left_section"
-              w="65%"
+              w={["100%", "65%"]}
               h="100%"
               border="1px solid #eee"
               padding="1rem"
               boxShadow="lg"
               borderRadius="10px"
             >
-              <h1 style={{ fontSize: "2.5rem", fontWeight: "bold" }}>
+              <h1
+                style={
+                  isMobileView
+                    ? { fontSize: "2.5rem", fontWeight: "bold" }
+                    : { fontSize: "2rem", fontWeight: "bold" }
+                }
+              >
                 {blogsdata.data[0].attributes.Heading}
               </h1>
               <HStack mt="1rem">
@@ -262,7 +288,11 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                   <br />
                 </>
               )}
-              <Box mt="1rem" className="service-body">
+              <Box
+                mt="1rem"
+                className="service-body"
+                style={{ "white-space": "pre-line", padding: "0 2rem" }}
+              >
                 <ReactMarkdown>
                   {blogsdata &&
                     blogsdata.data[0].attributes.body.split("<br/>").join("\n")}
@@ -283,10 +313,10 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                 background="gray.100"
                 borderRadius="15px"
               >
-                <Box id="user_icon" w="5%">
+                <Box id="user_icon" w={["auto", "5%"]}>
                   <Avatar />
                 </Box>
-                <Box id="user_info" w="90%">
+                <Box id="user_info" w={["80%", "90%"]}>
                   <Heading fontSize={"3xl"} paddingBottom="0.5rem">
                     {blogsdata.data[0].attributes.Author}
                   </Heading>
@@ -299,10 +329,10 @@ export default function NavService({ blogsdata, services, faqschemas }) {
             </Box>
             <Box
               id="right_section"
-              w="30%"
+              w={["100%", "30%"]}
               h="100%"
               border="1px solid #eee"
-              padding="1rem"
+              padding={["1rem 0", "1rem"]}
               boxShadow="lg"
               borderRadius="10px"
             >
@@ -313,9 +343,16 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                   maxW={"lg"}
                   px={6}
                   className="set-pp"
+                  padding={["0"]}
                 >
                   <Stack align={"center"}>
-                    <p style={{ fontSize: "2.25rem", fontWeight: "bold" }}>
+                    <p
+                      style={
+                        isMobileView
+                          ? { fontSize: "2rem", fontWeight: "bold" }
+                          : { fontSize: "2.25rem", fontWeight: "bold" }
+                      }
+                    >
                       Assignment Santa
                     </p>
                     <p color="#000" className="text-capitalize">
