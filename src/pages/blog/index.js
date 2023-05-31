@@ -8,7 +8,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AnonymousChat from "../../components/chat_components/anonymous_chat";
 import { FooterHome } from "../../components/home_components/footer_home";
 import SearchBar from "../../components/home_components/SearchBar";
@@ -29,6 +29,26 @@ export default function Blog({ services, seotags, blogs, blogsdata }) {
     apiData.filter((data) =>
       blogData.find((val) => val.attributes.Slug === data.name)
     );
+
+  const useCheckMobileScreen = () => {
+    const [width, setWidth] = useState(
+      typeof window !== "undefined" && window.innerWidth
+    );
+    const handleWindowSizeChange = () => {
+      setWidth(window.innerWidth);
+    };
+
+    useEffect(() => {
+      window.addEventListener("resize", handleWindowSizeChange);
+      return () => {
+        window.removeEventListener("resize", handleWindowSizeChange);
+      };
+    }, []);
+
+    return width <= 768;
+  };
+  const isMobileView = useCheckMobileScreen();
+
   return (
     <>
       <HeadLayout slug="blog" seotags={seotags} />
@@ -38,13 +58,20 @@ export default function Blog({ services, seotags, blogs, blogsdata }) {
       <NavbarHome services={services} />
       <Divider />
       <Box
-        h="500px"
+        h={isMobileView ? "auto" : "500px"}
         background="linear-gradient(to right top, #dc3545, #dc3545, #dc3545, #ffffff);"
         mt="1rem"
         display="flex"
-        padding="2rem"
+        flexDirection={isMobileView ? "column" : "row"}
+        padding={isMobileView ? "1rem" : "2rem"}
       >
-        <Box id="text_section" w="50%" padding="5rem" color="#fff">
+        <Box
+          id="text_section"
+          w={isMobileView ? "auto" : "50%"}
+          padding={isMobileView ? "1rem" : "5rem"}
+          color="#fff"
+          order={isMobileView ? "2" : "1"}
+        >
           <Heading mb="1rem">Assignment Santa's Blog</Heading>
           <span>
             Find here the latest information and updates related to education,
@@ -52,10 +79,10 @@ export default function Blog({ services, seotags, blogs, blogsdata }) {
             from Assignment Santa.
           </span>
           <Box mt="1rem">
-            <SearchBar />
+            <SearchBar isMobileView={isMobileView} />
           </Box>
         </Box>
-        <Box id="image_part" display="flex" w="50%">
+        <Box id="image_part" display="flex" w={isMobileView ? "auto" : "50%"}>
           <Image
             src="/assets/avtar/blog_bg.jpeg"
             alt="Assignment santa"
@@ -65,7 +92,11 @@ export default function Blog({ services, seotags, blogs, blogsdata }) {
           />
         </Box>
       </Box>
-      <Box padding="3rem" display="grid" gridTemplateColumns="auto auto auto">
+      <Box
+        padding={!isMobileView ? "3rem" : "1rem"}
+        display={!isMobileView ? "grid" : "block"}
+        gridTemplateColumns={!isMobileView ? "auto auto auto" : "none"}
+      >
         {blogData &&
           blogData.map((blog) => {
             return (

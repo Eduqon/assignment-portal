@@ -215,7 +215,6 @@ export default function NavService({ blogsdata, services, faqschemas }) {
     blogsdata &&
     getURL &&
     apiData.filter((data) => data.name === blogsdata.data[0].attributes.Slug);
-  console.log({ blogsdata, isMobileView });
   return (
     <>
       {getURL ? (
