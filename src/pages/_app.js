@@ -11,8 +11,8 @@ import * as gTag from "../../lib/gTag";
 
 //Apollo client
 export const client = new ApolloClient({
-  // uri: `${strapiUrl}/graphql`,
-  uri: "http://localhost:1337/graphql",
+  uri: `${strapiUrl}/graphql`,
+  // uri: "http://localhost:1337/graphql",
   cache: new InMemoryCache(),
 });
 
