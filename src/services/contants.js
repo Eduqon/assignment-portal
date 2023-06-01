@@ -39,6 +39,8 @@ export const SERVICE = gql`
           Seotitle
           Seocntag
           SchemaTitle
+          table_heading
+          table_data
         }
       }
     }
@@ -111,6 +113,8 @@ export const BLOG = gql`
           Seo_Cntag
           createdAt
           SchemaTitle
+          table_heading
+          table_data
         }
       }
     }

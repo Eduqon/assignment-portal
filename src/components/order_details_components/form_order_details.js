@@ -226,6 +226,7 @@ export function FormOrderDetails() {
                   numOfPages: pages,
                   vendorId: vendorId,
                   currentState: 0,
+                  countrycode: countrycode.value,
                   contact_no: number.value,
                   order_placed_time: {
                     0: Date.now(),
@@ -274,6 +275,7 @@ export function FormOrderDetails() {
                   numOfPages: pages,
                   vendorId: vendorId,
                   currentState: 0,
+                  countrycode: countrycode.value,
                   contact_no: number.value,
                   order_placed_time: {
                     0: Date.now(),
@@ -406,6 +408,7 @@ export function FormOrderDetails() {
                     numOfPages: pages,
                     vendorId: vendorId,
                     currentState: 0,
+                    countrycode: countrycode.value,
                     contact_no: number.value,
                     order_placed_time: {
                       0: Date.now(),
@@ -456,6 +459,7 @@ export function FormOrderDetails() {
                     numOfPages: pages,
                     vendorId: vendorId,
                     currentState: 0,
+                    countrycode: countrycode.value,
                     contact_no: number.value,
                     order_placed_time: {
                       0: Date.now(),
@@ -704,7 +708,7 @@ export function FormOrderDetails() {
                 <Box>
                   <FormControl>
                     <FormLabel>Country</FormLabel>
-                    <Select id="countrycode">
+                    <Select id="countrycode" defaultValue={"91"}>
                       <option data-countrycode="DZ" value="213">
                         Algeria (+213)
                       </option>

@@ -39,7 +39,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-import { apiUrl } from "../../services/contants";
+import { apiUrl, localUrl } from "../../services/contants";
 import { RepeatIcon, PhoneIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 
@@ -117,7 +117,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
         headers: { Authorization: `Bearer ${userToken}` },
       };
       const response = await axios.post(
-        apiUrl + "/assignment/fetch",
+        localUrl + "/assignment/fetch",
         {
           status: {
             $in: ["Fresh Order", "Quotation Asked", "Doability Asked"],
@@ -126,6 +126,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
         config
       );
       let data = await response.data.assignmentData;
+      console.log({ data });
       assignmentList = [];
       if (data.length !== 0) {
         for (let index = 0; index < data.length; index++) {
@@ -143,6 +144,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
             order_placed_time: data[index].order_placed_time,
             numOfPages: data[index].numOfPages,
             paid: data[index].paid,
+            countryCode: data[index].countrycode,
             contact_no: data[index].contact_no,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
@@ -1176,7 +1178,9 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
     date.value = new Date().toLocaleDateString("en-ca");
   }
 
-  async function _calling(client_number, id) {
+  async function _calling(countrycode, client_number, id) {
+    console.log({ countrycode, client_number });
+    // return;
     const updateAssignment = assignments.map((assignment) =>
       assignment.id === id ? { ...assignment, client_call: true } : assignment
     );
@@ -1185,20 +1189,37 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
         ? { ...assignment, client_call: false }
         : assignment
     );
+
     try {
-      const response = await axios.post(apiUrl + "/calling", {
-        clientNumber: client_number,
-      });
-      if (response.status === 200) {
-        setAssignments(updateAssignment);
-        setTimeout(() => {
-          setAssignments(assignment_data);
-        }, 2000);
+      if (countrycode !== 91) {
+        console.log("international");
+        const response = await axios.post(localUrl + "/calling/international", {
+          clientNumber: client_number,
+        });
+        if (response.status === 200) {
+          setAssignments(updateAssignment);
+          setTimeout(() => {
+            setAssignments(assignment_data);
+          }, 2000);
+        }
+      } else {
+        console.log("here");
+        const response = await axios.post(apiUrl + "/calling", {
+          clientNumber: client_number,
+        });
+        if (response.status === 200) {
+          setAssignments(updateAssignment);
+          setTimeout(() => {
+            setAssignments(assignment_data);
+          }, 2000);
+        }
       }
     } catch (err) {
       console.log(err);
     }
   }
+
+  console.log({ assignments });
 
   return (
     <>
@@ -1256,7 +1277,11 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                           _hover={{ background: "none" }}
                           color={"#dc3545"}
                           onClick={() =>
-                            _calling(assignment.contact_no, assignment.id)
+                            _calling(
+                              assignment.countryCode,
+                              assignment.contact_no,
+                              assignment.id
+                            )
                           }
                         >
                           <PhoneIcon />

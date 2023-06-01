@@ -1,7 +1,7 @@
 import { Button, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import React, { useState } from "react";
 
-const searchBar = ({ isMobileView }) => {
+const searchBar = () => {
   const [searchInput, setSearchInput] = useState("");
 
   const countries = [];
@@ -19,12 +19,13 @@ const searchBar = ({ isMobileView }) => {
 
   return (
     <>
-      <InputGroup size="lg" width={isMobileView ? "auto" : "70%"}>
+      <InputGroup size="lg" width={["auto", "70%"]}>
         <Input
           pr="4.5rem"
           type="text"
           placeholder="Seach here..."
           boxShadow="md"
+          onChange={handleChange}
         />
         <InputRightElement>
           <i class="fa fa-search" aria-hidden="true"></i>

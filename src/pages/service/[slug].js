@@ -14,12 +14,13 @@ import {
   Heading,
   useColorModeValue,
   InputLeftElement,
-  // TableContainer,
-  // Table,
-  // TableCaption,
-  // Tr,
-  // Td,
-  // Tbody,
+  TableContainer,
+  Table,
+  TableCaption,
+  Tr,
+  Td,
+  Tbody,
+  Link,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { AddIcon, MinusIcon, Search2Icon } from "@chakra-ui/icons";
@@ -41,10 +42,8 @@ import { NavbarHome } from "../../components/home_components/navbar_home";
 import { FooterHome } from "../../components/home_components/footer_home";
 import Testomonial from "../../components/home_components/Testomonial";
 import Faqschema from "../../components/home_components/Faqschema";
-import Link from "next/link";
 import { client } from "../_app";
 import Custom404 from "../404";
-import AnonymousChat from "../../components/chat_components/anonymous_chat";
 
 export default function NavService({ servicesdata, services, faqschemas }) {
   const [pages, setPages] = useState(0);
@@ -392,47 +391,8 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                   <br />
                 </>
               )}
-              {/* <Box
-                display={"flex"}
-                alignItems="center"
-                flexDirection={"column"}
-                width="90%"
-              >
-                <Box
-                  width={"90%"}
-                  textAlign="center"
-                  border={"1px solid #eee"}
-                  padding="1rem"
-                  fontSize={"1.5rem"}
-                  fontWeight="bold"
-                >
-                  Checkout Our Samples
-                </Box>
-                <Box
-                  display={"grid"}
-                  width="90%"
-                  gridTemplateColumns={
-                    Tabular_data.length <= 10 ? "auto auto" : "auto auto auto"
-                  }
-                  color={"#dc3545"}
-                  fontWeight="bold"
-                >
-                  {Tabular_data.map((data) => {
-                    return (
-                      <Box
-                        border={"1px solid #eee"}
-                        padding="2rem"
-                        fontSize={"1rem"}
-                        textAlign="center"
-                      >
-                        {data}
-                      </Box>
-                    );
-                  })}
-                </Box>
-              </Box> */}
 
-              {/* <TableContainer
+              <TableContainer
                 width={"90%"}
                 border="1px solid #eee"
                 borderRadius={"15px"}
@@ -443,32 +403,157 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                       captionSide: "top",
                       marginTop: "0",
                       padding: "1.5rem",
-                      fontSize: "1.5rem",
                       fontWeight: "bold",
                     }}
                   >
-                    Checkout Our Samples
+                    <h2 style={{ fontSize: "20px" }}>
+                      {servicesdata &&
+                        servicesdata.data[0].attributes.table_heading}
+                    </h2>
                   </TableCaption>
                   <Tbody borderTopWidth={"1px"}>
-                    <Tr>
-                      <Td>inches</Td>
-                      <Td>millimetres (mm)</Td>
-                      <Td isNumeric>25.4</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>feet</Td>
-                      <Td>centimetres (cm)</Td>
-                      <Td isNumeric>30.48</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>yards</Td>
-                      <Td>metres (m)</Td>
-                      <Td isNumeric>0.91444</Td>
-                    </Tr>
+                    {servicesdata &&
+                      servicesdata.data[0].attributes.table_data &&
+                      servicesdata.data[0].attributes.table_data.length !== 0 &&
+                      servicesdata &&
+                      servicesdata.data[0].attributes.table_data.map((data) => {
+                        return (
+                          <Tr>
+                            {data.firstData && (
+                              <Td
+                                borderRight={"1px solid #eee"}
+                                textAlign="center"
+                              >
+                                <Link
+                                  href={data.firstData.Link}
+                                  target="_blank"
+                                  _hover={{
+                                    color: "#dc3545",
+                                  }}
+                                >
+                                  {data.firstData.name}
+                                </Link>
+                              </Td>
+                            )}
+                            {data.secondData && (
+                              <Td
+                                borderRight={"1px solid #eee"}
+                                textAlign="center"
+                              >
+                                <Link
+                                  href={data.secondData.Link}
+                                  target="_blank"
+                                  _hover={{
+                                    color: "#dc3545",
+                                  }}
+                                >
+                                  {data.secondData.name}
+                                </Link>
+                              </Td>
+                            )}
+                            {data.thirdData && (
+                              <Td
+                                borderRight={"1px solid #eee"}
+                                textAlign="center"
+                              >
+                                <Link
+                                  href={data.thirdData.Link}
+                                  target="_blank"
+                                  _hover={{
+                                    color: "#dc3545",
+                                  }}
+                                >
+                                  {data.thirdData.name}
+                                </Link>
+                              </Td>
+                            )}
+                            {data.fourthData && (
+                              <Td
+                                borderRight={"1px solid #eee"}
+                                textAlign="center"
+                              >
+                                <Link
+                                  href={data.fourthData.Link}
+                                  target="_blank"
+                                  _hover={{
+                                    color: "#dc3545",
+                                  }}
+                                >
+                                  {data.fourthData.name}
+                                </Link>
+                              </Td>
+                            )}
+                            {data.fifthData && (
+                              <Td
+                                borderRight={"1px solid #eee"}
+                                textAlign="center"
+                              >
+                                <Link
+                                  href={data.fifthData.Link}
+                                  target="_blank"
+                                  _hover={{
+                                    color: "#dc3545",
+                                  }}
+                                >
+                                  {data.fifthData.name}
+                                </Link>
+                              </Td>
+                            )}
+                            {data.sixthData && (
+                              <Td
+                                borderRight={"1px solid #eee"}
+                                textAlign="center"
+                              >
+                                <Link
+                                  href={data.sixthData.Link}
+                                  target="_blank"
+                                  _hover={{
+                                    color: "#dc3545",
+                                  }}
+                                >
+                                  {data.sixthData.name}
+                                </Link>
+                              </Td>
+                            )}
+                            {data.seventhData && (
+                              <Td
+                                borderRight={"1px solid #eee"}
+                                textAlign="center"
+                              >
+                                <Link
+                                  href={data.seventhData.Link}
+                                  target="_blank"
+                                  _hover={{
+                                    color: "#dc3545",
+                                  }}
+                                >
+                                  {data.seventhData.name}
+                                </Link>
+                              </Td>
+                            )}
+                            {data.eighthData && (
+                              <Td
+                                borderRight={"1px solid #eee"}
+                                textAlign="center"
+                              >
+                                <Link
+                                  href={data.eighthData.Link}
+                                  target="_blank"
+                                  _hover={{
+                                    color: "#dc3545",
+                                  }}
+                                >
+                                  {data.eighthData.name}
+                                </Link>
+                              </Td>
+                            )}
+                          </Tr>
+                        );
+                      })}
                   </Tbody>
                 </Table>
               </TableContainer>
-              <br /> */}
+              <br />
               {servicesdata && servicesdata.data[0].attributes.body_2 && (
                 <Box
                   className="service-body"
