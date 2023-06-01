@@ -16,6 +16,13 @@ import {
   InputLeftElement,
   Divider,
   Avatar,
+  TableContainer,
+  Table,
+  TableCaption,
+  Tr,
+  Td,
+  Tbody,
+  Link,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
@@ -35,10 +42,8 @@ import { useRouter } from "next/router";
 import useFetch from "../../hooks/useFetch";
 import { NavbarHome } from "../../components/home_components/navbar_home";
 import { FooterHome } from "../../components/home_components/footer_home";
-import Link from "next/link";
 import { client } from "../_app";
 import Custom404 from "../404";
-import AnonymousChat from "../../components/chat_components/anonymous_chat";
 import Faqschema from "../../components/home_components/Faqschema";
 
 export default function NavService({ blogsdata, services, faqschemas }) {
@@ -298,166 +303,169 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                 </ReactMarkdown>
               </Box>
               <br />
-              <TableContainer
-                width={"90%"}
-                border="1px solid #eee"
-                borderRadius={"15px"}
-              >
-                <Table variant="simple">
-                  <TableCaption
-                    style={{
-                      captionSide: "top",
-                      marginTop: "0",
-                      padding: "1.5rem",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    <h2 style={{ fontSize: "20px" }}>
-                      {blogsdata && blogsdata.data[0].attributes.table_heading}
-                    </h2>
-                  </TableCaption>
-                  <Tbody borderTopWidth={"1px"}>
-                    {blogsdata &&
-                      blogsdata.data[0].attributes.table_data &&
-                      blogsdata.data[0].attributes.table_data.length !== 0 &&
-                      blogsdata &&
-                      blogsdata.data[0].attributes.table_data.map((data) => {
-                        return (
-                          <Tr>
-                            {data.firstData && (
-                              <Td
-                                borderRight={"1px solid #eee"}
-                                textAlign="center"
-                              >
-                                <Link
-                                  href={data.firstData.Link}
-                                  target="_blank"
-                                  _hover={{
-                                    color: "#dc3545",
-                                  }}
+              {blogsdata && blogsdata.data[0].attributes.table_heading && (
+                <TableContainer
+                  width={"90%"}
+                  border="1px solid #eee"
+                  borderRadius={"15px"}
+                >
+                  <Table variant="simple">
+                    <TableCaption
+                      style={{
+                        captionSide: "top",
+                        marginTop: "0",
+                        padding: "1.5rem",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <h2 style={{ fontSize: "20px" }}>
+                        {blogsdata &&
+                          blogsdata.data[0].attributes.table_heading}
+                      </h2>
+                    </TableCaption>
+                    <Tbody borderTopWidth={"1px"}>
+                      {blogsdata &&
+                        blogsdata.data[0].attributes.table_data &&
+                        blogsdata.data[0].attributes.table_data.length !== 0 &&
+                        blogsdata &&
+                        blogsdata.data[0].attributes.table_data.map((data) => {
+                          return (
+                            <Tr>
+                              {data.firstData && (
+                                <Td
+                                  borderRight={"1px solid #eee"}
+                                  textAlign="center"
                                 >
-                                  {data.firstData.name}
-                                </Link>
-                              </Td>
-                            )}
-                            {data.secondData && (
-                              <Td
-                                borderRight={"1px solid #eee"}
-                                textAlign="center"
-                              >
-                                <Link
-                                  href={data.secondData.Link}
-                                  target="_blank"
-                                  _hover={{
-                                    color: "#dc3545",
-                                  }}
+                                  <Link
+                                    href={data.firstData.Link}
+                                    target="_blank"
+                                    _hover={{
+                                      color: "#dc3545",
+                                    }}
+                                  >
+                                    {data.firstData.name}
+                                  </Link>
+                                </Td>
+                              )}
+                              {data.secondData && (
+                                <Td
+                                  borderRight={"1px solid #eee"}
+                                  textAlign="center"
                                 >
-                                  {data.secondData.name}
-                                </Link>
-                              </Td>
-                            )}
-                            {data.thirdData && (
-                              <Td
-                                borderRight={"1px solid #eee"}
-                                textAlign="center"
-                              >
-                                <Link
-                                  href={data.thirdData.Link}
-                                  target="_blank"
-                                  _hover={{
-                                    color: "#dc3545",
-                                  }}
+                                  <Link
+                                    href={data.secondData.Link}
+                                    target="_blank"
+                                    _hover={{
+                                      color: "#dc3545",
+                                    }}
+                                  >
+                                    {data.secondData.name}
+                                  </Link>
+                                </Td>
+                              )}
+                              {data.thirdData && (
+                                <Td
+                                  borderRight={"1px solid #eee"}
+                                  textAlign="center"
                                 >
-                                  {data.thirdData.name}
-                                </Link>
-                              </Td>
-                            )}
-                            {data.fourthData && (
-                              <Td
-                                borderRight={"1px solid #eee"}
-                                textAlign="center"
-                              >
-                                <Link
-                                  href={data.fourthData.Link}
-                                  target="_blank"
-                                  _hover={{
-                                    color: "#dc3545",
-                                  }}
+                                  <Link
+                                    href={data.thirdData.Link}
+                                    target="_blank"
+                                    _hover={{
+                                      color: "#dc3545",
+                                    }}
+                                  >
+                                    {data.thirdData.name}
+                                  </Link>
+                                </Td>
+                              )}
+                              {data.fourthData && (
+                                <Td
+                                  borderRight={"1px solid #eee"}
+                                  textAlign="center"
                                 >
-                                  {data.fourthData.name}
-                                </Link>
-                              </Td>
-                            )}
-                            {data.fifthData && (
-                              <Td
-                                borderRight={"1px solid #eee"}
-                                textAlign="center"
-                              >
-                                <Link
-                                  href={data.fifthData.Link}
-                                  target="_blank"
-                                  _hover={{
-                                    color: "#dc3545",
-                                  }}
+                                  <Link
+                                    href={data.fourthData.Link}
+                                    target="_blank"
+                                    _hover={{
+                                      color: "#dc3545",
+                                    }}
+                                  >
+                                    {data.fourthData.name}
+                                  </Link>
+                                </Td>
+                              )}
+                              {data.fifthData && (
+                                <Td
+                                  borderRight={"1px solid #eee"}
+                                  textAlign="center"
                                 >
-                                  {data.fifthData.name}
-                                </Link>
-                              </Td>
-                            )}
-                            {data.sixthData && (
-                              <Td
-                                borderRight={"1px solid #eee"}
-                                textAlign="center"
-                              >
-                                <Link
-                                  href={data.sixthData.Link}
-                                  target="_blank"
-                                  _hover={{
-                                    color: "#dc3545",
-                                  }}
+                                  <Link
+                                    href={data.fifthData.Link}
+                                    target="_blank"
+                                    _hover={{
+                                      color: "#dc3545",
+                                    }}
+                                  >
+                                    {data.fifthData.name}
+                                  </Link>
+                                </Td>
+                              )}
+                              {data.sixthData && (
+                                <Td
+                                  borderRight={"1px solid #eee"}
+                                  textAlign="center"
                                 >
-                                  {data.sixthData.name}
-                                </Link>
-                              </Td>
-                            )}
-                            {data.seventhData && (
-                              <Td
-                                borderRight={"1px solid #eee"}
-                                textAlign="center"
-                              >
-                                <Link
-                                  href={data.seventhData.Link}
-                                  target="_blank"
-                                  _hover={{
-                                    color: "#dc3545",
-                                  }}
+                                  <Link
+                                    href={data.sixthData.Link}
+                                    target="_blank"
+                                    _hover={{
+                                      color: "#dc3545",
+                                    }}
+                                  >
+                                    {data.sixthData.name}
+                                  </Link>
+                                </Td>
+                              )}
+                              {data.seventhData && (
+                                <Td
+                                  borderRight={"1px solid #eee"}
+                                  textAlign="center"
                                 >
-                                  {data.seventhData.name}
-                                </Link>
-                              </Td>
-                            )}
-                            {data.eighthData && (
-                              <Td
-                                borderRight={"1px solid #eee"}
-                                textAlign="center"
-                              >
-                                <Link
-                                  href={data.eighthData.Link}
-                                  target="_blank"
-                                  _hover={{
-                                    color: "#dc3545",
-                                  }}
+                                  <Link
+                                    href={data.seventhData.Link}
+                                    target="_blank"
+                                    _hover={{
+                                      color: "#dc3545",
+                                    }}
+                                  >
+                                    {data.seventhData.name}
+                                  </Link>
+                                </Td>
+                              )}
+                              {data.eighthData && (
+                                <Td
+                                  borderRight={"1px solid #eee"}
+                                  textAlign="center"
                                 >
-                                  {data.eighthData.name}
-                                </Link>
-                              </Td>
-                            )}
-                          </Tr>
-                        );
-                      })}
-                  </Tbody>
-                </Table>
-              </TableContainer>
+                                  <Link
+                                    href={data.eighthData.Link}
+                                    target="_blank"
+                                    _hover={{
+                                      color: "#dc3545",
+                                    }}
+                                  >
+                                    {data.eighthData.name}
+                                  </Link>
+                                </Td>
+                              )}
+                            </Tr>
+                          );
+                        })}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              )}
               <br />
               <Faqschema
                 title={SchemaTitle}
