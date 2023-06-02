@@ -117,7 +117,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
         headers: { Authorization: `Bearer ${userToken}` },
       };
       const response = await axios.post(
-        localUrl + "/assignment/fetch",
+        apiUrl + "/assignment/fetch",
         {
           status: {
             $in: ["Fresh Order", "Quotation Asked", "Doability Asked"],
