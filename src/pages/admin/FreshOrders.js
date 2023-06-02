@@ -1219,7 +1219,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
     }
   }
 
-  console.log({ assignments });
+  // console.log({ assignments });
 
   return (
     <>
