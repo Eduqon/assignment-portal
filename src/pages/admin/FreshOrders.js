@@ -1193,7 +1193,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
     try {
       if (countrycode !== 91) {
         console.log("international");
-        const response = await axios.post(localUrl + "/calling/international", {
+        const response = await axios.post(apiUrl + "/calling/international", {
           clientNumber: client_number,
         });
         if (response.status === 200) {
