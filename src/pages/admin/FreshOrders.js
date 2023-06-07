@@ -28,6 +28,7 @@ import {
   Checkbox,
   Select,
   Spinner,
+  Heading,
 } from "@chakra-ui/react";
 import {
   Box,
@@ -39,7 +40,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-import { apiUrl, localUrl } from "../../services/contants";
+import { apiUrl, callingNumbers } from "../../services/contants";
 import { RepeatIcon, PhoneIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 
@@ -67,6 +68,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
   const ExpertModalDis = useDisclosure();
   const QuotesModalDis = useDisclosure();
   const DoableResponsesModalDis = useDisclosure();
+  const CallingModalDis = useDisclosure();
 
   useEffect(() => {
     _fetchAssignments();
@@ -1178,9 +1180,61 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
     date.value = new Date().toLocaleDateString("en-ca");
   }
 
-  async function _calling(countrycode, client_number, id) {
-    console.log({ countrycode, client_number });
-    // return;
+  async function openCallingModal(index) {
+    setSelectedIndex(index);
+    CallingModalDis.onOpen();
+  }
+
+  function CallingModal() {
+    return (
+      <Modal
+        size={"md"}
+        onClose={CallingModalDis.onClose}
+        isOpen={CallingModalDis.isOpen}
+        onOpen={CallingModalDis.onOpen}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent maxH={"500px"} overflowY="scroll">
+          <ModalHeader>Choose Caller ID</ModalHeader>
+          <hr />
+          <ModalCloseButton />
+          <ModalBody>
+            <Table marginTop={2} variant="simple" size="sm">
+              <Tbody>
+                <Heading size={"sm"}>
+                  Which number do you want the recipient to see ?
+                </Heading>
+                <br />
+                {callingNumbers.map((number, index) => {
+                  return (
+                    <>
+                      <Button
+                        width={"100%"}
+                        marginBottom={2}
+                        onClick={() => {
+                          _calling(
+                            assignments[selectedIndex].countryCode,
+                            assignments[selectedIndex].contact_no,
+                            assignments[selectedIndex].id,
+                            index
+                          );
+                        }}
+                      >
+                        {number}
+                      </Button>
+                    </>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
+  async function _calling(countrycode, client_number, id, callingIndex) {
     const updateAssignment = assignments.map((assignment) =>
       assignment.id === id ? { ...assignment, client_call: true } : assignment
     );
@@ -1192,9 +1246,9 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
 
     try {
       if (countrycode !== 91) {
-        console.log("international");
         const response = await axios.post(apiUrl + "/calling/international", {
-          clientNumber: client_number,
+          clientNumber: Number(String(countrycode) + String(client_number)),
+          CallerId: +callingNumbers[callingIndex],
         });
         if (response.status === 200) {
           setAssignments(updateAssignment);
@@ -1203,9 +1257,9 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
           }, 2000);
         }
       } else {
-        console.log("here");
         const response = await axios.post(apiUrl + "/calling", {
-          clientNumber: client_number,
+          clientNumber: Number(String(countrycode) + String(client_number)),
+          CallerId: +callingNumbers[callingIndex],
         });
         if (response.status === 200) {
           setAssignments(updateAssignment);
@@ -1219,12 +1273,57 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
     }
   }
 
-  // console.log({ assignments });
+  async function handleQuoteStatus(selectedValue, index) {
+    let userToken = localStorage.getItem("userToken");
+    if (userToken == null) {
+      navigate.replace("/admin/login");
+    }
+    let config = {
+      headers: { Authorization: `Bearer ${userToken}` },
+    };
+
+    if (selectedValue === "give_quote") {
+      openModal(index);
+    } else if (
+      selectedValue === "CP1 Pending" ||
+      selectedValue === "CP1 Done"
+    ) {
+      const responseDeadline = await axios.post(
+        apiUrl + "/assignment/update",
+        {
+          _id: assignments[index].id,
+          status: selectedValue,
+          order_placed_time: Date.now(),
+          currentState: 1,
+          order_placed_time: {
+            ...assignments[index].order_placed_time,
+            1: Date.now(),
+          },
+        },
+        config
+      );
+      const createNotification = await axios.post(
+        apiUrl + "/notifications",
+        {
+          assignmentId: assignments[index].id,
+          read: false,
+        },
+        config
+      );
+      if (responseDeadline.data.success) {
+        window.alert(`Quote Move to ${selectedValue}`);
+        await _fetchAssignments();
+        incrementCounter(selectedValue);
+        decrementCounter("Fresh Order");
+      }
+    }
+  }
 
   return (
     <>
       <div display={{ base: "none", sm: "block", md: "block" }}>
         <ExpertModal />
+        <CallingModal />
         <QuotationModal />
         <QuotesModal />
         <AskDoableModal />
@@ -1238,6 +1337,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
             <Tr>
               <Th>ID</Th>
               <Th>Student Email</Th>
+              <Th>Student No.</Th>
               <Th>Subject</Th>
               <Th>Deadline</Th>
               <Th>Status</Th>
@@ -1276,13 +1376,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                           _focus={{ outline: "none" }}
                           _hover={{ background: "none" }}
                           color={"#dc3545"}
-                          onClick={() =>
-                            _calling(
-                              assignment.countryCode,
-                              assignment.contact_no,
-                              assignment.id
-                            )
-                          }
+                          onClick={() => openCallingModal(index)}
                         >
                           <PhoneIcon />
                         </Button>
@@ -1308,6 +1402,20 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                         "@" +
                         "****" +
                         ".com"}
+                  </Td>
+                  <Td textAlign={"center"}>
+                    {localStorage.getItem("userRole") === "Super Admin" ||
+                    localStorage.getItem("userRole") === "Admin"
+                      ? "+" +
+                        String(assignment.countryCode) +
+                        " " +
+                        assignment.contact_no
+                      : "+" +
+                        String(assignment.countryCode) +
+                        " " +
+                        String(assignment.contact_no).substring(0, 2) +
+                        "********" +
+                        String(assignment.contact_no).substring(8, 10)}
                   </Td>
                   <Td color={"green.600"} fontWeight={"semibold"}>
                     {assignment.subject}
@@ -1349,10 +1457,27 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                                 ? "flex"
                                 : "none"
                             }
-                            onClick={async () => openModal(index)}
+                            // onClick={async () => openModal(index)}
                           >
-                            Give Quote
+                            <select
+                              style={{
+                                background: "none",
+                                outline: "none",
+                                fontWeight: "600",
+                              }}
+                              onChange={(e) =>
+                                handleQuoteStatus(e.target.value, index)
+                              }
+                            >
+                              <option>Select Quote</option>
+                              <option value="give_quote">Give Quote</option>
+                              <option value="CP1 Pending">
+                                Move to CP1 Pending
+                              </option>
+                              <option value="CP1 Done">Move to CP1 Done</option>
+                            </select>
                           </Button>
+
                           <Button
                             display={
                               localStorage.getItem("userRole") === "Operator" ||

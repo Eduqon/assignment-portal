@@ -31,11 +31,10 @@ import {
   Input,
   InputLeftElement,
   InputRightElement,
-  Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { apiUrl } from "../../services/contants";
+import { apiUrl, callingNumbers } from "../../services/contants";
 import { useRouter } from "next/router";
 import {
   Accordion,
@@ -67,6 +66,7 @@ function ExpertAskedOrders({
   const MessagesModalDis = useDisclosure();
   const ReplyMessageModalDis = useDisclosure();
   const [userID, setUserID] = useState("");
+  const CallingModalDis = useDisclosure();
 
   let assignmentList = [];
 
@@ -131,6 +131,7 @@ function ExpertAskedOrders({
             order_placed_time: data[index].order_placed_time,
             numOfPages: data[index].numOfPages,
             paid: data[index].paid,
+            countryCode: data[index].countrycode,
             contact_no: data[index].contact_no,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
@@ -547,7 +548,61 @@ function ExpertAskedOrders({
     }
   };
 
-  async function _calling(client_number, id) {
+  async function openCallingModal(index) {
+    setSelectedIndex(index);
+    CallingModalDis.onOpen();
+  }
+
+  function CallingModal() {
+    return (
+      <Modal
+        size={"md"}
+        onClose={CallingModalDis.onClose}
+        isOpen={CallingModalDis.isOpen}
+        onOpen={CallingModalDis.onOpen}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent maxH={"500px"} overflowY="scroll">
+          <ModalHeader>Choose Caller ID</ModalHeader>
+          <hr />
+          <ModalCloseButton />
+          <ModalBody>
+            <Table marginTop={2} variant="simple" size="sm">
+              <Tbody>
+                <Heading size={"sm"}>
+                  Which number do you want the recipient to see ?
+                </Heading>
+                <br />
+                {callingNumbers.map((number, index) => {
+                  return (
+                    <>
+                      <Button
+                        width={"100%"}
+                        marginBottom={2}
+                        onClick={() => {
+                          _calling(
+                            assignments[selectedIndex].countryCode,
+                            assignments[selectedIndex].contact_no,
+                            assignments[selectedIndex].id,
+                            index
+                          );
+                        }}
+                      >
+                        {number}
+                      </Button>
+                    </>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
+  async function _calling(countrycode, client_number, id, callingIndex) {
     const updateAssignment = assignments.map((assignment) =>
       assignment.id === id ? { ...assignment, client_call: true } : assignment
     );
@@ -556,15 +611,30 @@ function ExpertAskedOrders({
         ? { ...assignment, client_call: false }
         : assignment
     );
+
     try {
-      const response = await axios.post(apiUrl + "/calling", {
-        clientNumber: client_number,
-      });
-      if (response.status === 200) {
-        setAssignments(updateAssignment);
-        setTimeout(() => {
-          setAssignments(assignment_data);
-        }, 2000);
+      if (countrycode !== 91) {
+        const response = await axios.post(apiUrl + "/calling/international", {
+          clientNumber: Number(String(countrycode) + String(client_number)),
+          CallerId: +callingNumbers[callingIndex],
+        });
+        if (response.status === 200) {
+          setAssignments(updateAssignment);
+          setTimeout(() => {
+            setAssignments(assignment_data);
+          }, 2000);
+        }
+      } else {
+        const response = await axios.post(apiUrl + "/calling", {
+          clientNumber: Number(String(countrycode) + String(client_number)),
+          CallerId: +callingNumbers[callingIndex],
+        });
+        if (response.status === 200) {
+          setAssignments(updateAssignment);
+          setTimeout(() => {
+            setAssignments(assignment_data);
+          }, 2000);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -575,6 +645,7 @@ function ExpertAskedOrders({
     <>
       <MessageModal />
       <ReplyMessageModal />
+      <CallingModal />
       <Table
         variant="simple"
         size="md"
@@ -584,6 +655,7 @@ function ExpertAskedOrders({
           <Tr>
             <Th>Id</Th>
             <Th>Student Email</Th>
+            <Th>Student No.</Th>
             <Th>Subject</Th>
             <Th>Amount Paid</Th>
             <Th>Expert Deadline</Th>
@@ -617,9 +689,7 @@ function ExpertAskedOrders({
                         _focus={{ outline: "none" }}
                         _hover={{ background: "none" }}
                         color={"#dc3545"}
-                        onClick={() =>
-                          _calling(assignment.contact_no, assignment.id)
-                        }
+                        onClick={() => openCallingModal(index)}
                       >
                         <PhoneIcon />
                       </Button>
@@ -681,6 +751,20 @@ function ExpertAskedOrders({
                       "@" +
                       "****" +
                       ".com"}
+                </Td>
+                <Td textAlign={"center"}>
+                  {localStorage.getItem("userRole") === "Super Admin" ||
+                  localStorage.getItem("userRole") === "Admin"
+                    ? "+" +
+                      String(assignment.countryCode) +
+                      " " +
+                      assignment.contact_no
+                    : "+" +
+                      String(assignment.countryCode) +
+                      " " +
+                      String(assignment.contact_no).substring(0, 2) +
+                      "********" +
+                      String(assignment.contact_no).substring(8, 10)}
                 </Td>
                 <Td color={"green.600"} fontWeight={"semibold"}>
                   {assignment.subject}

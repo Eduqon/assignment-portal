@@ -42,7 +42,7 @@ import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { apiUrl } from "../../services/contants";
+import { apiUrl, callingNumbers } from "../../services/contants";
 import { db } from "../../services/firebase";
 
 function ProofReadOrders({
@@ -61,6 +61,7 @@ function ProofReadOrders({
 
   const MessagesModalDis = useDisclosure();
   const ReplyMessageModalDis = useDisclosure();
+  const CallingModalDis = useDisclosure();
 
   let assignmentList = [];
   let qcList = [];
@@ -112,15 +113,27 @@ function ProofReadOrders({
             descriptionFile: data[index].descriptionFile,
             numOfPages: data[index].numOfPages,
             paid: data[index].paid,
+            countryCode: data[index].countrycode,
             contact_no: data[index].contact_no,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
               ", " +
               new Date(data[index].deadline).toDateString(),
             expertDeadline:
-              new Date(data[index].expertDeadline).toLocaleTimeString() +
-              ", " +
-              new Date(data[index].expertDeadline).toDateString(),
+              data[index].expertDeadline &&
+              data[index].expertDeadline[data[index]._id]
+                ? new Date(
+                    data[index].expertDeadline[data[index]._id][
+                      data[index].expertDeadline[data[index]._id].length - 1
+                    ]
+                  ).toLocaleTimeString() +
+                  ", " +
+                  new Date(
+                    data[index].expertDeadline[data[index]._id][
+                      data[index].expertDeadline[data[index]._id].length - 1
+                    ]
+                  ).toDateString()
+                : [],
             amountStatus: data[index].amountStatus,
             quoteAmountStatus: data[index].quoteAmountStatus,
           });
@@ -530,8 +543,61 @@ function ProofReadOrders({
       console.log(err);
     }
   }
+  async function openCallingModal(index) {
+    setSelectedIndex(index);
+    CallingModalDis.onOpen();
+  }
 
-  async function _calling(client_number, id) {
+  function CallingModal() {
+    return (
+      <Modal
+        size={"md"}
+        onClose={CallingModalDis.onClose}
+        isOpen={CallingModalDis.isOpen}
+        onOpen={CallingModalDis.onOpen}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent maxH={"500px"} overflowY="scroll">
+          <ModalHeader>Choose Caller ID</ModalHeader>
+          <hr />
+          <ModalCloseButton />
+          <ModalBody>
+            <Table marginTop={2} variant="simple" size="sm">
+              <Tbody>
+                <Heading size={"sm"}>
+                  Which number do you want the recipient to see ?
+                </Heading>
+                <br />
+                {callingNumbers.map((number, index) => {
+                  return (
+                    <>
+                      <Button
+                        width={"100%"}
+                        marginBottom={2}
+                        onClick={() => {
+                          _calling(
+                            assignments[selectedIndex].countryCode,
+                            assignments[selectedIndex].contact_no,
+                            assignments[selectedIndex].id,
+                            index
+                          );
+                        }}
+                      >
+                        {number}
+                      </Button>
+                    </>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
+  async function _calling(countrycode, client_number, id, callingIndex) {
     const updateAssignment = assignments.map((assignment) =>
       assignment.id === id ? { ...assignment, client_call: true } : assignment
     );
@@ -540,15 +606,30 @@ function ProofReadOrders({
         ? { ...assignment, client_call: false }
         : assignment
     );
+
     try {
-      const response = await axios.post(apiUrl + "/calling", {
-        clientNumber: client_number,
-      });
-      if (response.status === 200) {
-        setAssignments(updateAssignment);
-        setTimeout(() => {
-          setAssignments(assignment_data);
-        }, 2000);
+      if (countrycode !== 91) {
+        const response = await axios.post(apiUrl + "/calling/international", {
+          clientNumber: Number(String(countrycode) + String(client_number)),
+          CallerId: +callingNumbers[callingIndex],
+        });
+        if (response.status === 200) {
+          setAssignments(updateAssignment);
+          setTimeout(() => {
+            setAssignments(assignment_data);
+          }, 2000);
+        }
+      } else {
+        const response = await axios.post(apiUrl + "/calling", {
+          clientNumber: Number(String(countrycode) + String(client_number)),
+          CallerId: +callingNumbers[callingIndex],
+        });
+        if (response.status === 200) {
+          setAssignments(updateAssignment);
+          setTimeout(() => {
+            setAssignments(assignment_data);
+          }, 2000);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -556,7 +637,7 @@ function ProofReadOrders({
   }
 
   async function _qcCalling(assignedQc, id) {
-    const qc_number = qcs.find((qc) => qc.id === assignedQc).contact_no;
+    const qc_number = qcs.find((qc) => qc.id === assignedQc)?.contact_no;
     const updateAssignment = assignments.map((assignment) =>
       assignment.id === id ? { ...assignment, qc_call: true } : assignment
     );
@@ -568,6 +649,7 @@ function ProofReadOrders({
     try {
       const response = await axios.post(apiUrl + "/calling", {
         clientNumber: Number(qc_number),
+        CallerId: +callingNumbers[0],
       });
       if (response.status === 200) {
         setAssignments(updateAssignment);
@@ -584,6 +666,7 @@ function ProofReadOrders({
     <>
       <MessageModal />
       <ReplyMessageModal />
+      <CallingModal />
       <Table
         variant="simple"
         size="md"
@@ -593,6 +676,7 @@ function ProofReadOrders({
           <Tr>
             <Th>Id</Th>
             <Th>Student Email</Th>
+            <Th>Student No.</Th>
             <Th>Subject</Th>
             <Th>Order Quote</Th>
             <Th>Amount Paid</Th>
@@ -628,9 +712,7 @@ function ProofReadOrders({
                         _focus={{ outline: "none" }}
                         _hover={{ background: "none" }}
                         color={"#dc3545"}
-                        onClick={() =>
-                          _calling(assignment.contact_no, assignment.id)
-                        }
+                        onClick={() => openCallingModal(index)}
                       >
                         <PhoneIcon />
                       </Button>
@@ -699,6 +781,20 @@ function ProofReadOrders({
                       "@" +
                       "****" +
                       ".com"}
+                </Td>
+                <Td textAlign={"center"}>
+                  {localStorage.getItem("userRole") === "Super Admin" ||
+                  localStorage.getItem("userRole") === "Admin"
+                    ? "+" +
+                      String(assignment.countryCode) +
+                      " " +
+                      assignment.contact_no
+                    : "+" +
+                      String(assignment.countryCode) +
+                      " " +
+                      String(assignment.contact_no).substring(0, 2) +
+                      "********" +
+                      String(assignment.contact_no).substring(8, 10)}
                 </Td>
                 <Td color={"green.600"} fontWeight={"semibold"}>
                   {assignment.subject}
@@ -863,39 +959,41 @@ function ProofReadOrders({
                 <Td color={"red.600"} fontWeight={"semibold"}>
                   {assignment.deadline}
                 </Td>
-                <Td display={"flex"} alignItems="center">
-                  {localStorage.getItem("userRole") === "Super Admin" ||
-                  localStorage.getItem("userRole") === "Admin"
-                    ? assignment.assignedQC
-                    : assignment.assignedQC &&
-                      assignment.assignedQC.substring(0, 2) +
-                        "****" +
-                        "@" +
-                        "****" +
-                        ".com"}
-                  {!assignment.qc_call ? (
-                    <Button
-                      background={"none"}
-                      _focus={{ outline: "none" }}
-                      _hover={{ background: "none" }}
-                      color={"#dc3545"}
-                      onClick={() =>
-                        _qcCalling(assignment.assignedQC, assignment.id)
-                      }
-                    >
-                      <PhoneIcon />
-                    </Button>
-                  ) : (
-                    <i
-                      class="fa fa-phone-square"
-                      aria-hidden="true"
-                      style={{
-                        fontSize: "1.5rem",
-                        color: "#dc3545",
-                        marginLeft: "1rem",
-                      }}
-                    />
-                  )}
+                <Td fontWeight={"semibold"} padding={0}>
+                  <Box display={"flex"} alignItems="center">
+                    {localStorage.getItem("userRole") === "Super Admin" ||
+                    localStorage.getItem("userRole") === "Admin"
+                      ? assignment.assignedQC
+                      : assignment.assignedQC &&
+                        assignment.assignedQC.substring(0, 2) +
+                          "****" +
+                          "@" +
+                          "****" +
+                          ".com"}
+                    {!assignment.qc_call ? (
+                      <Button
+                        background={"none"}
+                        _focus={{ outline: "none" }}
+                        _hover={{ background: "none" }}
+                        color={"#dc3545"}
+                        onClick={() =>
+                          _qcCalling(assignment.assignedQC, assignment.id)
+                        }
+                      >
+                        <PhoneIcon />
+                      </Button>
+                    ) : (
+                      <i
+                        class="fa fa-phone-square"
+                        aria-hidden="true"
+                        style={{
+                          fontSize: "1.5rem",
+                          color: "#dc3545",
+                          marginLeft: "1rem",
+                        }}
+                      />
+                    )}
+                  </Box>
                 </Td>
                 {/* <Td><Button>Choose Expert</Button></Td> */}
               </Tr>

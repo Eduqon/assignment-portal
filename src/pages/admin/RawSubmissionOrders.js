@@ -47,7 +47,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { apiUrl } from "../../services/contants";
+import { apiUrl, callingNumbers } from "../../services/contants";
 import { db } from "../../services/firebase";
 
 function RawSubmissionOrders({
@@ -79,6 +79,9 @@ function RawSubmissionOrders({
 
   const MessagesModalDis = useDisclosure();
   const ReplyMessageModalDis = useDisclosure();
+
+  const CallingModalDis = useDisclosure();
+
   let expertsList = [];
   let qcList = [];
 
@@ -700,6 +703,7 @@ function RawSubmissionOrders({
             order_placed_time: data[index].order_placed_time,
             numOfPages: data[index].numOfPages,
             paid: data[index].paid,
+            countryCode: data[index].countrycode,
             contact_no: data[index].contact_no,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
@@ -1132,8 +1136,61 @@ function RawSubmissionOrders({
       console.log(err);
     }
   }
+  async function openCallingModal(index) {
+    setSelectedIndex(index);
+    CallingModalDis.onOpen();
+  }
 
-  async function _calling(client_number, id) {
+  function CallingModal() {
+    return (
+      <Modal
+        size={"md"}
+        onClose={CallingModalDis.onClose}
+        isOpen={CallingModalDis.isOpen}
+        onOpen={CallingModalDis.onOpen}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent maxH={"500px"} overflowY="scroll">
+          <ModalHeader>Choose Caller ID</ModalHeader>
+          <hr />
+          <ModalCloseButton />
+          <ModalBody>
+            <Table marginTop={2} variant="simple" size="sm">
+              <Tbody>
+                <Heading size={"sm"}>
+                  Which number do you want the recipient to see ?
+                </Heading>
+                <br />
+                {callingNumbers.map((number, index) => {
+                  return (
+                    <>
+                      <Button
+                        width={"100%"}
+                        marginBottom={2}
+                        onClick={() => {
+                          _calling(
+                            assignments[selectedIndex].countryCode,
+                            assignments[selectedIndex].contact_no,
+                            assignments[selectedIndex].id,
+                            index
+                          );
+                        }}
+                      >
+                        {number}
+                      </Button>
+                    </>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
+  async function _calling(countrycode, client_number, id, callingIndex) {
     const updateAssignment = assignments.map((assignment) =>
       assignment.id === id ? { ...assignment, client_call: true } : assignment
     );
@@ -1142,15 +1199,30 @@ function RawSubmissionOrders({
         ? { ...assignment, client_call: false }
         : assignment
     );
+
     try {
-      const response = await axios.post(apiUrl + "/calling", {
-        clientNumber: client_number,
-      });
-      if (response.status === 200) {
-        setAssignments(updateAssignment);
-        setTimeout(() => {
-          setAssignments(assignment_data);
-        }, 2000);
+      if (countrycode !== 91) {
+        const response = await axios.post(apiUrl + "/calling/international", {
+          clientNumber: Number(String(countrycode) + String(client_number)),
+          CallerId: +callingNumbers[callingIndex],
+        });
+        if (response.status === 200) {
+          setAssignments(updateAssignment);
+          setTimeout(() => {
+            setAssignments(assignment_data);
+          }, 2000);
+        }
+      } else {
+        const response = await axios.post(apiUrl + "/calling", {
+          clientNumber: Number(String(countrycode) + String(client_number)),
+          CallerId: +callingNumbers[callingIndex],
+        });
+        if (response.status === 200) {
+          setAssignments(updateAssignment);
+          setTimeout(() => {
+            setAssignments(assignment_data);
+          }, 2000);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -1172,6 +1244,7 @@ function RawSubmissionOrders({
     try {
       const response = await axios.post(apiUrl + "/calling", {
         clientNumber: Number(expert_number),
+        CallerId: +callingNumbers[0],
       });
       if (response.status === 200) {
         setAssignments(updateAssignment);
@@ -1197,6 +1270,7 @@ function RawSubmissionOrders({
     try {
       const response = await axios.post(apiUrl + "/calling", {
         clientNumber: Number(qc_number),
+        CallerId: +callingNumbers[0],
       });
       if (response.status === 200) {
         setAssignments(updateAssignment);
@@ -1223,6 +1297,7 @@ function RawSubmissionOrders({
         <MessageModal />
         <ReplyMessageModal />
         <SubmissionsModal />
+        <CallingModal />
         <ReworkModal />
         <Table
           variant="simple"
@@ -1233,6 +1308,7 @@ function RawSubmissionOrders({
             <Tr>
               <Th>Id</Th>
               <Th>Subject</Th>
+              <Th>Student No.</Th>
               <Th>Deadline</Th>
               <Th>Expert Deadline</Th>
               <Th>Assigned Expert</Th>
@@ -1266,9 +1342,7 @@ function RawSubmissionOrders({
                           _focus={{ outline: "none" }}
                           _hover={{ background: "none" }}
                           color={"#dc3545"}
-                          onClick={() =>
-                            _calling(assignment.contact_no, assignment.id)
-                          }
+                          onClick={() => openCallingModal(index)}
                         >
                           <PhoneIcon />
                         </Button>
@@ -1344,6 +1418,20 @@ function RawSubmissionOrders({
                   <Td color={"green.600"} fontWeight={"semibold"}>
                     {assignment.subject}
                   </Td>
+                  <Td textAlign={"center"}>
+                    {localStorage.getItem("userRole") === "Super Admin" ||
+                    localStorage.getItem("userRole") === "Admin"
+                      ? "+" +
+                        String(assignment.countryCode) +
+                        " " +
+                        assignment.contact_no
+                      : "+" +
+                        String(assignment.countryCode) +
+                        " " +
+                        String(assignment.contact_no).substring(0, 2) +
+                        "********" +
+                        String(assignment.contact_no).substring(8, 10)}
+                  </Td>
                   <Td color={"red.600"} fontWeight={"semibold"}>
                     {assignment.deadline}
                   </Td>
@@ -1400,41 +1488,45 @@ function RawSubmissionOrders({
                       )}
                     </Box>
                   </Td>
-                  <Td>
-                    <Box display="flex" alignItems="center">
-                      {localStorage.getItem("userRole") === "Super Admin" ||
-                      localStorage.getItem("userRole") === "Admin"
-                        ? assignment.assignedQC
-                        : assignment.assignedQC?.substring(0, 2) +
-                          "****" +
-                          "@" +
-                          "****" +
-                          ".com"}
-                      {!assignment.qc_call ? (
-                        <Button
-                          background={"none"}
-                          _focus={{ outline: "none" }}
-                          _hover={{ background: "none" }}
-                          color={"#dc3545"}
-                          onClick={() =>
-                            _qcCalling(assignment.assignedQC, assignment.id)
-                          }
-                        >
-                          <PhoneIcon />
-                        </Button>
-                      ) : (
-                        <i
-                          class="fa fa-phone-square"
-                          aria-hidden="true"
-                          style={{
-                            fontSize: "1.5rem",
-                            color: "#dc3545",
-                            marginLeft: "1rem",
-                          }}
-                        />
-                      )}
-                    </Box>
-                  </Td>
+                  {assignment.assignedQC ? (
+                    <Td>
+                      <Box display="flex" alignItems="center">
+                        {localStorage.getItem("userRole") === "Super Admin" ||
+                        localStorage.getItem("userRole") === "Admin"
+                          ? assignment.assignedQC
+                          : assignment.assignedQC?.substring(0, 2) +
+                            "****" +
+                            "@" +
+                            "****" +
+                            ".com"}
+                        {!assignment.qc_call ? (
+                          <Button
+                            background={"none"}
+                            _focus={{ outline: "none" }}
+                            _hover={{ background: "none" }}
+                            color={"#dc3545"}
+                            onClick={() =>
+                              _qcCalling(assignment.assignedQC, assignment.id)
+                            }
+                          >
+                            <PhoneIcon />
+                          </Button>
+                        ) : (
+                          <i
+                            class="fa fa-phone-square"
+                            aria-hidden="true"
+                            style={{
+                              fontSize: "1.5rem",
+                              color: "#dc3545",
+                              marginLeft: "1rem",
+                            }}
+                          />
+                        )}
+                      </Box>
+                    </Td>
+                  ) : (
+                    <Td></Td>
+                  )}
                   <Td>
                     <HStack>
                       <Button onClick={async () => openSubmissionsModal(index)}>

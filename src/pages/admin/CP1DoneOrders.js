@@ -36,6 +36,7 @@ import {
   Spinner,
   InputLeftElement,
   InputRightElement,
+  Heading,
 } from "@chakra-ui/react";
 import {
   Accordion,
@@ -46,7 +47,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { apiUrl } from "../../services/contants";
+import { apiUrl, callingNumbers } from "../../services/contants";
 import { useRouter } from "next/router";
 import { updateAssignment } from "../../services/functions/assignmentFun";
 
@@ -58,6 +59,7 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
     showQCModal: false,
     showQuotesModal: false,
     showEditQuoteModal: false,
+    showCallingModal: false,
   });
   let assignmentList = [];
   let expertList = [];
@@ -70,6 +72,7 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
   const [userID, setUserID] = useState("");
 
   const [selectedIndex, setSelectedIndex] = useState();
+  const CallingModalDis = useDisclosure();
 
   useEffect(() => {
     _fetchAssignments();
@@ -1020,6 +1023,7 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
             cp2PaymentId: data[index].cp2PaymentId,
             deadline_quote: data[index].deadline,
             order_placed_time: data[index].order_placed_time,
+            countryCode: data[index].countrycode,
             contact_no: data[index].contact_no,
             deadline:
               new Date(data[index].deadline).toLocaleTimeString() +
@@ -1322,7 +1326,66 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
     );
   }
 
-  async function _calling(client_number, id) {
+  async function openCallingModal(index) {
+    setSelectedIndex(index);
+    setShowModals({ ...showModals, showCallingModal: true });
+    CallingModalDis.onOpen();
+  }
+
+  function CallingModal() {
+    const closeModal = () => {
+      setShowModals({ ...showModals, showCallingModal: false });
+      CallingModalDis.onClose();
+    };
+    return (
+      <Modal
+        size={"md"}
+        onClose={closeModal}
+        isOpen={CallingModalDis.isOpen}
+        onOpen={CallingModalDis.onOpen}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent maxH={"500px"} overflowY="scroll">
+          <ModalHeader>Choose Caller ID</ModalHeader>
+          <hr />
+          <ModalCloseButton />
+          <ModalBody>
+            <Table marginTop={2} variant="simple" size="sm">
+              <Tbody>
+                <Heading size={"sm"}>
+                  Which number do you want the recipient to see ?
+                </Heading>
+                <br />
+                {callingNumbers.map((number, index) => {
+                  return (
+                    <>
+                      <Button
+                        width={"100%"}
+                        marginBottom={2}
+                        onClick={() => {
+                          _calling(
+                            assignments[selectedIndex].countryCode,
+                            assignments[selectedIndex].contact_no,
+                            assignments[selectedIndex].id,
+                            index
+                          );
+                        }}
+                      >
+                        {number}
+                      </Button>
+                    </>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
+  async function _calling(countrycode, client_number, id, callingIndex) {
     const updateAssignment = assignments.map((assignment) =>
       assignment.id === id ? { ...assignment, client_call: true } : assignment
     );
@@ -1333,14 +1396,28 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
     );
 
     try {
-      const response = await axios.post(apiUrl + "/calling", {
-        clientNumber: client_number,
-      });
-      if (response.status === 200) {
-        setAssignments(updateAssignment);
-        setTimeout(() => {
-          setAssignments(assignment_data);
-        }, 2000);
+      if (countrycode !== 91) {
+        const response = await axios.post(apiUrl + "/calling/international", {
+          clientNumber: Number(String(countrycode) + String(client_number)),
+          CallerId: +callingNumbers[callingIndex],
+        });
+        if (response.status === 200) {
+          setAssignments(updateAssignment);
+          setTimeout(() => {
+            setAssignments(assignment_data);
+          }, 2000);
+        }
+      } else {
+        const response = await axios.post(apiUrl + "/calling", {
+          clientNumber: Number(String(countrycode) + String(client_number)),
+          CallerId: +callingNumbers[callingIndex],
+        });
+        if (response.status === 200) {
+          setAssignments(updateAssignment);
+          setTimeout(() => {
+            setAssignments(assignment_data);
+          }, 2000);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -1354,6 +1431,7 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
         {showModals.showQCModal && <QcModal />}
         {showModals.showQuotesModal && <QuotesModal />}
         {showModals.showEditQuoteModal && <EditQuoteExpertModal />}
+        {showModals.showCallingModal && <CallingModal />}
 
         <Table
           variant="simple"
@@ -1364,6 +1442,7 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
             <Tr>
               <Th>Id</Th>
               <Th>Student Email</Th>
+              <Th>Student No.</Th>
               <Th>Subject</Th>
               <Th>Order Quote</Th>
               <Th>Amount Paid</Th>
@@ -1401,9 +1480,7 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                           _focus={{ outline: "none" }}
                           _hover={{ background: "none" }}
                           color={"#dc3545"}
-                          onClick={() =>
-                            _calling(assignment.contact_no, assignment.id)
-                          }
+                          onClick={() => openCallingModal(index)}
                         >
                           <PhoneIcon />
                         </Button>
@@ -1429,6 +1506,20 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                         "@" +
                         "****" +
                         ".com"}
+                  </Td>
+                  <Td textAlign={"center"}>
+                    {localStorage.getItem("userRole") === "Super Admin" ||
+                    localStorage.getItem("userRole") === "Admin"
+                      ? "+" +
+                        String(assignment.countryCode) +
+                        " " +
+                        assignment.contact_no
+                      : "+" +
+                        String(assignment.countryCode) +
+                        " " +
+                        String(assignment.contact_no).substring(0, 2) +
+                        "********" +
+                        String(assignment.contact_no).substring(8, 10)}
                   </Td>
                   <Td color={"green.600"} fontWeight={"semibold"}>
                     {assignment.subject}

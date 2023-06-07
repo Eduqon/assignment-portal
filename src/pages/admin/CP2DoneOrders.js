@@ -42,7 +42,7 @@ import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { apiUrl } from "../../services/contants";
+import { apiUrl, callingNumbers } from "../../services/contants";
 import { db } from "../../services/firebase";
 
 function CP2DoneOrders({
@@ -63,6 +63,7 @@ function CP2DoneOrders({
 
   const MessagesModalDis = useDisclosure();
   const ReplyMessageModalDis = useDisclosure();
+  const CallingModalDis = useDisclosure();
 
   let assignmentList = [];
 
@@ -111,6 +112,7 @@ function CP2DoneOrders({
             descriptionFile: data[index].descriptionFile,
             numOfPages: data[index].numOfPages,
             paid: data[index].paid,
+            countryCode: data[index].countrycode,
             contact_no: data[index].contact_no,
             cp1PaymentId: data[index].cp1PaymentId,
             cp2PaymentId: data[index].cp2PaymentId,
@@ -496,7 +498,61 @@ function CP2DoneOrders({
     );
   }
 
-  async function _calling(client_number, id) {
+  async function openCallingModal(index) {
+    setSelectedIndex(index);
+    CallingModalDis.onOpen();
+  }
+
+  function CallingModal() {
+    return (
+      <Modal
+        size={"md"}
+        onClose={CallingModalDis.onClose}
+        isOpen={CallingModalDis.isOpen}
+        onOpen={CallingModalDis.onOpen}
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent maxH={"500px"} overflowY="scroll">
+          <ModalHeader>Choose Caller ID</ModalHeader>
+          <hr />
+          <ModalCloseButton />
+          <ModalBody>
+            <Table marginTop={2} variant="simple" size="sm">
+              <Tbody>
+                <Heading size={"sm"}>
+                  Which number do you want the recipient to see ?
+                </Heading>
+                <br />
+                {callingNumbers.map((number, index) => {
+                  return (
+                    <>
+                      <Button
+                        width={"100%"}
+                        marginBottom={2}
+                        onClick={() => {
+                          _calling(
+                            assignments[selectedIndex].countryCode,
+                            assignments[selectedIndex].contact_no,
+                            assignments[selectedIndex].id,
+                            index
+                          );
+                        }}
+                      >
+                        {number}
+                      </Button>
+                    </>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  }
+
+  async function _calling(countrycode, client_number, id, callingIndex) {
     const updateAssignment = assignments.map((assignment) =>
       assignment.id === id ? { ...assignment, client_call: true } : assignment
     );
@@ -505,15 +561,30 @@ function CP2DoneOrders({
         ? { ...assignment, client_call: false }
         : assignment
     );
+
     try {
-      const response = await axios.post(apiUrl + "/calling", {
-        clientNumber: client_number,
-      });
-      if (response.status === 200) {
-        setAssignments(updateAssignment);
-        setTimeout(() => {
-          setAssignments(assignment_data);
-        }, 2000);
+      if (countrycode !== 91) {
+        const response = await axios.post(apiUrl + "/calling/international", {
+          clientNumber: Number(String(countrycode) + String(client_number)),
+          CallerId: +callingNumbers[callingIndex],
+        });
+        if (response.status === 200) {
+          setAssignments(updateAssignment);
+          setTimeout(() => {
+            setAssignments(assignment_data);
+          }, 2000);
+        }
+      } else {
+        const response = await axios.post(apiUrl + "/calling", {
+          clientNumber: Number(String(countrycode) + String(client_number)),
+          CallerId: +callingNumbers[callingIndex],
+        });
+        if (response.status === 200) {
+          setAssignments(updateAssignment);
+          setTimeout(() => {
+            setAssignments(assignment_data);
+          }, 2000);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -524,6 +595,7 @@ function CP2DoneOrders({
     <>
       <MessageModal />
       <ReplyMessageModal />
+      <CallingModal />
       <Table
         variant="simple"
         size="md"
@@ -533,6 +605,7 @@ function CP2DoneOrders({
           <Tr>
             <Th>Id</Th>
             <Th>Student Email</Th>
+            <Th>Student No.</Th>
             <Th>Subject</Th>
             <Th>Order Quote</Th>
             <Th>Amount Paid</Th>
@@ -556,7 +629,7 @@ function CP2DoneOrders({
             assignments.map((assignment, index) => (
               <Tr key={assignment.id}>
                 <Td fontWeight={"semibold"} paddingTop={9}>
-                  <Box display={"flex"}>
+                  <Box display={"flex"} alignItems={"center"}>
                     <Link href={"/admin/assignment_details/" + assignment.id}>
                       {assignment.id}
                     </Link>
@@ -566,9 +639,7 @@ function CP2DoneOrders({
                         _focus={{ outline: "none" }}
                         _hover={{ background: "none" }}
                         color={"#dc3545"}
-                        onClick={() =>
-                          _calling(assignment.contact_no, assignment.id)
-                        }
+                        onClick={() => openCallingModal(index)}
                       >
                         <PhoneIcon />
                       </Button>
@@ -637,6 +708,20 @@ function CP2DoneOrders({
                       "@" +
                       "****" +
                       ".com"}
+                </Td>
+                <Td textAlign={"center"}>
+                  {localStorage.getItem("userRole") === "Super Admin" ||
+                  localStorage.getItem("userRole") === "Admin"
+                    ? "+" +
+                      String(assignment.countryCode) +
+                      " " +
+                      assignment.contact_no
+                    : "+" +
+                      String(assignment.countryCode) +
+                      " " +
+                      String(assignment.contact_no).substring(0, 2) +
+                      "********" +
+                      String(assignment.contact_no).substring(8, 10)}
                 </Td>
                 <Td color={"green.600"} fontWeight={"semibold"}>
                   {assignment.subject}

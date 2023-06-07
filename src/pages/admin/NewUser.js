@@ -406,6 +406,12 @@ const NewUser = () => {
                     </FormControl>
                   </Box>
                   <Box width={"100%"}>
+                    <FormControl id="passwordExpert" isRequired>
+                      <FormLabel>Password</FormLabel>
+                      <Input type="password" />
+                    </FormControl>
+                  </Box>
+                  <Box width={"100%"}>
                     <FormControl id="countryExpert" isRequired>
                       <FormLabel>Country</FormLabel>
                       <Input type="text" />
@@ -451,6 +457,7 @@ const NewUser = () => {
                   onClick={async () => {
                     let name = document.getElementById("nameExpert");
                     let email = document.getElementById("emailExpert");
+                    let password = document.getElementById("passwordExpert");
                     let country = document.getElementById("countryExpert");
                     let countrycode =
                       document.getElementById("countrycodeExpert");
@@ -459,6 +466,7 @@ const NewUser = () => {
                     if (
                       name.value === "" ||
                       email.value === "" ||
+                      password.value === "" ||
                       country.value === "" ||
                       countrycode.value === "" ||
                       contact.value === "" ||
@@ -472,7 +480,7 @@ const NewUser = () => {
                           {
                             _id: email.value,
                             name: name.value,
-                            // "subject": subject.value,
+                            password: password.value,
                             subject: SendSubjectData,
                             contact_no: contact.value,
                             country: country.value,
@@ -483,6 +491,7 @@ const NewUser = () => {
                           window.alert(responseExpert.data.msg);
                           name.value = "";
                           email.value = "";
+                          password.value = "";
                           country.value = "";
                           countrycode.value = "";
                           contact.value = "";
