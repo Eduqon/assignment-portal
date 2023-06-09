@@ -7,7 +7,7 @@ export const localUrl = "http://localhost:8080";
 export const frontEndUrl = "https://www.assignmentsanta.com";
 export const strapiUrl = "https://assignmentsantastrapi.fly.dev";
 export const mediaUrl = "https://assignmentsantastrapi.fly.dev/api";
-export const callingNumbers = ["8069458292", "+442033180057", "+17182134395"];
+export const callingNumbers = ["India", "+442033180057", "+17182134395"];
 
 export const SERVICES = gql`
   query {

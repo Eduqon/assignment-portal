@@ -680,8 +680,7 @@ function AssignedExpertOrders({
         }
       } else {
         const response = await axios.post(apiUrl + "/calling", {
-          clientNumber: Number(String(countrycode) + String(client_number)),
-          CallerId: +callingNumbers[callingIndex],
+          clientNumber: String(client_number),
         });
         if (response.status === 200) {
           setAssignments(updateAssignment);
@@ -709,8 +708,7 @@ function AssignedExpertOrders({
     );
     try {
       const response = await axios.post(apiUrl + "/calling", {
-        clientNumber: Number(expert_number),
-        CallerId: +callingNumbers[0],
+        clientNumber: String(expert_number),
       });
       if (response.status === 200) {
         setAssignments(updateAssignment);

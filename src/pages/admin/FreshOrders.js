@@ -1258,8 +1258,7 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
         }
       } else {
         const response = await axios.post(apiUrl + "/calling", {
-          clientNumber: Number(String(countrycode) + String(client_number)),
-          CallerId: +callingNumbers[callingIndex],
+          clientNumber: String(client_number),
         });
         if (response.status === 200) {
           setAssignments(updateAssignment);

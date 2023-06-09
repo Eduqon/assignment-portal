@@ -45,7 +45,7 @@ const ExpertList = () => {
   async function _calling(client_number) {
     try {
       const response = await axios.post(apiUrl + "/calling", {
-        clientNumber: client_number,
+        clientNumber: String(client_number),
       });
     } catch (err) {
       console.log(err);

@@ -1214,8 +1214,7 @@ function RawSubmissionOrders({
         }
       } else {
         const response = await axios.post(apiUrl + "/calling", {
-          clientNumber: Number(String(countrycode) + String(client_number)),
-          CallerId: +callingNumbers[callingIndex],
+          clientNumber: String(client_number),
         });
         if (response.status === 200) {
           setAssignments(updateAssignment);
@@ -1243,8 +1242,7 @@ function RawSubmissionOrders({
     );
     try {
       const response = await axios.post(apiUrl + "/calling", {
-        clientNumber: Number(expert_number),
-        CallerId: +callingNumbers[0],
+        clientNumber: String(expert_number),
       });
       if (response.status === 200) {
         setAssignments(updateAssignment);
@@ -1268,15 +1266,18 @@ function RawSubmissionOrders({
         : assignment
     );
     try {
-      const response = await axios.post(apiUrl + "/calling", {
-        clientNumber: Number(qc_number),
-        CallerId: +callingNumbers[0],
-      });
-      if (response.status === 200) {
-        setAssignments(updateAssignment);
-        setTimeout(() => {
-          setAssignments(assignment_data);
-        }, 2000);
+      if (!qc_number) {
+        window.alert("Please use the correct Number !");
+      } else {
+        const response = await axios.post(apiUrl + "/calling", {
+          clientNumber: String(qc_number),
+        });
+        if (response.status === 200) {
+          setAssignments(updateAssignment);
+          setTimeout(() => {
+            setAssignments(assignment_data);
+          }, 2000);
+        }
       }
     } catch (err) {
       console.log(err);
