@@ -208,15 +208,6 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
   }
 
   async function _calling(countrycode, client_number, id, callingIndex) {
-    const updateAssignment = assignments.map((assignment) =>
-      assignment.id === id ? { ...assignment, client_call: true } : assignment
-    );
-    const assignment_data = assignments.map((assignment) =>
-      assignment.client_call
-        ? { ...assignment, client_call: false }
-        : assignment
-    );
-
     try {
       if (countrycode !== 91) {
         const response = await axios.post(apiUrl + "/calling/international", {
@@ -224,20 +215,18 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
           CallerId: +callingNumbers[callingIndex],
         });
         if (response.status === 200) {
-          setAssignments(updateAssignment);
-          setTimeout(() => {
-            setAssignments(assignment_data);
-          }, 2000);
+          window.alert("Call has been initiated");
+        } else {
+          window.alert("Call has not been initiated due to some reason.");
         }
       } else {
         const response = await axios.post(apiUrl + "/calling", {
           clientNumber: String(client_number),
         });
-        if (response.status === 200) {
-          setAssignments(updateAssignment);
-          setTimeout(() => {
-            setAssignments(assignment_data);
-          }, 2000);
+        if (response.data.msg === "Call originated successfully!!") {
+          window.alert("Call has been initiated");
+        } else {
+          window.alert("Call has not been initiated due to some reason.");
         }
       }
     } catch (err) {
@@ -328,27 +317,15 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
                     <Link href={"/admin/assignment_details/" + assignment.id}>
                       {assignment.id}
                     </Link>
-                    {!assignment.client_call ? (
-                      <Button
-                        background={"none"}
-                        _focus={{ outline: "none" }}
-                        _hover={{ background: "none" }}
-                        color={"#dc3545"}
-                        onClick={() => openCallingModal(index)}
-                      >
-                        <PhoneIcon />
-                      </Button>
-                    ) : (
-                      <i
-                        class="fa fa-phone-square"
-                        aria-hidden="true"
-                        style={{
-                          fontSize: "1.5rem",
-                          color: "#dc3545",
-                          marginLeft: "1rem",
-                        }}
-                      />
-                    )}
+                    <Button
+                      background={"none"}
+                      _focus={{ outline: "none" }}
+                      _hover={{ background: "none" }}
+                      color={"#dc3545"}
+                      onClick={() => openCallingModal(index)}
+                    >
+                      <PhoneIcon />
+                    </Button>
                   </Box>
                 </Td>
                 <Td>

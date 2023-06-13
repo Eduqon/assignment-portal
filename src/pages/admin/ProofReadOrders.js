@@ -598,15 +598,6 @@ function ProofReadOrders({
   }
 
   async function _calling(countrycode, client_number, id, callingIndex) {
-    const updateAssignment = assignments.map((assignment) =>
-      assignment.id === id ? { ...assignment, client_call: true } : assignment
-    );
-    const assignment_data = assignments.map((assignment) =>
-      assignment.client_call
-        ? { ...assignment, client_call: false }
-        : assignment
-    );
-
     try {
       if (countrycode !== 91) {
         const response = await axios.post(apiUrl + "/calling/international", {
@@ -614,20 +605,18 @@ function ProofReadOrders({
           CallerId: +callingNumbers[callingIndex],
         });
         if (response.status === 200) {
-          setAssignments(updateAssignment);
-          setTimeout(() => {
-            setAssignments(assignment_data);
-          }, 2000);
+          window.alert("Call has been initiated");
+        } else {
+          window.alert("Call has not been initiated due to some reason.");
         }
       } else {
-        const response = await axios.post(localUrl + "/calling", {
+        const response = await axios.post(apiUrl + "/calling", {
           clientNumber: String(client_number),
         });
-        if (response.status === 200) {
-          setAssignments(updateAssignment);
-          setTimeout(() => {
-            setAssignments(assignment_data);
-          }, 2000);
+        if (response.data.msg === "Call originated successfully!!") {
+          window.alert("Call has been initiated");
+        } else {
+          window.alert("Call has not been initiated due to some reason.");
         }
       }
     } catch (err) {
@@ -636,15 +625,6 @@ function ProofReadOrders({
   }
 
   async function _qcCalling(assignedQc, id) {
-    const qc_number = qcs.find((qc) => qc.id === assignedQc)?.contact_no;
-    const updateAssignment = assignments.map((assignment) =>
-      assignment.id === id ? { ...assignment, qc_call: true } : assignment
-    );
-    const assignment_data = assignments.map((assignment) =>
-      assignment.client_call
-        ? { ...assignment, client_call: false }
-        : assignment
-    );
     try {
       if (!qc_number) {
         window.alert("Please use the correct Number !");
@@ -652,11 +632,10 @@ function ProofReadOrders({
         const response = await axios.post(apiUrl + "/calling", {
           clientNumber: String(qc_number),
         });
-        if (response.status === 200) {
-          setAssignments(updateAssignment);
-          setTimeout(() => {
-            setAssignments(assignment_data);
-          }, 2000);
+        if (response.data.msg === "Call originated successfully!!") {
+          window.alert("Call has been initiated");
+        } else {
+          window.alert("Call has not been initiated due to some reason.");
         }
       }
     } catch (err) {
@@ -708,27 +687,16 @@ function ProofReadOrders({
                     <Link href={"/admin/assignment_details/" + assignment.id}>
                       {assignment.id}
                     </Link>
-                    {!assignment.client_call ? (
-                      <Button
-                        background={"none"}
-                        _focus={{ outline: "none" }}
-                        _hover={{ background: "none" }}
-                        color={"#dc3545"}
-                        onClick={() => openCallingModal(index)}
-                      >
-                        <PhoneIcon />
-                      </Button>
-                    ) : (
-                      <i
-                        class="fa fa-phone-square"
-                        aria-hidden="true"
-                        style={{
-                          fontSize: "1.5rem",
-                          color: "#dc3545",
-                          marginLeft: "1rem",
-                        }}
-                      />
-                    )}
+                    <Button
+                      background={"none"}
+                      _focus={{ outline: "none" }}
+                      _hover={{ background: "none" }}
+                      color={"#dc3545"}
+                      onClick={() => openCallingModal(index)}
+                    >
+                      <PhoneIcon />
+                    </Button>
+
                     {confirmOrderAssignedExpertMessages &&
                       confirmOrderAssignedExpertMessages.length !== 0 &&
                       confirmOrderAssignedExpertMessages.map((data) => {
@@ -972,29 +940,17 @@ function ProofReadOrders({
                           "@" +
                           "****" +
                           ".com"}
-                    {!assignment.qc_call ? (
-                      <Button
-                        background={"none"}
-                        _focus={{ outline: "none" }}
-                        _hover={{ background: "none" }}
-                        color={"#dc3545"}
-                        onClick={() =>
-                          _qcCalling(assignment.assignedQC, assignment.id)
-                        }
-                      >
-                        <PhoneIcon />
-                      </Button>
-                    ) : (
-                      <i
-                        class="fa fa-phone-square"
-                        aria-hidden="true"
-                        style={{
-                          fontSize: "1.5rem",
-                          color: "#dc3545",
-                          marginLeft: "1rem",
-                        }}
-                      />
-                    )}
+                    <Button
+                      background={"none"}
+                      _focus={{ outline: "none" }}
+                      _hover={{ background: "none" }}
+                      color={"#dc3545"}
+                      onClick={() =>
+                        _qcCalling(assignment.assignedQC, assignment.id)
+                      }
+                    >
+                      <PhoneIcon />
+                    </Button>
                   </Box>
                 </Td>
                 {/* <Td><Button>Choose Expert</Button></Td> */}
