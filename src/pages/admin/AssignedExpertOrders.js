@@ -672,7 +672,7 @@ function AssignedExpertOrders({
         const response = await axios.post(apiUrl + "/calling", {
           clientNumber: String(client_number),
         });
-        if (response.data.msg === "Call originated successfully!!") {
+        if (response.data.msg === "Call originate succesfully.") {
           window.alert("Call has been initiated");
         } else {
           window.alert("Call has not been initiated due to some reason.");
@@ -688,7 +688,7 @@ function AssignedExpertOrders({
       const response = await axios.post(apiUrl + "/calling", {
         clientNumber: String(expert_number),
       });
-      if (response.data.msg === "Call originated successfully!!") {
+      if (response.data.msg === "Call originate succesfully.") {
         window.alert("Call has been initiated");
       } else {
         window.alert("Call has not been initiated due to some reason.");
