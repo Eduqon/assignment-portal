@@ -65,7 +65,10 @@ function PortalLayout() {
   return (
     <>
       <Box padding={"10px"} position={"relative"}>
-        {loading && (
+
+        {/* Ajay Dholia Changes Spinner is Not Stop After Successfull Login Into that */}
+
+        {/* {loading && (
           <Box
             width={"100%"}
             height={"100vh"}
@@ -80,7 +83,11 @@ function PortalLayout() {
           >
             <Spinner size={"xl"} />
           </Box>
-        )}
+        )} */}
+
+        {/* Ajay Dholia Changes Spinner is Not Stop After Successfull Login Into that */}
+
+
         <Tabs
           position={"absolute"}
           orientation="vertical"

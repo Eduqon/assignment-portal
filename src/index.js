@@ -22,6 +22,7 @@ import Testomonial from "./components/home_components/Testomonial";
 import Review from "./components/home_components/Review";
 import Error from "./pages/Error";
 import { strapiUrl } from "./services/contants";
+import Isverify from "./components/admin_components/Isverify";
 
 const propsData = {
   name: "nadeem",
@@ -42,6 +43,7 @@ ReactDOM.render(
           <ApolloProvider client={client}>
             <Routes>
               <Route exact path="/" element={<Home />} />
+              <Route path="verify/:id" element={<Isverify />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/reviews" element={<Review />} />
               <Route exact path="/samples" element={<Samples />} />
@@ -57,6 +59,7 @@ ReactDOM.render(
               <Route path="admin" element={<AdminLayout />}>
                 <Route path="login" element={<AdminLogin />} />
                 <Route path="portal" element={<PortalLayout />} />
+              
                 <Route
                   path="assignment_details"
                   element={<AssignmentsLayout />}

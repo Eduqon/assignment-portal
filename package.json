@@ -18,6 +18,7 @@
     "graphql": "^16.6.0",
     "jquery": "^3.6.0",
     "lodash": "^4.17.21",
+    "node": "^16.16.0",
     "qs": "^6.11.0",
     "react": "^17.0.2",
     "react-awesome-slider": "^4.1.0",

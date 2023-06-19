@@ -15,6 +15,7 @@ import { UserStore } from "../../services/stores/user_store";
 import validator from "validator";
 import { apiUrl } from "../../services/contants";
 import axios from "axios";
+import { useToast } from '@chakra-ui/react'
 
 export const FormAdminLogin = () => {
   // const [pages, setPages] = useState(0);
@@ -25,12 +26,12 @@ export const FormAdminLogin = () => {
   const setRole = UserStore((state) => state.setRole);
   const setId = UserStore((state) => state.setId);
   const id = UserStore((state) => state.id);
-
+  const toast = useToast()
   let navigate = useNavigate();
 
   async function _submit() {
     let password = document.getElementById("password");
-
+   const localhost = "http://localhost:8080"
     let emailVal = false;
     let passwordVal = false;
 
@@ -58,6 +59,7 @@ export const FormAdminLogin = () => {
         };
         const response = await axios.post(
           apiUrl + "/user/verify",
+          // localhost+"/user/verify",
           {
             _id: id,
             password: password.value,
@@ -76,12 +78,12 @@ export const FormAdminLogin = () => {
             "userCommission",
             response.data.user.userCommission
           );
-          //localStorage.setItem('userChatToken', JSON.stringify(response.data.tokenObj));
           navigate("/admin/portal");
-        } else if (response.status == 203) {
+        } 
+        
+        else if (response.status == 203) {
           localStorage.setItem("userToken", response.data.token);
           userToken = response.data.token;
-
           try {
             let config = {
               headers: { Authorization: `Bearer ${userToken}` },
@@ -105,11 +107,34 @@ export const FormAdminLogin = () => {
               navigate("/admin/portal");
             }
           } catch (error) {
+            // if(error.response.data.message === "You Are Not Verify From Admin "){
+            //   toast({
+            //     title: 'Admin Approval.',
+            //     description: "You Are ot Verify From Admin ",
+            //     status: 'false',
+            //     isClosable: true,
+            //   })
+            // }
+               toast({
+                title: 'Admin Approval.',
+                description: error.response.data.msg,
+                status: 'error',
+                isClosable: true,
+              })
+            console.log(error);
             console.log(JSON.stringify(error.response.data));
           }
         }
-      } catch (err) {
-        console.log(JSON.stringify(err));
+      } 
+      catch (err) {
+        console.log(err,"error of firstCatch");
+        toast({
+          title: 'Error.',
+          description: err.response.data.msg,
+          status: 'error',
+          isClosable: true,
+        })
+        console.log(JSON.stringify(err.response.data));
       }
     }
   }

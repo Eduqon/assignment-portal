@@ -3,13 +3,17 @@ import {
     Flex,
     useColorModeValue,
     Image,
-    Button
+    Button,
+useToast
 } from '@chakra-ui/react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import logo from '../../assets/Logo.png';
 import Examplee from '../../components/sidebar/Sidebar'
 import React , {useState , useEffect} from 'react';
+import {deleteToken} from './LogoutFunction'
 function AdminLayout() {
+
+    const toast = useToast();
     // my adding
     const [userRole, setUserRole] = useState("");
     useEffect(async () => {
@@ -21,11 +25,14 @@ function AdminLayout() {
     let navigate = useNavigate();
 
     function _logout() {
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userRole');
-        localStorage.removeItem('userName');
-        localStorage.removeItem("userToken");
-        navigate("/admin/login");
+        console.log("haa yhi function chal rha h bhai")
+        deleteToken(navigate,toast);
+      
+        // localStorage.removeItem('userEmail');
+        // localStorage.removeItem('userRole');
+        // localStorage.removeItem('userName');
+        // localStorage.removeItem("userToken");
+        // navigate("/admin/login");
     }
     return (
         <>
