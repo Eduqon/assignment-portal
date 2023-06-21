@@ -1,5 +1,6 @@
 
 import axios from "axios";
+import { apiUrl } from "../../services/contants";
 export const deleteToken = async(navigate,toast) =>{
 console.log("hii yha ye b chal rha h ");
 
@@ -9,7 +10,7 @@ console.log("hii yha ye b chal rha h ");
     localStorage.removeItem("userToken");
 
     try {
-        const userData = await axios.put("http://localhost:8080/user/updatebyadmin",{
+        const userData = await axios.put(`${apiUrl}/user/updatebyadmin`,{
             _id:userEmail,
             isAuthentify:false
         })

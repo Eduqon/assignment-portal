@@ -40,6 +40,7 @@ import ClientReworkOrders from "./ClientReworkOrders";
 import { mobTab } from "../../components/sidebar/Sidebar";
 import { ChatIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import Messages from "./Messages";
+import TotalLogin from "./TotalLogin";
 // import Assignmentsmob from '../../components/sidebar/accodian-assignment'
 function PortalLayout() {
   const [userRole, setUserRole] = useState("");
@@ -192,6 +193,9 @@ function PortalLayout() {
                 <Tab>
                   <Heading fontSize={"md"}>Orders</Heading>
                 </Tab>
+                <Tab>
+                  <Heading fontSize={"md"}>All Logins</Heading>
+                </Tab>
               </TabList>
 
               <TabPanels>
@@ -206,6 +210,9 @@ function PortalLayout() {
                 </TabPanel>
                 <TabPanel>
                   <AdminOrders />
+                </TabPanel>
+                <TabPanel >
+                  <TotalLogin/>
                 </TabPanel>
               </TabPanels>
             </>

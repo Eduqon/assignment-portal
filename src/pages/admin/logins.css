@@ -1,0 +1,136 @@
+.totallogindiv{
+    width: 90vw;
+    padding-left: 6%;
+  
+}
+.heading{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background: #DC3545;
+    border: 1px solid #DC3545;
+    border-radius: 10px;
+    height: 6vh;
+    color: white;
+}
+
+.serial{
+    width:20%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 600;
+}
+.serialrow{
+    width:20%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 600;
+}
+.name{
+    width:20%;
+    display:flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 17px;
+    font-weight: 600;
+}
+.tablescroll{
+    max-height: 64vh;
+    overflow-y: auto;
+}
+
+.logoutall{
+    margin-top: 25px;
+    float: right;
+}
+
+.logoutall button{
+    background: #E55563;
+    padding: 9px;
+    width: 10rem;
+    color: white;
+    border-radius: 9px;
+    font-weight: 600;
+}
+.namerow{
+    width:20%;
+    display:flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 17px;
+    font-weight: 600;
+}
+.number{
+    width:20%;
+    display:flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 17px;
+    font-weight: 600;
+}
+.numberrow{
+    width:20%;
+    display:flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 17px;
+    font-weight: 600;
+}
+.role{
+    width:20%;
+    display:flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 17px;
+    font-weight: 600;
+}
+.rolerow{
+    width:20%;
+    display:flex;
+    align-items: center;
+   justify-content: flex-start;
+    font-size: 17px;
+    font-weight: 600;
+}
+.action{
+    width:20%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 600;
+}
+.actionrow{
+    width:20%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 600;
+}
+.tablerow{
+
+        width: 100%;
+        display: flex;
+        align-items: center;
+        border: 1px solid #DC3545;
+        border-radius: 10px;
+        height: 6vh;
+        margin-top: 5px;
+
+    }
+.actionrow span{
+    background: #E55563;
+    width: 39%;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+}
