@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Box, Flex, useColorModeValue, Image, Button } from "@chakra-ui/react";
+import { Box, Flex, useColorModeValue, Image, Button,useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import Examplee from "../../components/sidebar/Sidebar";
 
 function AdminLayout() {
   // my adding
+  const toast = useToast();
   const [userRole, setUserRole] = useState("");
   useEffect(async () => {
     setUserRole(localStorage.getItem("userRole"));
@@ -13,11 +14,12 @@ function AdminLayout() {
   let navigate = useRouter();
 
   function _logout() {
-    localStorage.removeItem("userEmail");
-    localStorage.removeItem("userRole");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("userToken");
-    navigate.replace("/admin/login");
+    deleteToken(navigate,toast)
+    // localStorage.removeItem("userEmail");
+    // localStorage.removeItem("userRole");
+    // localStorage.removeItem("userName");
+    // localStorage.removeItem("userToken");
+    // navigate.replace("/admin/login");
   }
   return (
     <>
