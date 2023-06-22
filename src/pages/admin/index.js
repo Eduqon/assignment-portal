@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Box, Flex, useColorModeValue, Image, Button,useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  useColorModeValue,
+  Image,
+  Button,
+  useToast,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import Examplee from "../../components/sidebar/Sidebar";
+import { deleteToken } from "./LogoutFunc";
 
 function AdminLayout() {
   // my adding
@@ -14,7 +22,7 @@ function AdminLayout() {
   let navigate = useRouter();
 
   function _logout() {
-    deleteToken(navigate,toast)
+    deleteToken(navigate, toast);
     // localStorage.removeItem("userEmail");
     // localStorage.removeItem("userRole");
     // localStorage.removeItem("userName");
