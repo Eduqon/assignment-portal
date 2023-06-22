@@ -1,1 +1,0 @@
-(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[4335],{6788:function(n,_,u){(window.__NEXT_P=window.__NEXT_P||[]).push(["/admin/Assignments",function(){return u(1172)}])}},function(n){n.O(0,[9669,8527,7496,1716,3673,5738,1172,9774,2888,179],(function(){return _=6788,n(n.s=_);var _}));var _=n.O();_N_E=_}]);
