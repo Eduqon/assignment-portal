@@ -9,14 +9,13 @@ import {
   Button,
   Heading,
   useColorModeValue,
-  
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { UserStore } from "../../services/stores/user_store";
 import validator from "validator";
 import { apiUrl } from "../../services/contants";
 import axios from "axios";
-import { useToast } from '@chakra-ui/react'
+import { useToast } from "@chakra-ui/react";
 
 export const FormAdminLogin = () => {
   // const [pages, setPages] = useState(0);
@@ -27,7 +26,7 @@ export const FormAdminLogin = () => {
   const setRole = UserStore((state) => state.setRole);
   const setId = UserStore((state) => state.setId);
   const id = UserStore((state) => state.id);
-const toast = useToast();
+  const toast = useToast();
   let navigate = useRouter();
 
   async function _submit() {
@@ -106,21 +105,21 @@ const toast = useToast();
             }
           } catch (error) {
             toast({
-              title: 'Admin Approval.',
+              title: "Admin Approval.",
               description: error.response.data.msg,
-              status: 'error',
+              status: "error",
               isClosable: true,
-            })
+            });
             console.log(JSON.stringify(error.response.data));
           }
         }
       } catch (err) {
         toast({
-          title: 'Error',
+          title: "Error",
           description: err.response.data.msg,
-          status: 'error',
+          status: "error",
           isClosable: true,
-        })
+        });
         console.log(JSON.stringify(err));
       }
     }
