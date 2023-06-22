@@ -697,7 +697,6 @@ export async function getStaticPaths() {
     query: SERVICES,
   });
   const allServices = serviceData.services.data;
-  console.log({ allServices });
   const paths = allServices.map((path) => ({
     params: { slug: path.attributes.slug },
   }));
