@@ -716,7 +716,6 @@ export async function getStaticProps({ params }) {
   const { data: serviceData } = await client.query({
     query: SERVICES,
   });
-  console.log({ serviceData });
   const { data: faqschemasData } = await client.query({
     query: FAQSCHEMA,
   });
