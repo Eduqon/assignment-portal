@@ -8,6 +8,7 @@ function Isverify() {
   const [isVerified, setIsverified] = useState(false);
   const navigate = useRouter();
   const { email } = navigate.query;
+  console.log({ email });
   const Isverifyfun = async () => {
     const data = await axios.put(apiUrl + "/user/updatebyadmin", {
       _id: email,
