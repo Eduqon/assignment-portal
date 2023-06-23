@@ -11,7 +11,6 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import Examplee from "../../components/sidebar/Sidebar";
 import { apiUrl } from "../../services/contants";
-// import { deleteToken } from "./LogoutFunc";
 
 const deleteToken = async (navigate, toast) => {
   const userEmail = localStorage.getItem("userEmail");
@@ -52,11 +51,6 @@ function AdminLayout() {
 
   function _logout() {
     deleteToken(navigate, toast);
-    // localStorage.removeItem("userEmail");
-    // localStorage.removeItem("userRole");
-    // localStorage.removeItem("userName");
-    // localStorage.removeItem("userToken");
-    // navigate.replace("/admin/login");
   }
   return (
     <>
