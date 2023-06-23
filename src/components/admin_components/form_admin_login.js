@@ -15,7 +15,14 @@ import { UserStore } from "../../services/stores/user_store";
 import validator from "validator";
 import { apiUrl } from "../../services/contants";
 import axios from "axios";
-import { useToast } from '@chakra-ui/react'
+import { useToast } from "@chakra-ui/react";
+
+import ClientJS from "clientjs";
+
+// const client = new ClientJS();
+// const windowClient =  window.ClientJS();
+
+// const fingerPrint = windowClient.getFingerprint();
 
 export const FormAdminLogin = () => {
   // const [pages, setPages] = useState(0);
@@ -26,12 +33,14 @@ export const FormAdminLogin = () => {
   const setRole = UserStore((state) => state.setRole);
   const setId = UserStore((state) => state.setId);
   const id = UserStore((state) => state.id);
-  const toast = useToast()
+  const toast = useToast();
   let navigate = useNavigate();
 
   async function _submit() {
+    console.log({ ClientJS });
+
     let password = document.getElementById("password");
-   const localhost = "http://localhost:8080"
+    const localhost = "http://localhost:8080";
     let emailVal = false;
     let passwordVal = false;
 
@@ -79,9 +88,7 @@ export const FormAdminLogin = () => {
             response.data.user.userCommission
           );
           navigate("/admin/portal");
-        } 
-        
-        else if (response.status == 203) {
+        } else if (response.status == 203) {
           localStorage.setItem("userToken", response.data.token);
           userToken = response.data.token;
           try {
@@ -115,25 +122,24 @@ export const FormAdminLogin = () => {
             //     isClosable: true,
             //   })
             // }
-               toast({
-                title: 'Admin Approval.',
-                description: error.response.data.msg,
-                status: 'error',
-                isClosable: true,
-              })
+            toast({
+              title: "Admin Approval.",
+              description: error.response.data.msg,
+              status: "error",
+              isClosable: true,
+            });
             console.log(error);
             console.log(JSON.stringify(error.response.data));
           }
         }
-      } 
-      catch (err) {
-        console.log(err,"error of firstCatch");
+      } catch (err) {
+        console.log(err, "error of firstCatch");
         toast({
-          title: 'Error.',
+          title: "Error.",
           description: err.response.data.msg,
-          status: 'error',
+          status: "error",
           isClosable: true,
-        })
+        });
         console.log(JSON.stringify(err.response.data));
       }
     }

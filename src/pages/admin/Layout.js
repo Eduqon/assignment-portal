@@ -47,15 +47,16 @@ function AdminLayout() {
     socket.connect();
     socket.on("connect", () => {
       console.log(socket.connected, "socket connected successfully");
-
     });
   }, []);
 
   useEffect(() => {
     if (userEmail)
       socket.on("logout", async (user) => {
-        console.log(user, "userDetail on logout");
-        deleteToken(navigate, toast);
+        if (userEmail == user._id) {
+          console.log(user, "userDetail on logout");
+          deleteToken(navigate, toast);
+        }
       });
   }, [userEmail]);
 

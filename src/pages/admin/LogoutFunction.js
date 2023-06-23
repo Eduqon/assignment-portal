@@ -1,5 +1,6 @@
 import axios from "axios";
 import { apiUrl } from "../../services/contants";
+
 export const deleteToken = async (navigate, toast) => {
   const userEmail = localStorage.getItem("userEmail");
   localStorage.removeItem("userRole");
@@ -25,4 +26,43 @@ export const deleteToken = async (navigate, toast) => {
   }
   localStorage.removeItem("userEmail");
   navigate("/admin/login");
+};
+
+export const logoutUser = async (userEmail, toast) => {
+  try {
+    const userData = await axios.put(`${apiUrl}/user/updatebyadmin`, {
+      _id: userEmail,
+      isAuthentify: false,
+    });
+
+    if (userData) {
+      toast({
+        title: "Logout SuccessFull",
+        description: "Logout",
+        status: "success",
+        isClosable: true,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const logoutAllUser = async ({ users, toast }) => {
+  try {
+    const userData = await axios.put(`${apiUrl}/user/logoutAll`, {
+      users,
+    });
+
+    if (userData) {
+      toast({
+        title: "Logout SuccessFull",
+        description: "Logout",
+        status: "success",
+        isClosable: true,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
