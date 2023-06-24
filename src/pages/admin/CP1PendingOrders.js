@@ -189,7 +189,6 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
                           _calling(
                             assignments[selectedIndex].countryCode,
                             assignments[selectedIndex].contact_no,
-                            assignments[selectedIndex].id,
                             index
                           );
                         }}
@@ -207,7 +206,7 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
     );
   }
 
-  async function _calling(countrycode, client_number, id, callingIndex) {
+  async function _calling(countrycode, client_number, callingIndex) {
     try {
       if (countrycode !== 91) {
         const response = await axios.post(apiUrl + "/calling/international", {
@@ -226,7 +225,9 @@ function CP1PendingOrders({ incrementCounter, decrementCounter }) {
         if (response.data.msg === "Call originate succesfully.") {
           window.alert("Call has been initiated");
         } else {
-          window.alert("Call has not been initiated due to some reason.");
+          window.alert(
+            `Call has not been initiated due to ${response.data.msg}.`
+          );
         }
       }
     } catch (err) {

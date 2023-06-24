@@ -584,7 +584,6 @@ function ExpertAskedOrders({
                           _calling(
                             assignments[selectedIndex].countryCode,
                             assignments[selectedIndex].contact_no,
-                            assignments[selectedIndex].id,
                             index
                           );
                         }}
@@ -602,7 +601,7 @@ function ExpertAskedOrders({
     );
   }
 
-  async function _calling(countrycode, client_number, id, callingIndex) {
+  async function _calling(countrycode, client_number, callingIndex) {
     try {
       if (countrycode !== 91) {
         const response = await axios.post(apiUrl + "/calling/international", {
@@ -621,7 +620,9 @@ function ExpertAskedOrders({
         if (response.data.msg === "Call originate succesfully.") {
           window.alert("Call has been initiated");
         } else {
-          window.alert("Call has not been initiated due to some reason.");
+          window.alert(
+            `Call has not been initiated due to ${response.data.msg}.`
+          );
         }
       }
     } catch (err) {

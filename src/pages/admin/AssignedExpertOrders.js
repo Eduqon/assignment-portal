@@ -638,7 +638,6 @@ function AssignedExpertOrders({
                           _calling(
                             assignments[selectedIndex].countryCode,
                             assignments[selectedIndex].contact_no,
-                            assignments[selectedIndex].id,
                             index
                           );
                         }}
@@ -656,7 +655,7 @@ function AssignedExpertOrders({
     );
   }
 
-  async function _calling(countrycode, client_number, id, callingIndex) {
+  async function _calling(countrycode, client_number, callingIndex) {
     try {
       if (countrycode !== 91) {
         const response = await axios.post(apiUrl + "/calling/international", {
@@ -675,7 +674,9 @@ function AssignedExpertOrders({
         if (response.data.msg === "Call originate succesfully.") {
           window.alert("Call has been initiated");
         } else {
-          window.alert("Call has not been initiated due to some reason.");
+          window.alert(
+            `Call has not been initiated due to ${response.data.msg}.`
+          );
         }
       }
     } catch (err) {
@@ -684,6 +685,9 @@ function AssignedExpertOrders({
   }
 
   async function _expertCalling(assignedExpert, id) {
+    const expert_number = experts.find(
+      (expert) => expert.id === assignedExpert
+    )?.contact_no;
     try {
       const response = await axios.post(apiUrl + "/calling", {
         clientNumber: String(expert_number),
@@ -691,7 +695,9 @@ function AssignedExpertOrders({
       if (response.data.msg === "Call originate succesfully.") {
         window.alert("Call has been initiated");
       } else {
-        window.alert("Call has not been initiated due to some reason.");
+        window.alert(
+          `Call has not been initiated due to ${response.data.msg}.`
+        );
       }
     } catch (err) {
       console.log(err);
@@ -893,26 +899,28 @@ function AssignedExpertOrders({
                     </Button>
                   )}
                 </Td>
-                <Td display={"flex"} alignItems="center">
-                  {localStorage.getItem("userRole") === "Super Admin" ||
-                  localStorage.getItem("userRole") === "Admin"
-                    ? assignment.assignedExpert
-                    : assignment.assignedExpert?.substring(0, 2) +
-                      "****" +
-                      "@" +
-                      "****" +
-                      ".com"}
-                  <Button
-                    background={"none"}
-                    _focus={{ outline: "none" }}
-                    _hover={{ background: "none" }}
-                    color={"#dc3545"}
-                    onClick={() =>
-                      _expertCalling(assignment.assignedExpert, assignment.id)
-                    }
-                  >
-                    <PhoneIcon />
-                  </Button>
+                <Td fontWeight={"semibold"} padding={0}>
+                  <Box display={"flex"} alignItems="center">
+                    {localStorage.getItem("userRole") === "Super Admin" ||
+                    localStorage.getItem("userRole") === "Admin"
+                      ? assignment.assignedExpert
+                      : assignment.assignedExpert?.substring(0, 2) +
+                        "****" +
+                        "@" +
+                        "****" +
+                        ".com"}
+                    <Button
+                      background={"none"}
+                      _focus={{ outline: "none" }}
+                      _hover={{ background: "none" }}
+                      color={"#dc3545"}
+                      onClick={() =>
+                        _expertCalling(assignment.assignedExpert, assignment.id)
+                      }
+                    >
+                      <PhoneIcon />
+                    </Button>
+                  </Box>
                 </Td>
                 <Td
                   color={"red.600"}

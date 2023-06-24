@@ -1172,7 +1172,6 @@ function RawSubmissionOrders({
                           _calling(
                             assignments[selectedIndex].countryCode,
                             assignments[selectedIndex].contact_no,
-                            assignments[selectedIndex].id,
                             index
                           );
                         }}
@@ -1190,7 +1189,7 @@ function RawSubmissionOrders({
     );
   }
 
-  async function _calling(countrycode, client_number, id, callingIndex) {
+  async function _calling(countrycode, client_number, callingIndex) {
     try {
       if (countrycode !== 91) {
         const response = await axios.post(apiUrl + "/calling/international", {
@@ -1209,7 +1208,9 @@ function RawSubmissionOrders({
         if (response.data.msg === "Call originate succesfully.") {
           window.alert("Call has been initiated");
         } else {
-          window.alert("Call has not been initiated due to some reason.");
+          window.alert(
+            `Call has not been initiated due to ${response.data.msg}.`
+          );
         }
       }
     } catch (err) {
@@ -1217,7 +1218,10 @@ function RawSubmissionOrders({
     }
   }
 
-  async function _expertCalling(assignedExpert, id) {
+  async function _expertCalling(assignedExpert) {
+    const expert_number = experts.find(
+      (expert) => expert.id === assignedExpert
+    )?.contact_no;
     try {
       const response = await axios.post(apiUrl + "/calling", {
         clientNumber: String(expert_number),
@@ -1225,14 +1229,17 @@ function RawSubmissionOrders({
       if (response.data.msg === "Call originate succesfully.") {
         window.alert("Call has been initiated");
       } else {
-        window.alert("Call has not been initiated due to some reason.");
+        window.alert(
+          `Call has not been initiated due to ${response.data.msg}.`
+        );
       }
     } catch (err) {
       console.log(err);
     }
   }
 
-  async function _qcCalling(assignedQc, id) {
+  async function _qcCalling(assignedQc) {
+    const qc_number = qcs.find((qc) => qc.id === assignedQc)?.contact_no;
     try {
       if (!qc_number) {
         window.alert("Please use the correct Number !");
@@ -1243,7 +1250,9 @@ function RawSubmissionOrders({
         if (response.data.msg === "Call originate succesfully.") {
           window.alert("Call has been initiated");
         } else {
-          window.alert("Call has not been initiated due to some reason.");
+          window.alert(
+            `Call has not been initiated due to ${response.data.msg}.`
+          );
         }
       }
     } catch (err) {
@@ -1423,10 +1432,7 @@ function RawSubmissionOrders({
                         _hover={{ background: "none" }}
                         color={"#dc3545"}
                         onClick={() =>
-                          _expertCalling(
-                            assignment.assignedExpert,
-                            assignment.id
-                          )
+                          _expertCalling(assignment.assignedExpert)
                         }
                       >
                         <PhoneIcon />
@@ -1449,9 +1455,7 @@ function RawSubmissionOrders({
                           _focus={{ outline: "none" }}
                           _hover={{ background: "none" }}
                           color={"#dc3545"}
-                          onClick={() =>
-                            _qcCalling(assignment.assignedQC, assignment.id)
-                          }
+                          onClick={() => _qcCalling(assignment.assignedQC)}
                         >
                           <PhoneIcon />
                         </Button>

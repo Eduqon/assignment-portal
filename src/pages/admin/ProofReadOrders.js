@@ -579,7 +579,6 @@ function ProofReadOrders({
                           _calling(
                             assignments[selectedIndex].countryCode,
                             assignments[selectedIndex].contact_no,
-                            assignments[selectedIndex].id,
                             index
                           );
                         }}
@@ -597,7 +596,7 @@ function ProofReadOrders({
     );
   }
 
-  async function _calling(countrycode, client_number, id, callingIndex) {
+  async function _calling(countrycode, client_number, callingIndex) {
     try {
       if (countrycode !== 91) {
         const response = await axios.post(apiUrl + "/calling/international", {
@@ -616,7 +615,9 @@ function ProofReadOrders({
         if (response.data.msg === "Call originated successfully!!") {
           window.alert("Call has been initiated");
         } else {
-          window.alert("Call has not been initiated due to some reason.");
+          window.alert(
+            `Call has not been initiated due to ${response.data.msg}.`
+          );
         }
       }
     } catch (err) {
@@ -624,7 +625,8 @@ function ProofReadOrders({
     }
   }
 
-  async function _qcCalling(assignedQc, id) {
+  async function _qcCalling(assignedQc) {
+    const qc_number = qcs.find((qc) => qc.id === assignedQc)?.contact_no;
     try {
       if (!qc_number) {
         window.alert("Please use the correct Number !");
@@ -635,7 +637,9 @@ function ProofReadOrders({
         if (response.data.msg === "Call originate succesfully.") {
           window.alert("Call has been initiated");
         } else {
-          window.alert("Call has not been initiated due to some reason.");
+          window.alert(
+            `Call has not been initiated due to ${response.data.msg}.`
+          );
         }
       }
     } catch (err) {
@@ -945,9 +949,7 @@ function ProofReadOrders({
                       _focus={{ outline: "none" }}
                       _hover={{ background: "none" }}
                       color={"#dc3545"}
-                      onClick={() =>
-                        _qcCalling(assignment.assignedQC, assignment.id)
-                      }
+                      onClick={() => _qcCalling(assignment.assignedQC)}
                     >
                       <PhoneIcon />
                     </Button>
