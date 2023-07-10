@@ -721,15 +721,14 @@ export async function getStaticProps({ params }) {
     query: FAQSCHEMA,
   });
 
-  return data && serviceData && faqschemasData
-    ? {
-        props: {
-          servicesdata: data.services,
-          services: serviceData.services,
-          faqschemas: faqschemasData.faqschemas,
-        },
-      }
-    : {
-        props: {},
-      };
+  return {
+    props:
+      data && serviceData && faqschemasData
+        ? {
+            servicesdata: data.services,
+            services: serviceData.services,
+            faqschemas: faqschemasData.faqschemas,
+          }
+        : {},
+  };
 }

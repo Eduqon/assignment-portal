@@ -653,15 +653,14 @@ export async function getStaticProps({ params }) {
     query: FAQSCHEMA,
   });
 
-  return data && serviceData && faqschemasData
-    ? {
-        props: {
-          blogsdata: data.blogs,
-          services: serviceData.services,
-          faqschemas: faqschemasData.faqschemas,
-        },
-      }
-    : {
-        props: {},
-      };
+  return {
+    props:
+      data && serviceData && faqschemasData
+        ? {
+            blogsdata: data.blogs,
+            services: serviceData.services,
+            faqschemas: faqschemasData.faqschemas,
+          }
+        : {},
+  };
 }
