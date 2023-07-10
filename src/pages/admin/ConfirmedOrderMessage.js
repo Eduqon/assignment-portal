@@ -40,7 +40,7 @@ function ConfirmedOrderMessage({
   const [expertChatData, setExpertChatData] = useState([]);
 
   const operatorMessageCounter = useMemo(() => {
-    if (Object.keys(operatorExpertChat).length !== 0) {
+    if (operatorExpertChat && Object.keys(operatorExpertChat).length !== 0) {
       const lastMessage =
         operatorExpertChat &&
         openModalId &&
