@@ -632,10 +632,12 @@ export async function getStaticPaths() {
   const paths = allBlogs.map((path) => ({
     params: { blog: path.attributes.Slug },
   }));
-  return {
-    paths,
-    fallback: false,
-  };
+  return paths && paths.length !== 0
+    ? {
+        paths,
+        fallback: false,
+      }
+    : {};
 }
 
 export async function getStaticProps({ params }) {
@@ -651,11 +653,15 @@ export async function getStaticProps({ params }) {
     query: FAQSCHEMA,
   });
 
-  return {
-    props: {
-      blogsdata: data.blogs,
-      services: serviceData.services,
-      faqschemas: faqschemasData.faqschemas,
-    },
-  };
+  return data && serviceData && faqschemasData
+    ? {
+        props: {
+          blogsdata: data.blogs,
+          services: serviceData.services,
+          faqschemas: faqschemasData.faqschemas,
+        },
+      }
+    : {
+        props: {},
+      };
 }
