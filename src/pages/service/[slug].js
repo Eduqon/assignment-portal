@@ -697,14 +697,15 @@ export async function getStaticPaths() {
     query: SERVICES,
   });
   const allServices = serviceData && serviceData.services.data;
-  console.log({ allServices });
   const paths = allServices.map((path) => ({
     params: { slug: path.attributes.slug },
   }));
-  return {
-    paths,
-    fallback: false,
-  };
+  return paths && paths.length !== 0
+    ? {
+        paths,
+        fallback: false,
+      }
+    : {};
 }
 
 export async function getStaticProps({ params }) {
@@ -716,16 +717,19 @@ export async function getStaticProps({ params }) {
   const { data: serviceData } = await client.query({
     query: SERVICES,
   });
-  console.log({ serviceData });
   const { data: faqschemasData } = await client.query({
     query: FAQSCHEMA,
   });
 
-  return {
-    props: {
-      servicesdata: data.services,
-      services: serviceData.services,
-      faqschemas: faqschemasData.faqschemas,
-    },
-  };
+  return data && serviceData && faqschemasData
+    ? {
+        props: {
+          servicesdata: data.services,
+          services: serviceData.services,
+          faqschemas: faqschemasData.faqschemas,
+        },
+      }
+    : {
+        props: {},
+      };
 }
