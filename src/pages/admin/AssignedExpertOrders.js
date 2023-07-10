@@ -259,14 +259,6 @@ function AssignedExpertOrders({
   }
 
   async function openReplyMessageModal(data) {
-    try {
-      let userToken = localStorage.getItem("userToken");
-      if (userToken == null) {
-        navigate.replace("/admin/login");
-      }
-    } catch (err) {
-      console.log(err);
-    }
     setMessages(data);
     ReplyMessageModalDis.onOpen();
   }
@@ -388,7 +380,7 @@ function AssignedExpertOrders({
                                   "chat",
                                   messages.chat[messages.chat.length - 1].user +
                                     "_" +
-                                    id +
+                                    "operator_expert_chat" +
                                     "_" +
                                     messages.id
                                 ),
@@ -398,6 +390,9 @@ function AssignedExpertOrders({
                                     time: Date.now(),
                                     type: "MEDIA",
                                     user: id,
+                                    newMessageCount: 0,
+                                    expertMsgCount: 0,
+                                    operatorMsgCount: 0,
                                   }),
                                 }
                               );
@@ -449,7 +444,7 @@ function AssignedExpertOrders({
                                 "chat",
                                 messages.chat[messages.chat.length - 1].user +
                                   "_" +
-                                  id +
+                                  "operator_expert_chat" +
                                   "_" +
                                   messages.id
                               ),
@@ -459,6 +454,9 @@ function AssignedExpertOrders({
                                   time: Date.now(),
                                   type: "TEXT",
                                   user: id,
+                                  newMessageCount: 0,
+                                  expertMsgCount: 0,
+                                  operatorMsgCount: 0,
                                 }),
                               }
                             );
@@ -515,9 +513,12 @@ function AssignedExpertOrders({
       if (operatorExpertChat[_assignmentId]) {
         const newChat = operatorExpertChat[_assignmentId].slice();
         const lastMsg = newChat.pop();
-        let userEmail = localStorage.getItem("userEmail");
         const message = await updateDoc(
-          doc(db, "chat", lastMsg.user + "_" + userEmail + "_" + _assignmentId),
+          doc(
+            db,
+            "chat",
+            lastMsg.user + "_" + "operator_expert_chat" + "_" + _assignmentId
+          ),
           {
             conversation: [...newChat, { ...lastMsg, newMessageCount: 0 }],
           }

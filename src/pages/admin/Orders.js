@@ -177,7 +177,7 @@ function AdminOrders() {
         });
       }
     })();
-  }, [messageData]);
+  }, [messageData, confirmedOrders, inProcessOrders]);
 
   useEffect(() => {
     (async () => {
@@ -198,9 +198,9 @@ function AdminOrders() {
   }
 
   async function _fetchConfirmedOperatorExpertChat(expertEmail, assignment_id) {
-    let userEmail = localStorage.getItem("userEmail");
     try {
-      const chatName = expertEmail + "_" + userEmail + "_" + assignment_id;
+      const chatName =
+        expertEmail + "_" + "operator_expert_chat" + "_" + assignment_id;
 
       const chatDoc = await getDoc(doc(db, "chat", chatName));
 
@@ -221,9 +221,9 @@ function AdminOrders() {
   }
 
   async function _fetchProcessOperatorExpertChat(expertEmail, assignment_id) {
-    let userEmail = localStorage.getItem("userEmail");
     try {
-      const chatName = expertEmail + "_" + userEmail + "_" + assignment_id;
+      const chatName =
+        expertEmail + "_" + "InProcess_order_chat" + "_" + assignment_id;
       const chatDoc = await getDoc(doc(db, "chat", chatName));
       if (!chatDoc.exists()) {
         await setDoc(doc(db, "chat", chatName), {
@@ -758,7 +758,8 @@ function AdminOrders() {
                   }}
                   onClick={async () => openNotificationModal("Fresh Order")}
                 >
-                  {notificationCounter["Fresh Order"]}
+                  {notificationCounter["Fresh Order"] !== 0 &&
+                    notificationCounter["Fresh Order"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>CP1 Pending</Heading>
@@ -778,7 +779,8 @@ function AdminOrders() {
                   }}
                   onClick={async () => openNotificationModal("CP1 Pending")}
                 >
-                  {notificationCounter["CP1 Pending"]}
+                  {notificationCounter["CP1 Pending"] !== 0 &&
+                    notificationCounter["CP1 Pending"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>CP1 Done</Heading>
@@ -798,7 +800,8 @@ function AdminOrders() {
                   }}
                   onClick={async () => openNotificationModal("CP1 Done")}
                 >
-                  {notificationCounter["CP1 Done"]}
+                  {notificationCounter["CP1 Done"] !== 0 &&
+                    notificationCounter["CP1 Done"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Confirmation Asked</Heading>
@@ -818,7 +821,8 @@ function AdminOrders() {
                   }}
                   onClick={async () => openNotificationModal("Expert Asked")}
                 >
-                  {notificationCounter["Expert Asked"]}
+                  {notificationCounter["Expert Asked"] !== 0 &&
+                    notificationCounter["Expert Asked"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Assigned Expert</Heading>
@@ -838,7 +842,8 @@ function AdminOrders() {
                   }}
                   onClick={async () => openNotificationModal("Expert Assigned")}
                 >
-                  {notificationCounter["Expert Assigned"]}
+                  {notificationCounter["Expert Assigned"] !== 0 &&
+                    notificationCounter["Expert Assigned"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Raw Submission</Heading>
@@ -858,7 +863,8 @@ function AdminOrders() {
                   }}
                   onClick={async () => openNotificationModal("Raw Submission")}
                 >
-                  {notificationCounter["Raw Submission"]}
+                  {notificationCounter["Raw Submission"] !== 0 &&
+                    notificationCounter["Raw Submission"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Proof Read</Heading>
@@ -878,7 +884,8 @@ function AdminOrders() {
                   }}
                   onClick={async () => openNotificationModal("Proof Read")}
                 >
-                  {notificationCounter["Proof Read"]}
+                  {notificationCounter["Proof Read"] !== 0 &&
+                    notificationCounter["Proof Read"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>CP2 Done</Heading>
@@ -898,7 +905,8 @@ function AdminOrders() {
                   }}
                   onClick={async () => openNotificationModal("CP2 Done")}
                 >
-                  {notificationCounter["CP2 Done"]}
+                  {notificationCounter["CP2 Done"] !== 0 &&
+                    notificationCounter["CP2 Done"]}
                 </div>
               </TabList>
 

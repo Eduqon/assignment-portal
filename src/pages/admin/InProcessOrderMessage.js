@@ -38,6 +38,7 @@ function InProcessOrderMessage({
   const [token, setToken] = useState("");
   const [openModalId, setOpenModalId] = useState(null);
   const { onOpen, onClose } = useDisclosure();
+  const [expertChatData, setExpertChatData] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -71,25 +72,30 @@ function InProcessOrderMessage({
     } catch (err) {
       console.log(err);
     }
-
+    setExpertChatData(expertData);
     setOpenModalId(id);
   }
 
-  function MessageModal({ assignment, assignmentID, openModalId }) {
+  function MessageModal({ expertChatData, openModalId }) {
     const MessageModalDis = useDisclosure();
 
     useEffect(() => {
-      if (assignmentID === openModalId) {
+      if (openModalId) {
         MessageModalDis.onOpen();
       } else {
         MessageModalDis.onClose();
       }
-    }, [assignmentID, openModalId]);
+    }, [openModalId]);
+
+    const handleCloseModal = () => {
+      setOpenModalId(null);
+      MessageModalDis.onClose();
+    };
 
     return (
       <Modal
         size={"lg"}
-        onClose={MessageModalDis.onClose}
+        onClose={handleCloseModal}
         isOpen={MessageModalDis.isOpen}
         onOpen={MessageModalDis.onOpen}
         isCentered
@@ -121,8 +127,8 @@ function InProcessOrderMessage({
                   alignItems={"start"}
                   width={"100%"}
                 >
-                  {operatorExpertChat[assignmentID] &&
-                    operatorExpertChat[assignmentID].map((msg, index) => {
+                  {operatorExpertChat[openModalId] &&
+                    operatorExpertChat[openModalId].map((msg, index) => {
                       return (
                         <Box
                           display={
@@ -199,12 +205,13 @@ function InProcessOrderMessage({
                                 doc(
                                   db,
                                   "chat",
-                                  assignment.chat[assignment.chat.length - 1]
-                                    .user +
+                                  expertChatData.expertChat[
+                                    expertChatData.expertChat.length - 1
+                                  ].user +
                                     "_" +
-                                    id +
+                                    "InProcess_order_chat" +
                                     "_" +
-                                    assignment.id
+                                    openModalId.split("_")[0]
                                 ),
                                 {
                                   conversation: arrayUnion({
@@ -212,6 +219,8 @@ function InProcessOrderMessage({
                                     time: Date.now(),
                                     type: "MEDIA",
                                     user: id,
+                                    expertMsgCount: 0,
+                                    newMessageCount: 0,
                                   }),
                                 }
                               );
@@ -261,12 +270,13 @@ function InProcessOrderMessage({
                               doc(
                                 db,
                                 "chat",
-                                assignment.chat[assignment.chat.length - 1]
-                                  .user +
+                                expertChatData.expertChat[
+                                  expertChatData.expertChat.length - 1
+                                ].user +
                                   "_" +
-                                  id +
+                                  "InProcess_order_chat" +
                                   "_" +
-                                  assignmentID.split("_")[0]
+                                  openModalId.split("_")[0]
                               ),
                               {
                                 conversation: arrayUnion({
@@ -274,6 +284,8 @@ function InProcessOrderMessage({
                                   time: Date.now(),
                                   type: "TEXT",
                                   user: id,
+                                  expertMsgCount: 0,
+                                  newMessageCount: 0,
                                 }),
                               }
                             );
@@ -284,8 +296,11 @@ function InProcessOrderMessage({
                               const response = await axios.post(
                                 apiUrl + "/messages",
                                 {
-                                  id: assignmentID,
-                                  expertEmail: assignment.assignedExpert,
+                                  id: openModalId.split("_")[0],
+                                  expertEmail:
+                                    expertChatData.expertChat[
+                                      expertChatData.expertChat.length - 1
+                                    ].user,
                                 },
                                 config
                               );
@@ -329,12 +344,15 @@ function InProcessOrderMessage({
       if (operatorExpertChat[_assignmentId]) {
         const newChat = operatorExpertChat[_assignmentId].slice();
         const lastMsg = newChat.pop();
-        let userEmail = localStorage.getItem("userEmail");
         const message = await updateDoc(
           doc(
             db,
             "chat",
-            lastMsg.user + "_" + userEmail + "_" + _assignmentId.split("_")[0]
+            lastMsg.user +
+              "_" +
+              "InProcess_order_chat" +
+              "_" +
+              _assignmentId.split("_")[0]
           ),
           {
             conversation: [...newChat, { ...lastMsg, newMessageCount: 0 }],
@@ -348,16 +366,12 @@ function InProcessOrderMessage({
 
   return (
     <>
-      {assignedExpertMessages &&
-        assignedExpertMessages.map((data) => {
-          return (
-            <MessageModal
-              assignment={data}
-              assignmentID={data.id}
-              openModalId={openModalId}
-            />
-          );
-        })}
+      {openModalId && (
+        <MessageModal
+          expertChatData={expertChatData}
+          openModalId={openModalId}
+        />
+      )}
       <Box
         display={"block"}
         borderWidth="1px"

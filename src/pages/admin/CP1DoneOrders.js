@@ -571,8 +571,7 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                               };
 
                               try {
-                                let assignment_response =
-                                  await updateAssignment(JSON.stringify(data));
+                                await updateAssignment(JSON.stringify(data));
                                 const response = await axios.post(
                                   apiUrl + "/expert/quote/askCharges",
                                   {
@@ -616,8 +615,7 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                                     [assignments[selectedIndex].id]: [iso],
                                   },
                                 };
-                                let assignment_response =
-                                  await updateAssignment(JSON.stringify(data));
+                                await updateAssignment(JSON.stringify(data));
                                 const response = await axios.post(
                                   apiUrl + "/expert/assignment/ask",
                                   {
@@ -638,7 +636,7 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                                   },
                                   config
                                 );
-                                if (response.success) {
+                                if (response.data.success) {
                                   incrementCounter("Expert Asked");
                                   decrementCounter("CP1 Done");
                                 }

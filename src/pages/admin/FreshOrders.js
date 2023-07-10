@@ -602,6 +602,8 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                       if (resdata.success) {
                         await _fetchAssignments();
                         window.alert("Quote Generated");
+                        incrementCounter("CP1 Pending");
+                        decrementCounter("Fresh Order");
                         ExpertQuoteGenerateModalDis.onClose();
                       }
                     } else {

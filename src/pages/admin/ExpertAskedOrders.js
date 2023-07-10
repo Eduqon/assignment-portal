@@ -53,19 +53,18 @@ function ExpertAskedOrders({
   incrementCounter,
 }) {
   const [assignments, setAssignments] = useState([]);
-
   const [selectedIndex, setSelectedIndex] = useState();
   const [openModalId, setOpenModalId] = useState(null);
   const [id, setId] = useState("");
   const [token, setToken] = useState("");
-  const [loader, setLoader] = useState(true);
   const inputFileOperatorExpert = useRef(null);
+  const [userID, setUserID] = useState("");
+
   const { onOpen, onClose } = useDisclosure();
   let inProcessOrderDataMessageCount;
 
   const MessagesModalDis = useDisclosure();
   const ReplyMessageModalDis = useDisclosure();
-  const [userID, setUserID] = useState("");
   const CallingModalDis = useDisclosure();
 
   let assignmentList = [];
@@ -283,7 +282,7 @@ function ExpertAskedOrders({
                                   "chat",
                                   openModalId.split("_")[1] +
                                     "_" +
-                                    id +
+                                    "InProcess_order_chat" +
                                     "_" +
                                     openModalId.split("_")[0]
                                 ),
@@ -293,6 +292,9 @@ function ExpertAskedOrders({
                                     time: Date.now(),
                                     type: "MEDIA",
                                     user: id,
+                                    newMessageCount: 0,
+                                    expertMsgCount: 0,
+                                    operatorMsgCount: 0,
                                   }),
                                 }
                               );
@@ -344,7 +346,7 @@ function ExpertAskedOrders({
                                 "chat",
                                 openModalId.split("_")[1] +
                                   "_" +
-                                  id +
+                                  "InProcess_order_chat" +
                                   "_" +
                                   openModalId.split("_")[0]
                               ),
@@ -354,6 +356,9 @@ function ExpertAskedOrders({
                                   time: Date.now(),
                                   type: "TEXT",
                                   user: id,
+                                  newMessageCount: 0,
+                                  expertMsgCount: 0,
+                                  operatorMsgCount: 0,
                                 }),
                               }
                             );
@@ -396,26 +401,18 @@ function ExpertAskedOrders({
     const _assignmentId = id + "_" + expertEmail;
 
     try {
-      let userToken = localStorage.getItem("userToken");
-      if (userToken == null) {
-        navigate.replace("/admin/login");
-      }
-
-      let config = {
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      };
-
       if (operatorExpertChat[_assignmentId]) {
         const newChat = operatorExpertChat[_assignmentId].slice();
         const lastMsg = newChat.pop();
-        let userEmail = localStorage.getItem("userEmail");
         const message = await updateDoc(
           doc(
             db,
             "chat",
-            lastMsg.user + "_" + userEmail + "_" + _assignmentId.split("_")[0]
+            lastMsg.user +
+              "_" +
+              "InProcess_order_chat" +
+              "_" +
+              _assignmentId.split("_")[0]
           ),
           {
             conversation: [...newChat, { ...lastMsg, newMessageCount: 0 }],
@@ -428,23 +425,20 @@ function ExpertAskedOrders({
   }
 
   async function openMessageModal(index) {
-    setSelectedIndex(index);
+    await setSelectedIndex(index);
     MessagesModalDis.onOpen();
   }
 
   function MessageModal() {
-    let message;
-    if (
-      assignments &&
-      assignments.length !== 0 &&
+    const message =
       inProcessOrderData &&
       inProcessOrderData.length !== 0 &&
-      selectedIndex
-    ) {
-      message = inProcessOrderData.filter((data) => {
-        return assignments[selectedIndex].id === data.id;
+      inProcessOrderData.filter((data) => {
+        return (
+          assignments[selectedIndex] &&
+          assignments[selectedIndex].id === data.id
+        );
       });
-    }
 
     return (
       <Modal
@@ -460,7 +454,9 @@ function ExpertAskedOrders({
           <hr />
           <ModalCloseButton />
           <ModalBody>
-            <Heading size={"lg"}>{message && message[0].id}</Heading>
+            <Heading size={"lg"}>
+              {message && message.length !== 0 && message[0].id}
+            </Heading>
             <hr />
             <Table variant="simple" size="sm">
               <Thead bgColor={"gray.200"}>
@@ -472,11 +468,13 @@ function ExpertAskedOrders({
               </Thead>
               <Tbody>
                 {message &&
+                message.length !== 0 &&
                 message[0].experts &&
                 message[0].experts.length === 0 ? (
                   <></>
                 ) : (
                   message &&
+                  message.length !== 0 &&
                   message[0].experts &&
                   message[0].experts.map((msg, index) => (
                     <Tr key={msg.time}>

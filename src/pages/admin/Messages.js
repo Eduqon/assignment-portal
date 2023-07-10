@@ -42,6 +42,84 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
     _fetchInProcessOrders();
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      if (confirmedMessageData && confirmedMessageData.length !== 0) {
+        confirmedMessageData.map(async (msg) => {
+          await _fetchConfirmedOperatorExpertChat(msg.expertEmail, msg._id);
+        });
+      }
+      if (inProcessMessageData && inProcessMessageData.length !== 0) {
+        inProcessMessageData.map(async (msg) => {
+          const emails = msg.allExperts || [msg.expertEmail];
+          await Promise.all(
+            emails.map((email) =>
+              _fetchProcessOperatorExpertChat(email, msg._id)
+            )
+          );
+        });
+      }
+    })();
+  }, [messageData, confirmedOrders, inProcessOrders]);
+
+  useEffect(() => {
+    (async () => {
+      await _fetchInProcessOrdersData();
+    })();
+  }, [processOperatorExpertChat]);
+
+  useEffect(() => {
+    if (
+      Object.keys(confirmedOperatorExpertChat).length !== 0 ||
+      Object.keys(processOperatorExpertChat).length !== 0
+    ) {
+      const confirmOrderAssignedExpertChat =
+        confirmOrderAssignedExpertMessages &&
+        confirmOrderAssignedExpertMessages.filter(
+          (data) => data.chat.length !== 0
+        );
+      const processOrderAssignedExpertChat =
+        inProcessOrderAssignedExpertMessages &&
+        inProcessOrderAssignedExpertMessages.filter(
+          (data) => data.chat.length !== 0
+        );
+      let totalMessageCount =
+        (confirmOrderAssignedExpertChat || processOrderAssignedExpertChat) &&
+        (confirmOrderAssignedExpertChat || [])
+          .concat(processOrderAssignedExpertChat || [])
+          .filter((data) => data && data.chat)
+          .reduce((acc, val) => {
+            if (val && val.chat.length !== 0) {
+              return (
+                acc +
+                val.chat[val.chat.length - 1].newMessageCount +
+                val.chat[val.chat.length - 1].expertMsgCount
+              );
+            } else {
+              return acc;
+            }
+          }, 0);
+      setMessageCount(totalMessageCount);
+      setSpinnerLoading(false);
+    } else {
+      setSpinnerLoading(false);
+    }
+  }, [confirmedOperatorExpertChat, processOperatorExpertChat]);
+
+  async function _fetchMessages() {
+    try {
+      const response = await axios.get(apiUrl + "/messages");
+      let data = await response.data;
+      if (data.success) {
+        data.result.length !== 0
+          ? setMessageData(data.result)
+          : setLoading(false);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async function _fetchConfirmedOrders() {
     try {
       let clientToken = localStorage.getItem("userToken");
@@ -107,50 +185,10 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
     }
   }
 
-  useEffect(() => {
-    (async () => {
-      if (confirmedMessageData && confirmedMessageData.length !== 0) {
-        confirmedMessageData.map(async (msg) => {
-          await _fetchConfirmedOperatorExpertChat(msg.expertEmail, msg._id);
-        });
-      }
-      if (inProcessMessageData && inProcessMessageData.length !== 0) {
-        inProcessMessageData.map(async (msg) => {
-          const emails = msg.allExperts || [msg.expertEmail];
-          await Promise.all(
-            emails.map((email) =>
-              _fetchProcessOperatorExpertChat(email, msg._id)
-            )
-          );
-        });
-      }
-    })();
-  }, [messageData, confirmedOrders, inProcessOrders]);
-
-  useEffect(() => {
-    (async () => {
-      await _fetchInProcessOrdersData();
-    })();
-  }, [processOperatorExpertChat]);
-
-  async function _fetchMessages() {
-    try {
-      const response = await axios.get(apiUrl + "/messages");
-      let data = await response.data;
-      if (data.success) {
-        data.result.length !== 0
-          ? setMessageData(data.result)
-          : setLoading(false);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
   async function _fetchConfirmedOperatorExpertChat(expertEmail, assignment_id) {
-    let userEmail = localStorage.getItem("userEmail");
     try {
-      const chatName = expertEmail + "_" + userEmail + "_" + assignment_id;
+      const chatName =
+        expertEmail + "_" + "operator_expert_chat" + "_" + assignment_id;
 
       const chatDoc = await getDoc(doc(db, "chat", chatName));
 
@@ -173,9 +211,9 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
   }
 
   async function _fetchProcessOperatorExpertChat(expertEmail, assignment_id) {
-    let userEmail = localStorage.getItem("userEmail");
     try {
-      const chatName = expertEmail + "_" + userEmail + "_" + assignment_id;
+      const chatName =
+        expertEmail + "_" + "InProcess_order_chat" + "_" + assignment_id;
       const chatDoc = await getDoc(doc(db, "chat", chatName));
 
       if (!chatDoc.exists()) {
@@ -254,8 +292,7 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
   }
 
   if (
-    confirmedOrders.length !== 0 &&
-    inProcessOrders.length !== 0 &&
+    (confirmedOrders.length !== 0 || inProcessOrders.length !== 0) &&
     messageData.length !== 0
   ) {
     confirmedMessageData = messageData.filter((data) => {
@@ -265,25 +302,31 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
       return inProcessOrders.some((val) => val._id === data._id);
     });
   }
-
   if (Object.keys(confirmedOperatorExpertChat).length !== 0) {
     confirmOrderAssignedExpertMessages = Object.keys(
       confirmedOperatorExpertChat
-    ).map((key) => {
-      const data = confirmedOperatorExpertChat[key];
-      const values = data.filter((f) => {
-        return confirmedMessageData.some((val) => val.expertEmail === f.user);
-      });
-      const date =
-        values.length !== 0 &&
-        new Date(values[values.length - 1].time).toLocaleDateString("en-US");
+    )
+      .map((key) => {
+        const data = confirmedOperatorExpertChat[key];
+        const values =
+          data.length !== 0 &&
+          data.filter((f) => {
+            return confirmedMessageData.some(
+              (val) => val.expertEmail === f.user
+            );
+          });
+        const date =
+          data.length !== 0 &&
+          values.length !== 0 &&
+          new Date(values[values.length - 1].time).toLocaleDateString("en-US");
 
-      return {
-        id: key,
-        chat: values,
-        date: date,
-      };
-    });
+        return {
+          id: key,
+          chat: values,
+          date: date,
+        };
+      })
+      .filter((data) => data && data.chat);
   }
 
   if (Object.keys(processOperatorExpertChat).length !== 0) {
@@ -302,57 +345,6 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
     });
   }
 
-  if (
-    Object.keys(confirmedOperatorExpertChat).length !== 0 &&
-    Object.keys(processOperatorExpertChat).length !== 0
-  ) {
-    const confirmOrderAssignedExpertChat =
-      confirmOrderAssignedExpertMessages.filter(
-        (data) => data.chat.length !== 0
-      );
-    const processOrderAssignedExpertChat =
-      inProcessOrderAssignedExpertMessages.filter(
-        (data) => data.chat.length !== 0
-      );
-    let totalMessageCount = confirmOrderAssignedExpertChat
-      .concat(processOrderAssignedExpertChat)
-      .reduce((acc, val) => {
-        if (val && val.chat.length !== 0) {
-          return acc + val.chat[val.chat.length - 1].newMessageCount;
-        } else {
-          return acc;
-        }
-      }, 0);
-  }
-
-  useEffect(() => {
-    if (
-      Object.keys(confirmedOperatorExpertChat).length !== 0 &&
-      Object.keys(processOperatorExpertChat).length !== 0
-    ) {
-      const confirmOrderAssignedExpertChat =
-        confirmOrderAssignedExpertMessages.filter(
-          (data) => data.chat.length !== 0
-        );
-      const processOrderAssignedExpertChat =
-        inProcessOrderAssignedExpertMessages.filter(
-          (data) => data.chat.length !== 0
-        );
-      let totalMessageCount = confirmOrderAssignedExpertChat
-        .concat(processOrderAssignedExpertChat)
-        .reduce((acc, val) => {
-          if (val && val.chat.length !== 0) {
-            return acc + val.chat[val.chat.length - 1].newMessageCount;
-          } else {
-            return acc;
-          }
-        }, 0);
-      setMessageCount(totalMessageCount);
-      setSpinnerLoading(false);
-    } else {
-      setSpinnerLoading(false);
-    }
-  }, [confirmedOperatorExpertChat, processOperatorExpertChat]);
   return (
     <>
       <Box padding={0}>

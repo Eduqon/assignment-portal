@@ -510,7 +510,8 @@ function AssignmentDetails() {
   async function _fetchOperatorExpertChat(expertEmail, assignment_id) {
     let userEmail = localStorage.getItem("userEmail");
     try {
-      const chatName = expertEmail + "_" + userEmail + "_" + assignment_id;
+      const chatName =
+        expertEmail + "_" + "operator_expert_chat" + "_" + assignment_id;
       const chatDoc = await getDoc(doc(db, "chat", chatName));
       if (!chatDoc.exists()) {
         await setDoc(doc(db, "chat", chatName), {
@@ -1288,42 +1289,63 @@ function AssignmentDetails() {
             >
               <VStack overflowY={"scroll"} alignItems={"start"} width={"100%"}>
                 {operatorExpertChat.map((messageItem, index) => (
-                  <Box
-                    display={
-                      messageItem.type === "TEXT"
-                        ? "flex"
-                        : messageItem.type === "MEDIA"
-                        ? "flex"
-                        : "none"
-                    }
-                    alignSelf={
-                      messageItem.user === id ? "flex-end" : "flex-start"
-                    }
-                    flexWrap={true}
-                    padding={2}
-                    borderRadius={"md"}
-                    maxWidth="70%"
-                    bgColor={messageItem.user === id ? "blue.100" : "green.100"}
-                    key={index}
-                  >
-                    <VStack maxWidth="100%" overflowWrap={"break-word"}>
+                  <>
+                    {messageItem.user === id && (
                       <Text
                         display={messageItem.type === "TEXT" ? "flex" : "none"}
+                        alignSelf={
+                          messageItem.user === id ? "flex-end" : "flex-start"
+                        }
                         maxWidth={"100%"}
+                        color={"gray.500"}
+                        fontSize={"sm"}
                       >
-                        {messageItem.msg}
+                        {id}
                       </Text>
-                      <Link
-                        color={"blue"}
-                        fontWeight={"bold"}
-                        display={messageItem.type === "MEDIA" ? "flex" : "none"}
-                        maxWidth={"100%"}
-                        href={messageItem.msg}
-                      >
-                        {messageItem.msg && messageItem.msg.substring(62)}
-                      </Link>
-                    </VStack>
-                  </Box>
+                    )}
+                    <Box
+                      display={
+                        messageItem.type === "TEXT"
+                          ? "flex"
+                          : messageItem.type === "MEDIA"
+                          ? "flex"
+                          : "none"
+                      }
+                      alignSelf={
+                        messageItem.user === id ? "flex-end" : "flex-start"
+                      }
+                      flexWrap={true}
+                      padding={2}
+                      borderRadius={"md"}
+                      maxWidth="70%"
+                      bgColor={
+                        messageItem.user === id ? "blue.100" : "green.100"
+                      }
+                      key={index}
+                    >
+                      <VStack maxWidth="100%" overflowWrap={"break-word"}>
+                        <Text
+                          display={
+                            messageItem.type === "TEXT" ? "flex" : "none"
+                          }
+                          maxWidth={"100%"}
+                        >
+                          {messageItem.msg}
+                        </Text>
+                        <Link
+                          color={"blue"}
+                          fontWeight={"bold"}
+                          display={
+                            messageItem.type === "MEDIA" ? "flex" : "none"
+                          }
+                          maxWidth={"100%"}
+                          href={messageItem.msg}
+                        >
+                          {messageItem.msg && messageItem.msg.substring(62)}
+                        </Link>
+                      </VStack>
+                    </Box>
+                  </>
                 ))}
               </VStack>
               <InputGroup>
@@ -1419,25 +1441,6 @@ function AssignmentDetails() {
                             "Sharing Phone Numbers through Chat is not allowed"
                           );
                         } else {
-                          const message = await updateDoc(
-                            doc(
-                              db,
-                              "chat",
-                              assignment.assignedExpert +
-                                "_" +
-                                id +
-                                "_" +
-                                assignment.id
-                            ),
-                            {
-                              conversation: arrayUnion({
-                                msg: textInput.value,
-                                time: Date.now(),
-                                type: "TEXT",
-                                user: id,
-                              }),
-                            }
-                          );
                           let config = {
                             headers: {
                               Authorization: `Bearer ${userToken}`,
@@ -1445,16 +1448,35 @@ function AssignmentDetails() {
                           };
                           try {
                             const response = await axios.post(
-                              apiUrl + "/messages",
+                              apiUrl + "/assignment/messages",
                               {
-                                id: assignment.id,
-                                expertEmail: assignment.assignedExpert,
+                                _id: assignment.id,
+                                message: textInput.value,
                               },
                               config
                             );
                             let resdata = response.data;
                             if (resdata.success) {
-                              // window.alert("Message sent to Expert");
+                              const message = await updateDoc(
+                                doc(
+                                  db,
+                                  "chat",
+                                  assignment.assignedExpert +
+                                    "_" +
+                                    "operator_expert_chat" +
+                                    "_" +
+                                    assignment.id
+                                ),
+                                {
+                                  conversation: arrayUnion({
+                                    msg: textInput.value,
+                                    time: Date.now(),
+                                    type: "TEXT",
+                                    user: id,
+                                  }),
+                                }
+                              );
+                              window.alert("Message sent to Expert");
                             }
                           } catch (err) {
                             console.log(err);
