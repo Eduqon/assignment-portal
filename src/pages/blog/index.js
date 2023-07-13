@@ -168,10 +168,13 @@ export async function getStaticProps() {
     query: SEOTAGS,
   });
   return {
-    props: {
-      services: serviceData.services,
-      seotags: data.seotags,
-      blogs: blogData.blogs,
-    },
+    props:
+      data && serviceData && blogData
+        ? {
+            services: serviceData.services,
+            seotags: data.seotags,
+            blogs: blogData.blogs,
+          }
+        : {},
   };
 }
