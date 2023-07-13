@@ -388,6 +388,14 @@ input:focus {
   margin-top: 6%;
 }
 
+.privacyPolicy {
+  color: var(--red);
+  font-size: 27px;
+  font-weight: bolder;
+  text-align: center;
+  margin-top: 1%;
+}
+
 .headings1 {
   color: var(--red);
   font-size: 27px;
@@ -1177,9 +1185,13 @@ button.set-icon-design {
 .contact_details {
   box-shadow: 1px 1px 10px #8080807a;
   padding: 20px 40px;
+  font-size: 18px;
+  font-weight: 500;
+}
 
+.privacy_details {
   box-shadow: 1px 1px 10px #8080807a;
-  padding: 20px 40px;
+  padding: 20px;
   font-size: 18px;
   font-weight: 500;
 }
@@ -1203,6 +1215,11 @@ button.set-icon-design {
 
 .headings.set- {
   margin-bottom: 10%;
+  font-size: 36px;
+}
+
+.privacyPolicy.set- {
+  margin-bottom: 2%;
   font-size: 36px;
 }
 

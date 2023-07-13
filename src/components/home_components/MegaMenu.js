@@ -132,6 +132,11 @@ export default function MegaMenu({ services }) {
                   <a className="nav-link">Blog</a>
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link href="/privacy-policy">
+                  <a className="nav-link">Privacy Policy</a>
+                </Link>
+              </li>
             </ul>
           </div>
         ) : (
@@ -179,6 +184,11 @@ export default function MegaMenu({ services }) {
               <li className="nav-item">
                 <Link href="/blog">
                   <a className="nav-link">Blog</a>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link href="/privacy-policy">
+                  <a className="nav-link">Privacy Policy</a>
                 </Link>
               </li>
             </ul>
