@@ -3,13 +3,18 @@ import { apiUrl } from "../../services/contants";
 
 export const deleteToken = async (navigate, toast) => {
   const userEmail = localStorage.getItem("userEmail");
-  localStorage.removeItem("userRole");
+  // localStorage.removeItem("userRole");
   localStorage.removeItem("userName");
-  localStorage.removeItem("userToken");
+  // localStorage.removeItem("userToken");
 
   try {
-    const userData = await axios.put(`${apiUrl}/user/updatebyadmin`, {
+    let assignmentSantaBrowserToken = localStorage.getItem(
+      "assignmentSantaBrowserToken"
+    );
+
+    const userData = await axios.put(`${apiUrl}/user/logout`, {
       _id: userEmail,
+      browserId: assignmentSantaBrowserToken,
       isAuthentify: false,
     });
 
@@ -28,12 +33,28 @@ export const deleteToken = async (navigate, toast) => {
   navigate("/admin/login");
 };
 
-export const logoutUser = async (userEmail, toast) => {
+export const logoutUser = async ({ res, toast, setRefresh }) => {
   try {
-    const userData = await axios.put(`${apiUrl}/user/updatebyadmin`, {
-      _id: userEmail,
-      isAuthentify: false,
+    let userToken = localStorage.getItem("userToken");
+    let config = {
+      headers: { Authorization: `Bearer ${userToken}` },
+    };
+
+    console.log({
+      res,
     });
+
+    const userData = await axios.put(
+      `${apiUrl}/user/updatebyadmin`,
+      {
+        _id: res.email,
+        browserId: res.browserId,
+        isAuthentify: false,
+      },
+      config
+    );
+
+    setRefresh(true);
 
     if (userData) {
       toast({
@@ -48,7 +69,7 @@ export const logoutUser = async (userEmail, toast) => {
   }
 };
 
-export const logoutAllUser = async ({ users, toast }) => {
+export const logoutAllUser = async ({ users, toast, setRefresh }) => {
   try {
     const userData = await axios.put(`${apiUrl}/user/logoutAll`, {
       users,
@@ -61,6 +82,8 @@ export const logoutAllUser = async ({ users, toast }) => {
         status: "success",
         isClosable: true,
       });
+
+      setRefresh(true);
     }
   } catch (error) {
     console.log(error);

@@ -59,7 +59,6 @@ ReactDOM.render(
               <Route path="admin" element={<AdminLayout />}>
                 <Route path="login" element={<AdminLogin />} />
                 <Route path="portal" element={<PortalLayout />} />
-              
                 <Route
                   path="assignment_details"
                   element={<AssignmentsLayout />}

@@ -63,10 +63,11 @@ function PortalLayout() {
     setUserRole(localStorage.getItem("userRole"));
   });
 
+  console.log({ userRole });
+
   return (
     <>
       <Box padding={"10px"} position={"relative"}>
-
         {/* Ajay Dholia Changes Spinner is Not Stop After Successfull Login Into that */}
 
         {/* {loading && (
@@ -87,7 +88,6 @@ function PortalLayout() {
         )} */}
 
         {/* Ajay Dholia Changes Spinner is Not Stop After Successfull Login Into that */}
-
 
         <Tabs
           position={"absolute"}
@@ -211,8 +211,8 @@ function PortalLayout() {
                 <TabPanel>
                   <AdminOrders />
                 </TabPanel>
-                <TabPanel >
-                  <TotalLogin/>
+                <TabPanel>
+                  <TotalLogin />
                 </TabPanel>
               </TabPanels>
             </>

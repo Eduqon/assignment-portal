@@ -5,9 +5,11 @@ export const UserStore = create(set => ({
     name: '',
     contact_no: '',
     role: '',
+    loader: false,
 
     setId: (id) => set({ id: id }),
     setName: (name) => set({ name: name }),
     setContactNo: (contact_no) => set({ contact_no: contact_no }),
     setRole: (role) => set({ role: role }),
+  setLoader: (st) => set({ loader: st }),
 }));

@@ -9,13 +9,22 @@ import {
   Button,
   Heading,
   useColorModeValue,
+  Spinner,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Center,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { UserStore } from "../../services/stores/user_store";
 import validator from "validator";
 import { apiUrl } from "../../services/contants";
 import axios from "axios";
-import { useToast } from '@chakra-ui/react'
+import { useToast } from "@chakra-ui/react";
 
 export const FormAdminLogin = () => {
   // const [pages, setPages] = useState(0);
@@ -25,13 +34,15 @@ export const FormAdminLogin = () => {
   const setContactNo = UserStore((state) => state.setContactNo);
   const setRole = UserStore((state) => state.setRole);
   const setId = UserStore((state) => state.setId);
+  const loader = UserStore((state) => state.loader);
+  const setLoader = UserStore((state) => state.setLoader);
   const id = UserStore((state) => state.id);
-  const toast = useToast()
+  const toast = useToast();
   let navigate = useNavigate();
 
   async function _submit() {
     let password = document.getElementById("password");
-   const localhost = "http://localhost:8080"
+    const localhost = "http://localhost:8080";
     let emailVal = false;
     let passwordVal = false;
 
@@ -54,49 +65,72 @@ export const FormAdminLogin = () => {
     if (emailVal === true && passwordVal === true) {
       try {
         let userToken = localStorage.getItem("userToken");
+        let assignmentSantaBrowserToken = localStorage.getItem(
+          "assignmentSantaBrowserToken"
+        );
+        if (!assignmentSantaBrowserToken) {
+          let uniqueBrowserId = `ASSIGNMENT_${new Date().valueOf()}`;
+          localStorage.setItem("assignmentSantaBrowserToken", uniqueBrowserId);
+          assignmentSantaBrowserToken = uniqueBrowserId;
+        }
+        localStorage.setItem("userEmail", id);
+
         let config = {
           headers: { Authorization: `Bearer ${userToken}` },
         };
+
         const response = await axios.post(
           apiUrl + "/user/verify",
           // localhost+"/user/verify",
           {
             _id: id,
             password: password.value,
+            assignmentSantaBrowserToken,
           },
           config
         );
-        console.log(response.status);
+
+        console.log(response, "jhkasdfjishf");
+
         if (response.data.success === true) {
-          await setContactNo(response.data.user.contact_no);
-          await setRole(response.data.user.role);
-          await setName(response.data.user.name);
+          await setContactNo(
+            response.data.contact_no || response.data.user.contact_no
+          );
+          await setRole(response.data.role || response.data.user.role);
+          await setName(response.data.name || response.data.user.name);
           localStorage.setItem("userEmail", id);
-          localStorage.setItem("userRole", response.data.user.role);
-          localStorage.setItem("userName", response.data.user.name);
+          localStorage.setItem(
+            "userRole",
+            response.data.role || response.data.user.role
+          );
+          localStorage.setItem(
+            "userName",
+            response.data.name || response.data.user.name
+          );
           localStorage.setItem(
             "userCommission",
-            response.data.user.userCommission
+            response.data?.userCommission || response.data.user?.userCommission
           );
           navigate("/admin/portal");
-        } 
-        
-        else if (response.status == 203) {
+        } else if (response.status == 203) {
           localStorage.setItem("userToken", response.data.token);
           userToken = response.data.token;
           try {
             let config = {
               headers: { Authorization: `Bearer ${userToken}` },
             };
+
             const response = await axios.post(
               apiUrl + "/user/verify",
               {
                 _id: id,
                 password: password.value,
+                assignmentSantaBrowserToken,
               },
               config
             );
-            console.log(response.data);
+            console.log(response.data, "response data in else try");
+
             if (response.data.success === true) {
               await setContactNo(response.data.user.contact_no);
               await setRole(response.data.user.role);
@@ -107,33 +141,31 @@ export const FormAdminLogin = () => {
               navigate("/admin/portal");
             }
           } catch (error) {
-            // if(error.response.data.message === "You Are Not Verify From Admin "){
-            //   toast({
-            //     title: 'Admin Approval.',
-            //     description: "You Are ot Verify From Admin ",
-            //     status: 'false',
-            //     isClosable: true,
-            //   })
-            // }
-               toast({
-                title: 'Admin Approval.',
-                description: error.response.data.msg,
-                status: 'error',
-                isClosable: true,
-              })
-            console.log(error);
+            toast({
+              title: "Admin Approval.",
+              description: error.response.data.msg,
+              status: "error",
+              isClosable: true,
+            });
+            if (error.response.data.statusCode == 101) {
+              setLoader(true);
+              console.log("after setLoadter");
+            }
             console.log(JSON.stringify(error.response.data));
           }
         }
-      } 
-      catch (err) {
-        console.log(err,"error of firstCatch");
+      } catch (err) {
+        console.log(err, "error of firstCatch");
         toast({
-          title: 'Error.',
-          description: err.response.data.msg,
-          status: 'error',
+          title: "Error.",
+          description: err?.response?.data?.msg,
+          status: "error",
           isClosable: true,
-        })
+        });
+        if (err.response.data.statusCode == 101) {
+          setLoader(true);
+          console.log("after setLoadter");
+        }
         console.log(JSON.stringify(err.response.data));
       }
     }
@@ -181,8 +213,11 @@ export const FormAdminLogin = () => {
                 </FormControl>
               </Box>
             </VStack>
+
             <Button
               onClick={() => {
+                if (loader) return;
+                console.log({ loader });
                 _submit();
               }}
               size="lg"
@@ -192,11 +227,17 @@ export const FormAdminLogin = () => {
                 bg: "blue.500",
               }}
             >
-              Submit
+              {loader ? <Spinner /> : "Submit"}
             </Button>
           </Stack>
         </Box>
       </Stack>
+
+      {/* {loader ? (
+        <Center bg="tomato" h="100px" color="white">
+          This is the Center
+        </Center>
+      ) : null} */}
     </Flex>
   );
 };

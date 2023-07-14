@@ -13,8 +13,10 @@ function TotalLogin() {
   const GetAllUsers = async () => {
     try {
       const UserData = await axios.get(`${apiUrl}/user/loginuser`);
-      setUserData(UserData.data.res);
-      console.log(UserData.data.res, "sdhjksah");
+      setUserData(UserData.data.filter((e)=>{
+        return e.role != "Super Admin"
+      }));
+      console.log(UserData.data, "sdhjksah");
       // return UserData
     } catch (err) {
       console.log(err, "ERROR");
@@ -32,6 +34,7 @@ function TotalLogin() {
         <div className="name"> Name</div>
         <div className="number"> Phone Number</div>
         <div className="role"> Role</div>
+        <div className="browserId"> Browser Id</div>
         <div className="action"> Action</div>
       </div>
 
@@ -40,14 +43,15 @@ function TotalLogin() {
           console.log(res, "response print");
           return (
             <div className="tablerow">
-              <div className="serialrow">{index} </div>
+              <div className="serialrow">{index + 1} </div>
               <div className="namerow">{res?.name}</div>
               <div className="numberrow">{res?.contact_no}</div>
               <div className="rolerow">{res?.role?.substring(0, 20)}</div>
+              <div className="browserIdrow">{res?.browserId}</div>
               <div
                 className="actionrow"
                 onClick={() => {
-                  logoutUser(res._id, toast);
+                  logoutUser({ res, toast, setRefresh });
                   setRefresh(true);
                 }}
               >
@@ -65,6 +69,7 @@ function TotalLogin() {
           logoutAllUser({
             users: userData,
             toast,
+            setRefresh,
           });
           setRefresh(true);
         }}

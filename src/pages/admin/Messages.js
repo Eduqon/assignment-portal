@@ -305,7 +305,7 @@ function Messages({ setMessageCount, setSpinnerLoading }) {
     Object.keys(processOperatorExpertChat).length !== 0
   ) {
     const confirmOrderAssignedExpertChat =
-      confirmOrderAssignedExpertMessages.filter(
+      confirmOrderAssignedExpertMessages?.filter(
         (data) => data.chat.length !== 0
       );
     const processOrderAssignedExpertChat =
