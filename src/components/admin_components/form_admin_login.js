@@ -9,6 +9,7 @@ import {
   Button,
   Heading,
   useColorModeValue,
+  Spinner,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { UserStore } from "../../services/stores/user_store";
@@ -25,6 +26,10 @@ export const FormAdminLogin = () => {
   const setContactNo = UserStore((state) => state.setContactNo);
   const setRole = UserStore((state) => state.setRole);
   const setId = UserStore((state) => state.setId);
+  const setToken = UserStore((state) => state.setToken);
+
+  const loader = UserStore((state) => state.loader);
+  const setLoader = UserStore((state) => state.setLoader);
   const id = UserStore((state) => state.id);
   const toast = useToast();
   let navigate = useRouter();
@@ -53,7 +58,17 @@ export const FormAdminLogin = () => {
 
     if (emailVal === true && passwordVal === true) {
       try {
-        let userToken = localStorage.getItem("userToken");
+        let userToken = localStorage.getItem("userToken") || "";
+
+        let assignmentSantaBrowserToken = localStorage.getItem(
+          "assignmentSantaBrowserToken"
+        );
+        if (!assignmentSantaBrowserToken) {
+          let uniqueBrowserId = `ASSIGNMENT_${new Date().valueOf()}`;
+          localStorage.setItem("assignmentSantaBrowserToken", uniqueBrowserId);
+          assignmentSantaBrowserToken = uniqueBrowserId;
+        }
+        localStorage.setItem("userEmail", id);
         let config = {
           headers: { Authorization: `Bearer ${userToken}` },
         };
@@ -62,24 +77,35 @@ export const FormAdminLogin = () => {
           {
             _id: id,
             password: password.value,
+            assignmentSantaBrowserToken,
           },
           config
         );
         if (response.data.success === true) {
-          await setContactNo(response.data.user.contact_no);
-          await setRole(response.data.user.role);
-          await setName(response.data.user.name);
+          await setContactNo(
+            response.data.contact_no || response.data.user.contact_no
+          );
+          await setRole(response.data.role || response.data.user.role);
+          await setName(response.data.name || response.data.user.name);
           localStorage.setItem("userEmail", id);
-          localStorage.setItem("userRole", response.data.user.role);
-          localStorage.setItem("userName", response.data.user.name);
+          localStorage.setItem(
+            "userRole",
+            response.data.role || response.data.user.role
+          );
+          localStorage.setItem(
+            "userName",
+            response.data.name || response.data.user.name
+          );
           localStorage.setItem(
             "userCommission",
-            response.data.user.userCommission
+            response.data?.userCommission || response.data.user?.userCommission
           );
           //localStorage.setItem('userChatToken', JSON.stringify(response.data.tokenObj));
           navigate.replace("/admin/portal");
         } else if (response.status == 203) {
           localStorage.setItem("userToken", response.data.token);
+          setName(id);
+          setToken(assignmentSantaBrowserToken);
           userToken = response.data.token;
 
           try {
@@ -87,13 +113,15 @@ export const FormAdminLogin = () => {
               headers: { Authorization: `Bearer ${userToken}` },
             };
             const response = await axios.post(
-              apiUrl + "/user/verify",
+              localUrl + "/user/verify",
               {
                 _id: id,
                 password: password.value,
+                assignmentSantaBrowserToken,
               },
               config
             );
+
             if (response.data.success === true) {
               await setContactNo(response.data.user.contact_no);
               await setRole(response.data.user.role);
@@ -110,17 +138,21 @@ export const FormAdminLogin = () => {
               status: "error",
               isClosable: true,
             });
-            console.log(JSON.stringify(error.response.data));
+            if (error.response.data.statusCode == 101) {
+              setLoader(true);
+            }
           }
         }
       } catch (err) {
         toast({
           title: "Error",
-          description: err.response.data.msg,
+          description: err?.response?.data?.msg,
           status: "error",
           isClosable: true,
         });
-        console.log(JSON.stringify(err));
+        if (err?.response?.data?.statusCode == 101) {
+          setLoader(true);
+        }
       }
     }
   }
@@ -169,6 +201,7 @@ export const FormAdminLogin = () => {
             </VStack>
             <Button
               onClick={() => {
+                if (loader) return;
                 _submit();
               }}
               size="lg"
@@ -178,7 +211,7 @@ export const FormAdminLogin = () => {
                 bg: "blue.500",
               }}
             >
-              Submit
+              {loader ? <Spinner /> : "Submit"}
             </Button>
           </Stack>
         </Box>

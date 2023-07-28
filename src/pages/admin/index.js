@@ -7,51 +7,84 @@ import {
   Button,
   useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { useRouter } from "next/router";
+import io from "socket.io-client";
 import Examplee from "../../components/sidebar/Sidebar";
+import axios from "axios";
 import { apiUrl } from "../../services/contants";
-
-const deleteToken = async (navigate, toast) => {
-  const userEmail = localStorage.getItem("userEmail");
-  localStorage.removeItem("userRole");
-  localStorage.removeItem("userName");
-  localStorage.removeItem("userToken");
-
-  try {
-    const userData = await axios.put(`${apiUrl}/user/updatebyadmin`, {
-      _id: userEmail,
-      isAuthentify: false,
-    });
-
-    if (userData) {
-      toast({
-        title: "Logout SuccessFull",
-        description: "Logout",
-        status: "success",
-        isClosable: true,
-      });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-  localStorage.removeItem("userEmail");
-  navigate.replace("/admin/login");
-};
+import { UserStore } from "../../services/stores/user_store";
 
 function AdminLayout() {
   // my adding
   const toast = useToast();
   const [userRole, setUserRole] = useState("");
-  useEffect(async () => {
-    setUserRole(localStorage.getItem("userRole"));
-  });
+  const setName = UserStore((state) => state.setName);
+  const setContactNo = UserStore((state) => state.setContactNo);
+  const setRole = UserStore((state) => state.setRole);
+  const setLoader = UserStore((state) => state.setLoader);
+  const userEmail = UserStore((state) => state.name);
+  const assignmentSantaBrowserToken = UserStore((state) => state.token);
 
   let navigate = useRouter();
 
-  function _logout() {
-    deleteToken(navigate, toast);
+  async function _logout() {
+    const userData = await axios.put(`${apiUrl}/user/updatebyadmin`, {
+      _id: userEmail,
+      browserId: assignmentSantaBrowserToken,
+      isAuthentify: false,
+    });
+
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userName");
+
+    setLoader(false);
+    navigate.replace("/admin/login");
   }
+
+  const socket = io("http://localhost:8080/", {
+    transports: ["websocket", "polling"],
+    withCredentials: true,
+  });
+
+  useEffect(() => {
+    socket.connect();
+    socket.on("connect", () => {
+      console.log(socket.connected, "socket connected successfully");
+    });
+  }, []);
+
+  useEffect(() => {
+    if (userEmail && assignmentSantaBrowserToken) {
+      socket.on("logout", async (user) => {
+        if (
+          userEmail == user.email &&
+          assignmentSantaBrowserToken == user.browserId
+        ) {
+          localStorage.removeItem("userEmail");
+          localStorage.removeItem("userName");
+          setLoader(false);
+          navigate.replace("/admin/login");
+        }
+      });
+      socket.on("verifyByAdmin", async (user) => {
+        let newAssignmentSantaBrowserToken =
+          typeof window !== undefined &&
+          window.localStorage.getItem("assignmentSantaBrowserToken");
+        if (
+          userEmail === user.email &&
+          newAssignmentSantaBrowserToken === user.browserId
+        ) {
+          localStorage.setItem("userRole", user.role);
+          localStorage.setItem("userName", user.name);
+          localStorage.setItem("userCommission", user.userCommission);
+          await setContactNo(user.contact_no);
+          await setRole(user.role);
+          navigate.replace("/admin/portal");
+        }
+      });
+    }
+  }, [userEmail, assignmentSantaBrowserToken, socket]);
+
   return (
     <>
       <Box>
