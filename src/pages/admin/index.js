@@ -24,7 +24,7 @@ function AdminLayout() {
   const setLoader = UserStore((state) => state.setLoader);
   const userEmail = UserStore((state) => state.name);
   const assignmentSantaBrowserToken = UserStore((state) => state.token);
-  console.log({ userEmail, assignmentSantaBrowserToken });
+  // console.log({ userEmail, assignmentSantaBrowserToken });
 
   let navigate = useRouter();
 

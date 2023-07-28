@@ -17,7 +17,7 @@ import { BLOGS, mediaUrl, SEOTAGS, SERVICES } from "../../services/contants";
 import { client } from "../_app";
 import useFetch from "../../hooks/useFetch";
 
-export default function Blog({ services, seotags, blogs, blogsdata }) {
+export default function Blog({ services, seotags, blogs }) {
   const { data: blogData } = blogs;
 
   const { apiData } = useFetch(mediaUrl + "/upload/files");

@@ -6,7 +6,7 @@ import { NavbarHome } from "../../components/home_components/navbar_home";
 import { client } from "../_app";
 import Head from "next/head";
 
-function verify({ services }) {
+export default function NavService({ services }) {
   const [isVerified, setIsverified] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [browserId, setBrowserId] = useState("");
@@ -66,8 +66,6 @@ function verify({ services }) {
   );
 }
 
-export default verify;
-
 export async function getStaticPaths() {
   const paths = [
     {
@@ -76,7 +74,7 @@ export async function getStaticPaths() {
       },
     },
   ];
-  console.log({ paths });
+  // console.log({ paths });
   return {
     paths,
     fallback: false,
