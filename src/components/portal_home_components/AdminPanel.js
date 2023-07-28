@@ -7,10 +7,10 @@ import {
   TabPanel,
   Heading,
 } from "@chakra-ui/react";
-import Admins from "./Admins";
-import Assignments from "./Assignments";
+import Admins from "../admin_components/Admins";
+import Assignments from "../../pages/admin/Assignments";
 import Experts from "./Experts";
-import NewUser from "./NewUser";
+import NewUser from "../new_user_component/NewUser";
 import Operators from "./Operators";
 import QC from "./QC";
 import Sales from "./Sales";

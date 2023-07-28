@@ -24,6 +24,7 @@ function AdminLayout() {
   const setLoader = UserStore((state) => state.setLoader);
   const userEmail = UserStore((state) => state.name);
   const assignmentSantaBrowserToken = UserStore((state) => state.token);
+  console.log({ userEmail, assignmentSantaBrowserToken });
 
   let navigate = useRouter();
 
@@ -71,6 +72,7 @@ function AdminLayout() {
         let newAssignmentSantaBrowserToken =
           typeof window !== undefined &&
           window.localStorage.getItem("assignmentSantaBrowserToken");
+        console.log({ newAssignmentSantaBrowserToken, userEmail, user });
         if (
           userEmail === user.email &&
           newAssignmentSantaBrowserToken === user.browserId

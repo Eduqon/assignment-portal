@@ -8,19 +8,19 @@ import {
   Heading,
   Spinner,
 } from "@chakra-ui/react";
-import AdminOrders from "./Orders";
-import AdminHome from "./Home";
+import AdminOrders from "../../components/order_details_components/Orders";
+import AdminHome from "../../components/admin_components/Home";
 import { useEffect, useState } from "react";
-import Calendars from "./Calendars";
-import AdminPanel from "./AdminPanel";
+import Calendars from "../../components/calendar_components/Calendars";
+import AdminPanel from "../../components/portal_home_components/AdminPanel";
 import { ChatIcon } from "@chakra-ui/icons";
-import Messages from "./Messages";
+import Messages from "../../components/message_components/Messages";
 import AdminLayout from ".";
-import GetExcelData from "./GetExcelData";
-import GetStatusExcelData from "./GetStatusExcelData";
-import ExpertList from "./ExpertList";
-import QcList from "./QcList";
-import TotalLogin from "./TotalLogin";
+import GetExcelData from "../../components/portal_home_components/GetExcelData";
+import GetStatusExcelData from "../../components/portal_home_components/GetStatusExcelData";
+import ExpertList from "../../components/portal_home_components/ExpertList";
+import QcList from "../../components/portal_home_components/QcList";
+import TotalLogin from "../../components/portal_home_components/TotalLogin";
 
 function PortalLayout() {
   const [userRole, setUserRole] = useState("");

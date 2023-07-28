@@ -4,9 +4,8 @@ import { SideBarStore } from "../../services/stores/sidebar";
 import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
 // import Assignments from '../../pages/admin/Assignments';
 import { clickk } from "../../pages/admin/Assignments";
-import { SubjectShow } from "../../pages/admin/Subjects";
-import { NewUSe } from "../../pages/admin/NewUser";
-import { VendorShow } from "../../pages/admin/Vendors";
+import { SubjectShow } from "../portal_home_components/Subjects";
+import { VendorShow } from "../portal_home_components/Vendors";
 
 import {
   Box,

@@ -7,8 +7,8 @@ import {
   TabPanel,
   Heading,
 } from "@chakra-ui/react";
-import AnnChatQueue from "./AnnChatQueue";
-import SalesChatQueue from "./SalesChatQueue";
+import AnnChatQueue from "../chat_components/AnnChatQueue";
+import SalesChatQueue from "../chat_components/SalesChatQueue";
 
 function AdminHome() {
   return (

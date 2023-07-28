@@ -22,20 +22,20 @@ import {
   Button,
   Spinner,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { isMobile } from "react-device-detect";
-import AssignedExpertOrders from "./AssignedExpertOrders";
-import CP1DoneOrders from "./CP1DoneOrders";
-import CP1PendingOrders from "./CP1PendingOrders";
-import ExpertAskedOrders from "./ExpertAskedOrders";
-import FreshOrders from "./FreshOrders";
-import InternalReworkOrders from "./InternalReworkOrders";
-import ProofReadOrders from "./ProofReadOrders";
-import RawSubmissionOrders from "./RawSubmissionOrders";
-import { useEffect, useState } from "react";
-import VendorOrders from "./VendorOrders";
-import CP2DoneOrders from "./CP2DoneOrders";
-import ClientReworkOrders from "./ClientReworkOrders";
+import AssignedExpertOrders from "../portal_home_components/AssignedExpertOrders";
+import CP1DoneOrders from "../portal_home_components/CP1DoneOrders";
+import CP1PendingOrders from "../portal_home_components/CP1PendingOrders";
+import ExpertAskedOrders from "../portal_home_components/ExpertAskedOrders";
+import FreshOrders from "../portal_home_components/FreshOrders";
+import InternalReworkOrders from "../portal_home_components/InternalReworkOrders";
+import ProofReadOrders from "../portal_home_components/ProofReadOrders";
+import RawSubmissionOrders from "../portal_home_components/RawSubmissionOrders";
+import VendorOrders from "../portal_home_components/VendorOrders";
+import CP2DoneOrders from "../portal_home_components/CP2DoneOrders";
+import ClientReworkOrders from "../portal_home_components/ClientReworkOrders";
 import axios from "axios";
 import { apiUrl, frontEndUrl } from "../../services/contants";
 import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";

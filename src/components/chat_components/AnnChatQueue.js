@@ -27,7 +27,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { db } from "../../services/firebase";
-import AdminAnonymousChat from "../../components/chat_components/operator_anonymous_chat";
+import AdminAnonymousChat from "./operator_anonymous_chat";
 
 function AnnChatQueue() {
   const [users, setUsers] = useState([]);

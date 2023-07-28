@@ -30,7 +30,7 @@ import { db } from "../../services/firebase";
 import { useRouter } from "next/router";
 import { apiUrl } from "../../services/contants";
 import axios from "axios";
-import AdminAnonymousChat from "../../components/chat_components/operator_anonymous_chat";
+import AdminAnonymousChat from "./operator_anonymous_chat";
 
 function SalesChatQueue() {
   const [users, setUsers] = useState([]);

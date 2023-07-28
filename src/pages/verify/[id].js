@@ -3,7 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { apiUrl } from "../../services/contants";
 
-function Verify() {
+function verify() {
   const [isVerified, setIsverified] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [browserId, setBrowserId] = useState("");
@@ -57,4 +57,4 @@ function Verify() {
   );
 }
 
-export default Verify;
+export default verify;

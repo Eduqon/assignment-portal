@@ -113,7 +113,7 @@ export const FormAdminLogin = () => {
               headers: { Authorization: `Bearer ${userToken}` },
             };
             const response = await axios.post(
-              localUrl + "/user/verify",
+              apiUrl + "/user/verify",
               {
                 _id: id,
                 password: password.value,
