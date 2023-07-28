@@ -53,3 +53,5 @@ export const logoutAllUser = async ({ users, toast, setRefresh }) => {
     console.log(error);
   }
 };
+
+export default { logoutUser, logoutAllUser };
