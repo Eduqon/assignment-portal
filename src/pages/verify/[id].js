@@ -12,7 +12,6 @@ function verify({ services }) {
   const [browserId, setBrowserId] = useState("");
 
   let navigate = useRouter();
-  if (navigate.isFallback) return <div>Loading...</div>;
   const Isverifyfun = async () => {
     const data = await axios.put(apiUrl + "/user/updatebyadmin", {
       token: navigate.query.id,
@@ -80,7 +79,7 @@ export async function getStaticPaths() {
   console.log({ paths });
   return {
     paths,
-    fallback: true,
+    fallback: false,
   };
 }
 
