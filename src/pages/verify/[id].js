@@ -12,6 +12,7 @@ function verify({ services }) {
   const [browserId, setBrowserId] = useState("");
 
   let navigate = useRouter();
+  if (navigate.isFallback) return <div>Loading...</div>;
   const Isverifyfun = async () => {
     const data = await axios.put(apiUrl + "/user/updatebyadmin", {
       token: navigate.query.id,
