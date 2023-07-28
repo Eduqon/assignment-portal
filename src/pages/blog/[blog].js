@@ -659,13 +659,11 @@ export async function getStaticProps({ params }) {
   // });
 
   return {
-    props:
-      data && serviceData && faqschemasData
-        ? {
-            blogsdata: data.blogs,
-            services: serviceData.services,
-            faqschemas: faqschemasData.faqschemas,
-          }
-        : {},
+    props: {
+      blogsdata: data.blogs,
+      services: serviceData.services,
+      faqschemas: faqschemasData.faqschemas,
+    },
+    revalidate: 1,
   };
 }
