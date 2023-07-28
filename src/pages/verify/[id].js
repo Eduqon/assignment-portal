@@ -3,7 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { apiUrl } from "../../services/contants";
 
-function verify() {
+function Verify() {
   const [isVerified, setIsverified] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [browserId, setBrowserId] = useState("");
@@ -14,6 +14,7 @@ function verify() {
       token: navigate.query.id,
       isAuthentify: true,
     });
+    console.log({ data });
     if (data.data.success === true) {
       setIsverified(true);
       setUserEmail(data.data.response.email);
@@ -56,4 +57,4 @@ function verify() {
   );
 }
 
-export default verify;
+export default Verify;
