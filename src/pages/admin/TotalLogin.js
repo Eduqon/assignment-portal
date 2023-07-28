@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useToast } from "@chakra-ui/toast";
-import { logoutAllUser, logoutUser } from "./LogoutFunction";
 import { apiUrl } from "../../services/contants";
 
 function TotalLogin() {
@@ -22,6 +21,60 @@ function TotalLogin() {
       console.log(err, "ERROR");
     }
   };
+
+  const logoutUser = async ({ res, toast, setRefresh }) => {
+    try {
+      let userToken = localStorage.getItem("userToken");
+      let config = {
+        headers: { Authorization: `Bearer ${userToken}` },
+      };
+
+      const userData = await axios.put(
+        `${apiUrl}/user/updatebyadmin`,
+        {
+          _id: res.email,
+          browserId: res.browserId,
+          isAuthentify: false,
+        },
+        config
+      );
+
+      setRefresh(true);
+
+      if (userData) {
+        toast({
+          title: "Logout SuccessFull",
+          description: "Logout",
+          status: "success",
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const logoutAllUser = async ({ users, toast, setRefresh }) => {
+    try {
+      const userData = await axios.put(`${apiUrl}/user/logoutAll`, {
+        users,
+      });
+
+      if (userData) {
+        toast({
+          title: "Logout SuccessFull",
+          description: "Logout",
+          status: "success",
+          isClosable: true,
+        });
+
+        setRefresh(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     GetAllUsers();
     setRefresh(false);

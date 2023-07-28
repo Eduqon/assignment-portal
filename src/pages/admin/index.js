@@ -41,7 +41,8 @@ function AdminLayout() {
     navigate.replace("/admin/login");
   }
 
-  const socket = io("http://localhost:8080/", {
+  const socket = io("https://assignment-santa-api.azurewebsites.net/", {
+    // const socket = io("http://localhost:8080/", {
     transports: ["websocket", "polling"],
     withCredentials: true,
   });
@@ -81,6 +82,7 @@ function AdminLayout() {
           await setRole(user.role);
           navigate.replace("/admin/portal");
         }
+        // socket.on("disconnect");
       });
     }
   }, [userEmail, assignmentSantaBrowserToken, socket]);
