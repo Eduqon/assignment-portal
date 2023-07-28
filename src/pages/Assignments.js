@@ -25,7 +25,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { NavbarAssignments } from "../components/assignments_components.js/navbar_assignments";
+import { NavbarAssignments } from "../components/assignments_components/navbar_assignments";
 import { apiUrl } from "../services/contants";
 import { useRouter } from "next/router";
 
