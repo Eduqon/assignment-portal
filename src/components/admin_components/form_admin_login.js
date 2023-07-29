@@ -12,11 +12,11 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { UserStore } from "../../services/stores/user_store";
 import validator from "validator";
-import { apiUrl } from "../../services/contants";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
+import { apiUrl } from "../../services/contants";
+import { UserStore } from "../../services/stores/user_store";
 
 export const FormAdminLogin = () => {
   // const [pages, setPages] = useState(0);
