@@ -50,7 +50,7 @@ export default function Contact({ services, seotags }) {
                       <div className="d-flex">
                         <FaRegAddressCard className="whst" />
                         <span style={{ marginLeft: "1rem" }}>
-                          301 Hostorical dr, Aintree, Melbourne, Australia
+                          301 Historical dr, Aintree, Melbourne, Australia
                         </span>
                       </div>
                       <div className="d-flex">

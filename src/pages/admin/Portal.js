@@ -163,7 +163,7 @@ function PortalLayout() {
               </TabPanels>
             </Tabs>
           </>
-        ) : userRole === "Super Admin" || userRole === "Admin" ? (
+        ) : (
           <>
             <Tabs
               position={"absolute"}
@@ -201,27 +201,6 @@ function PortalLayout() {
                 <TabPanel>{tabIndex === 3 && <AdminOrders />}</TabPanel>
                 <TabPanel>{tabIndex === 4 && <GetExcelData />}</TabPanel>
                 <TabPanel>{tabIndex === 5 && <TotalLogin />}</TabPanel>
-              </TabPanels>
-            </Tabs>
-          </>
-        ) : (
-          <>
-            <Tabs
-              position={"absolute"}
-              orientation="vertical"
-              variant="solid-rounded"
-              display={{ base: "none", sm: "inline-flex", md: "inline-flex" }}
-              onChange={(index) => setTabIndex(index)}
-              index={tabIndex}
-            >
-              <TabList display={{ base: "none", sm: "block", md: "block" }}>
-                <Tab>
-                  <Heading fontSize={"md"}>Orders</Heading>
-                </Tab>
-              </TabList>
-
-              <TabPanels display={{ base: "none", sm: "block", md: "block" }}>
-                <TabPanel>{tabIndex === 0 && <AdminOrders />}</TabPanel>
               </TabPanels>
             </Tabs>
           </>

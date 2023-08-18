@@ -89,10 +89,6 @@ export const FormAdminLogin = () => {
           await setName(response.data.name || response.data.user.name);
           localStorage.setItem("userEmail", id);
           localStorage.setItem(
-            "userRole",
-            response.data.role || response.data.user.role
-          );
-          localStorage.setItem(
             "userName",
             response.data.name || response.data.user.name
           );
@@ -100,8 +96,15 @@ export const FormAdminLogin = () => {
             "userCommission",
             response.data?.userCommission || response.data.user?.userCommission
           );
-          //localStorage.setItem('userChatToken', JSON.stringify(response.data.tokenObj));
-          navigate.replace("/admin/portal");
+          if (response.data.user.role === "QC") {
+            window.alert("Wrong Username and Password");
+          } else {
+            localStorage.setItem(
+              "userRole",
+              response.data.role || response.data.user.role
+            );
+            navigate.replace("/admin/portal");
+          }
         } else if (response.status == 203) {
           localStorage.setItem("userToken", response.data.token);
           setName(id);
@@ -127,9 +130,13 @@ export const FormAdminLogin = () => {
               await setRole(response.data.user.role);
               await setName(response.data.user.name);
               localStorage.setItem("userEmail", id);
-              localStorage.setItem("userRole", response.data.user.role);
               localStorage.setItem("userName", response.data.user.name);
-              navigate.replace("/admin/portal");
+              if (response.data.user.role === "QC") {
+                window.alert("Wrong Username and Password");
+              } else {
+                localStorage.setItem("userRole", response.data.user.role);
+                navigate.replace("/admin/portal");
+              }
             }
           } catch (error) {
             toast({

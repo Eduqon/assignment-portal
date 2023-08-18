@@ -36,13 +36,14 @@ function AdminLayout() {
 
     localStorage.removeItem("userEmail");
     localStorage.removeItem("userName");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userToken");
 
     setLoader(false);
     navigate.replace("/admin/login");
   }
 
   const socket = io("https://assignment-santa-api.azurewebsites.net/", {
-    // const socket = io("http://localhost:8080/", {
     transports: ["websocket", "polling"],
     withCredentials: true,
   });

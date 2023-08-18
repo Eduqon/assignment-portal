@@ -1,35 +1,35 @@
-import {
-  Box,
-  Container,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
-import { BiMailSend, BiPhoneCall } from "react-icons/bi";
-import { AiOutlineWhatsApp } from "react-icons/ai";
 import Link from "next/link";
-import { LinkIcon } from "@chakra-ui/icons";
 
 export function FooterHome() {
   return (
     <div className="row p-0 m-0 set-back">
       <div className="col-12 ">
         <div className="row pt-4 m-0  d-flex align-items-center">
-          <div className="col-md-4 col-12">
+          <div className="col-md-3 col-12">
             <div className="details">
               <h2 className="Fs-4 font-weight-bolder mb-3">Contact Details</h2>
               <div className="address">
-                301 Hostorical dr, Aintree, Melbourne, Australia
+                301 Historical dr, Aintree, Melbourne, Australia
               </div>
             </div>
           </div>
-          <div className="col-md-4 col-12">
+          <div className="col-md-3 col-12">
+            <div className="details">
+              <h2 className="Fs-4 font-weight-bolder mb-3">Quick Links</h2>
+              <div className="address">
+                <Link href="/privacy-policy">
+                  <a className="nav-link">Privacy Policy</a>
+                </Link>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-3 col-12">
             <div className="payment d-flex flex-column flex-lg-row flex-sm-column align-items-center justify-content-around">
               <div className="set_">100% Secure Payment </div>
               <img src="/assets/payment.png" alt="" />
             </div>
           </div>
-          <div className="col-md-4 col-12">
+          <div className="col-md-3 col-12">
             <h2 className="Fs-4 d-flex  font-weight-bolder mb-3 justify-content-center text-white align-items-center ">
               Get In Touch
             </h2>
