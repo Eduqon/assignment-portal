@@ -1402,7 +1402,8 @@ function RawSubmissionOrders({
                     {assignment.deadline}
                   </Td>
                   <Td color={"red.600"} fontWeight={"semibold"}>
-                    {assignment.expertDeadline
+                    {assignment.expertDeadline &&
+                    assignment.expertDeadline[assignment.id]
                       ? new Date(
                           assignment.expertDeadline[assignment.id][
                             assignment.expertDeadline[assignment.id].length - 1
