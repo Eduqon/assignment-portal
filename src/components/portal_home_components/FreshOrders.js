@@ -39,6 +39,7 @@ import {
   AccordionIcon,
 } from "@chakra-ui/react";
 import axios from "axios";
+import moment from "moment";
 import { useEffect, useState, useRef } from "react";
 import { apiUrl, callingNumbers } from "../../services/contants";
 import { RepeatIcon, PhoneIcon } from "@chakra-ui/icons";
@@ -853,6 +854,11 @@ function FreshOrders({ incrementCounter, decrementCounter }) {
                 <Input
                   type="date"
                   id="date"
+                  max={moment(
+                    assignments &&
+                      assignments[selectedIndex] &&
+                      assignments[selectedIndex].deadline.split(",")[1]
+                  ).format("YYYY-MM-DD")}
                   onChange={(e) => {
                     setDate(e.target.value);
                   }}

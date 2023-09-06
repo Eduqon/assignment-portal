@@ -8,7 +8,7 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import Admins from "../admin_components/Admins";
-import Assignments from "../../pages/admin/Assignments";
+import Assignments from "../../pages/admin/assignments";
 import Experts from "./Experts";
 import NewUser from "../new_user_component/NewUser";
 import Operators from "./Operators";

@@ -46,6 +46,7 @@ import {
   AccordionIcon,
 } from "@chakra-ui/react";
 import axios from "axios";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { apiUrl, callingNumbers } from "../../services/contants";
 import { useRouter } from "next/router";
@@ -240,6 +241,7 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
 
   function ExpertModal() {
     const [error, setError] = useState(false);
+    const [timeValid, setTimeValid] = useState(false);
     const [experts, setExperts] = useState([]);
     const [inputValue, setInputValue] = useState({
       date: "",
@@ -251,7 +253,8 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
     );
     const [words, setWords] = useState(0);
     const [comments, setComments] = useState("");
-    const [charges, setCharges] = useState("");
+    const [charges, setCharges] = useState("regular");
+    const [activeTab, setActiveTab] = useState(0);
     const [chargesAmount, setChargesAmount] = useState("");
     const [selectValue, setSelectValue] = useState("page_number");
 
@@ -300,6 +303,9 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
       setShowModals({ ...showModals, showExpertModal: false });
       ExpertModalDis.onClose();
     };
+    const timeValue =
+      assignments && assignments[selectedIndex].deadline.split(",")[0];
+    const maxTime = timeValue.split(":")[0] + ":" + timeValue.split(":")[1];
 
     return (
       <Modal
@@ -348,7 +354,22 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                   type="date"
                   id="date"
                   value={inputValue.date}
+                  max={moment(
+                    assignments[selectedIndex].deadline.split(",")[1]
+                  ).format("YYYY-MM-DD")}
                   onChange={(e) => {
+                    const selectedDate = e.target.value;
+                    const deadlineDate = moment(
+                      assignments[selectedIndex].deadline.split(",")[1]
+                    ).format("YYYY-MM-DD");
+
+                    if (selectedDate === deadlineDate) {
+                      inputValue.time <= maxTime
+                        ? setTimeValid(true)
+                        : setTimeValid(false);
+                    } else {
+                      setTimeValid(true);
+                    }
                     setInputValue({
                       ...inputValue,
                       date: e.target.value,
@@ -359,7 +380,20 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                   type="time"
                   id="time"
                   value={inputValue.time}
+                  max={maxTime}
+                  required
                   onChange={(e) => {
+                    const date = inputValue.date;
+                    const deadlineDate = moment(
+                      assignments[selectedIndex].deadline.split(",")[1]
+                    ).format("YYYY-MM-DD");
+                    if (date === deadlineDate) {
+                      e.target.validity.valid
+                        ? setTimeValid(true)
+                        : setTimeValid(false);
+                    } else {
+                      setTimeValid(true);
+                    }
                     setInputValue({
                       ...inputValue,
                       time: e.target.value,
@@ -367,6 +401,11 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                   }}
                 />
               </HStack>
+              {!timeValid && inputValue.time && (
+                <span style={{ color: "red" }}>
+                  ** Time should not be greater than deadline time value
+                </span>
+              )}
               {error && (
                 <span style={{ color: "red" }}>
                   ** Expert Deadline is mandatory
@@ -456,13 +495,31 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
             <FormControl padding={2}>
               <FormLabel fontWeight={"bold"}>Charges</FormLabel>
               <HStack>
-                <Button onClick={() => setCharges("regular")}>
+                <Button
+                  onClick={() => {
+                    setCharges("regular");
+                    setActiveTab(0);
+                  }}
+                  className={activeTab === 0 && "activeChargeTab"}
+                >
                   Regular Charges
                 </Button>
-                <Button onClick={() => setCharges("custom")}>
+                <Button
+                  onClick={() => {
+                    setCharges("custom");
+                    setActiveTab(1);
+                  }}
+                  className={activeTab === 1 && "activeChargeTab"}
+                >
                   Enter Charges
                 </Button>
-                <Button onClick={() => setCharges("ask_quote")}>
+                <Button
+                  onClick={() => {
+                    setCharges("ask_quote");
+                    setActiveTab(2);
+                  }}
+                  className={activeTab === 2 && "activeChargeTab"}
+                >
                   Ask Quote Charges
                 </Button>
               </HStack>
@@ -510,6 +567,7 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                       </Td>
                       <Td>
                         <Button
+                          disabled={!timeValid}
                           onClick={async (e) => {
                             let userToken = localStorage.getItem("userToken");
 
@@ -536,7 +594,7 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                               0
                             );
 
-                            let iso = deadline?.toISOString();
+                            let iso = deadline && deadline?.toISOString();
 
                             if (userToken == null) {
                               navigate.replace("/admin/login");
@@ -1110,6 +1168,9 @@ function CP1DoneOrders({ incrementCounter, decrementCounter }) {
                 <Input
                   type="date"
                   id="date"
+                  max={moment(
+                    assignments[selectedIndex].deadline.split(",")[1]
+                  ).format("YYYY-MM-DD")}
                   value={inputValue.date}
                   onChange={(e) => {
                     setInputValue({

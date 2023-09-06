@@ -503,7 +503,8 @@ function AdminOrders() {
                   }}
                   onClick={async () => openNotificationModal("Fresh Order")}
                 >
-                  {notificationCounter["Fresh Order"]}
+                  {notificationCounter["Fresh Order"] !== 0 &&
+                    notificationCounter["Fresh Order"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>CP1 Pending</Heading>
@@ -521,9 +522,10 @@ function AdminOrders() {
                     fontSize: "20px",
                     fontWeight: "bold",
                   }}
-                  onClick={async () => openNotificationModal("Fresh Order")}
+                  onClick={async () => openNotificationModal("CP1 Pending")}
                 >
-                  {notificationCounter["Fresh Order"]}
+                  {notificationCounter["CP1 Pending"] !== 0 &&
+                    notificationCounter["CP1 Pending"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>CP1 Done</Heading>
@@ -541,9 +543,10 @@ function AdminOrders() {
                     fontSize: "20px",
                     fontWeight: "bold",
                   }}
-                  onClick={async () => openNotificationModal("Fresh Order")}
+                  onClick={async () => openNotificationModal("CP1 Done")}
                 >
-                  {notificationCounter["Fresh Order"]}
+                  {notificationCounter["CP1 Done"] !== 0 &&
+                    notificationCounter["CP1 Done"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Confirmation Asked</Heading>
@@ -561,9 +564,10 @@ function AdminOrders() {
                     fontSize: "20px",
                     fontWeight: "bold",
                   }}
-                  onClick={async () => openNotificationModal("Fresh Order")}
+                  onClick={async () => openNotificationModal("Expert Asked")}
                 >
-                  {notificationCounter["Fresh Order"]}
+                  {notificationCounter["Expert Asked"] !== 0 &&
+                    notificationCounter["Expert Asked"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Assigned Expert</Heading>
@@ -581,9 +585,10 @@ function AdminOrders() {
                     fontSize: "20px",
                     fontWeight: "bold",
                   }}
-                  onClick={async () => openNotificationModal("Fresh Order")}
+                  onClick={async () => openNotificationModal("Expert Assigned")}
                 >
-                  {notificationCounter["Fresh Order"]}
+                  {notificationCounter["Expert Assigned"] !== 0 &&
+                    notificationCounter["Expert Assigned"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Raw Submission</Heading>
@@ -601,9 +606,10 @@ function AdminOrders() {
                     fontSize: "20px",
                     fontWeight: "bold",
                   }}
-                  onClick={async () => openNotificationModal("Fresh Order")}
+                  onClick={async () => openNotificationModal("Raw Submission")}
                 >
-                  {notificationCounter["Fresh Order"]}
+                  {notificationCounter["Raw Submission"] !== 0 &&
+                    notificationCounter["Raw Submission"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Internal Rework</Heading>
@@ -621,9 +627,10 @@ function AdminOrders() {
                     fontSize: "20px",
                     fontWeight: "bold",
                   }}
-                  onClick={async () => openNotificationModal("Fresh Order")}
+                  onClick={async () => openNotificationModal("Internal Rework")}
                 >
-                  {notificationCounter["Fresh Order"]}
+                  {notificationCounter["Internal Rework"] !== 0 &&
+                    notificationCounter["Internal Rework"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Proof Read</Heading>
@@ -641,9 +648,10 @@ function AdminOrders() {
                     fontSize: "20px",
                     fontWeight: "bold",
                   }}
-                  onClick={async () => openNotificationModal("Fresh Order")}
+                  onClick={async () => openNotificationModal("Proof Read")}
                 >
-                  {notificationCounter["Fresh Order"]}
+                  {notificationCounter["Proof Read"] !== 0 &&
+                    notificationCounter["Proof Read"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>CP2 Done</Heading>
@@ -661,9 +669,10 @@ function AdminOrders() {
                     fontSize: "20px",
                     fontWeight: "bold",
                   }}
-                  onClick={async () => openNotificationModal("Fresh Order")}
+                  onClick={async () => openNotificationModal("CP2 Done")}
                 >
-                  {notificationCounter["Fresh Order"]}
+                  {notificationCounter["CP2 Done"] !== 0 &&
+                    notificationCounter["CP2 Done"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Client Rework</Heading>
@@ -683,7 +692,8 @@ function AdminOrders() {
                   }}
                   onClick={async () => openNotificationModal("Client Rework")}
                 >
-                  {notificationCounter["Client Rework"]}
+                  {notificationCounter["Client Rework"] !== 0 &&
+                    notificationCounter["Client Rework"]}
                 </div>
               </TabList>
 
@@ -867,6 +877,27 @@ function AdminOrders() {
                     notificationCounter["Raw Submission"]}
                 </div>
                 <Tab style={{ borderRadius: "5px" }}>
+                  <Heading fontSize={"lg"}>Internal Rework</Heading>
+                </Tab>
+                <div
+                  className="text-center"
+                  style={{
+                    width: "30px",
+                    height: "30px",
+                    borderRadius: "5px",
+                    background: "#c96969",
+                    cursor: "pointer",
+                    margin: "2px 5px",
+                    color: "#fff",
+                    fontSize: "20px",
+                    fontWeight: "bold",
+                  }}
+                  onClick={async () => openNotificationModal("Internal Rework")}
+                >
+                  {notificationCounter["Internal Rework"] !== 0 &&
+                    notificationCounter["Internal Rework"]}
+                </div>
+                <Tab style={{ borderRadius: "5px" }}>
                   <Heading fontSize={"lg"}>Proof Read</Heading>
                 </Tab>
                 <div
@@ -973,7 +1004,10 @@ function AdminOrders() {
                   )}
                 </TabPanel>
                 <TabPanel>
-                  {tabIndex === 6 && (
+                  {tabIndex === 6 && <InternalReworkOrders />}
+                </TabPanel>
+                <TabPanel>
+                  {tabIndex === 7 && (
                     <ProofReadOrders
                       incrementCounter={incrementCounter}
                       decrementCounter={decrementCounter}
@@ -985,7 +1019,7 @@ function AdminOrders() {
                   )}
                 </TabPanel>
                 <TabPanel>
-                  {tabIndex === 7 && (
+                  {tabIndex === 8 && (
                     <CP2DoneOrders
                       incrementCounter={incrementCounter}
                       decrementCounter={decrementCounter}

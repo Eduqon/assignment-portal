@@ -96,9 +96,6 @@ function AssignmentDetails() {
   const [token, setToken] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [assignmentFileName, setAssignmentFileName] = useState("");
-  const [assignmentFileUrl, setAssignmentFileUrl] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
   const inputRef = useRef(null);
 
@@ -595,37 +592,6 @@ function AssignmentDetails() {
     }
   }
 
-  async function uploadFile(blobName, filePath) {
-    setIsUploading(true);
-    var data = filePath;
-
-    var config = {
-      method: "put",
-      url:
-        "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
-        encodeURIComponent(blobName) +
-        "?" +
-        token,
-      headers: {
-        "x-ms-blob-type": "BlockBlob",
-      },
-      data: data,
-    };
-
-    axios(config)
-      .then(function (response) {
-        setAssignmentFileUrl(
-          "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
-            encodeURIComponent(blobName)
-        );
-        setIsUploading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setIsUploading(false);
-      });
-  }
-
   const SendToClientModalDis = useDisclosure();
 
   async function openSendToClientModal() {
@@ -818,12 +784,66 @@ function AssignmentDetails() {
   const AssignmentFileUploadModalDis = useDisclosure();
 
   async function openAssignmentFileUploadModal() {
-    setAssignmentFileName("");
-    setAssignmentFileUrl("");
     AssignmentFileUploadModalDis.onOpen();
   }
 
   function AssignmentFileUploadModal() {
+    const [assignmentFileName, setAssignmentFileName] = useState([]);
+    const [assignmentFileUrl, setAssignmentFileUrl] = useState([]);
+    const [isUploading, setIsUploading] = useState(false);
+    const [assignmentFileUploadToken, setAssignmentFileUploadToken] =
+      useState("");
+
+    useEffect(() => {
+      _assignmentFileUploadToken();
+    }, []);
+
+    async function _assignmentFileUploadToken() {
+      try {
+        const response = await axios.get(
+          apiUrl + "/util/sas-token?container_name=assignment-dscp"
+        );
+        let data = response.data;
+        if (data.success) {
+          setAssignmentFileUploadToken(data.SASToken);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    async function uploadFile(blobName, filePath) {
+      setIsUploading(true);
+      var data = filePath;
+
+      var config = {
+        method: "put",
+        url:
+          "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
+          encodeURIComponent(blobName) +
+          "?" +
+          assignmentFileUploadToken,
+        headers: {
+          "x-ms-blob-type": "BlockBlob",
+        },
+        data: data,
+      };
+
+      axios(config)
+        .then(function (response) {
+          setAssignmentFileUrl((fileUrl) => [
+            "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
+              encodeURIComponent(blobName),
+            ...fileUrl,
+          ]);
+          setIsUploading(false);
+        })
+        .catch(function (error) {
+          console.log({ error });
+          setIsUploading(false);
+        });
+    }
+
     return (
       <Modal
         size={"2xl"}
@@ -851,12 +871,21 @@ function AssignmentDetails() {
                   </Button>
                   <input
                     type="file"
+                    multiple={true}
                     onChange={async () => {
-                      setAssignmentFileName(inputRef.current.files[0].name);
-                      await uploadFile(
-                        inputRef.current.files[0].name,
-                        inputRef.current.files[0]
-                      );
+                      let tempFileNames = [];
+                      for (
+                        let index = 0;
+                        index < inputRef.current.files.length;
+                        index++
+                      ) {
+                        tempFileNames.push(inputRef.current.files[index].name);
+                        await uploadFile(
+                          inputRef.current.files[index].name,
+                          inputRef.current.files[index]
+                        );
+                      }
+                      setAssignmentFileName(tempFileNames);
                     }}
                     ref={inputRef}
                     style={{ display: "none" }}
@@ -868,6 +897,44 @@ function AssignmentDetails() {
               <FormLabel>2) Enter File Category</FormLabel>
               <Input type={"text"} id="fileCategory"></Input>
             </InputGroup>
+            <Box marginTop={2} padding={"0 1rem"} width={"100%"}>
+              {assignmentFileUrl &&
+                assignmentFileUrl.map((_, index) => {
+                  return (
+                    <Box
+                      display={"flex"}
+                      alignItems={"center"}
+                      justifyContent={"space-between"}
+                      marginBottom={1}
+                    >
+                      <Box width={"60%"}>
+                        {_.split("/")[_.split("/").length - 1]}
+                      </Box>
+                      <Box>
+                        <Button
+                          onClick={() => {
+                            const finalArr = assignmentFileUrl.filter(
+                              (_, removedItemindex) =>
+                                removedItemindex !== index
+                            );
+                            const finalFileNameList = assignmentFileName.filter(
+                              (_) =>
+                                _ !==
+                                assignmentFileUrl[index].split("/")[
+                                  assignmentFileUrl[index].split("/").length - 1
+                                ]
+                            );
+                            setAssignmentFileUrl(finalArr);
+                            setAssignmentFileName(finalFileNameList);
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </Box>
+                    </Box>
+                  );
+                })}
+            </Box>
           </ModalBody>
           <ModalFooter>
             <Button
@@ -902,6 +969,8 @@ function AssignmentDetails() {
                         },
                         config
                       );
+                      setAssignmentFileName("");
+                      setAssignmentFileUrl("");
                       AssignmentFileUploadModalDis.onClose();
                       _fetchAssignmentDetails();
                     } catch (error) {}
@@ -1191,26 +1260,47 @@ function AssignmentDetails() {
                 {assignmentFiles.length === 0 ? (
                   <></>
                 ) : (
-                  assignmentFiles.map((assignmentFile, index) => (
-                    <Box key={index}>
-                      <VStack alignItems={"start"} marginBottom={"20px"}>
-                        <HStack>
-                          <Text fontWeight={"bold"}>• Category: </Text>
-                          <Text>{assignmentFile.category}</Text>
-                        </HStack>
-                        <HStack>
-                          <Text fontWeight={"bold"}>File Name: </Text>
-                          <Link isExternal={true} href={assignmentFile.url}>
-                            {assignmentFile.name}
-                          </Link>
-                        </HStack>
-                        <HStack>
-                          <Text fontWeight={"bold"}>User: </Text>
-                          <Text fontWeight={"bold"}>{assignmentFile.user}</Text>
-                        </HStack>
-                      </VStack>
-                    </Box>
-                  ))
+                  assignmentFiles.map((assignmentFile, index) => {
+                    return (
+                      <Box key={index}>
+                        <VStack alignItems={"start"} marginBottom={"20px"}>
+                          <HStack>
+                            <Text fontWeight={"bold"}>• Category: </Text>
+                            <Text>{assignmentFile.category}</Text>
+                          </HStack>
+                          <HStack>
+                            <Text fontWeight={"bold"} paddingRight={4}>
+                              File Name:{" "}
+                            </Text>
+                            <ul>
+                              {assignmentFile.name.length !== 0 &&
+                                assignmentFile.name.map((_) => {
+                                  return (
+                                    <li>
+                                      <Link
+                                        isExternal={true}
+                                        href={
+                                          "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
+                                          _
+                                        }
+                                      >
+                                        {_}
+                                      </Link>
+                                    </li>
+                                  );
+                                })}
+                            </ul>
+                          </HStack>
+                          <HStack>
+                            <Text fontWeight={"bold"}>User: </Text>
+                            <Text fontWeight={"bold"}>
+                              {assignmentFile.user}
+                            </Text>
+                          </HStack>
+                        </VStack>
+                      </Box>
+                    );
+                  })
                 )}
               </VStack>
             </VStack>
@@ -1251,10 +1341,27 @@ function AssignmentDetails() {
                           <Text>{submission.category}</Text>
                         </HStack>
                         <HStack>
-                          <Text fontWeight={"bold"}>File Name: </Text>
-                          <Link isExternal={true} href={submission.url}>
-                            {submission.name}
-                          </Link>
+                          <Text fontWeight={"bold"} paddingRight={4}>
+                            File Name:{" "}
+                          </Text>
+                          <ul>
+                            {submission.name.length !== 0 &&
+                              submission.name.map((_) => {
+                                return (
+                                  <li>
+                                    <Link
+                                      isExternal={true}
+                                      href={
+                                        "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
+                                        _
+                                      }
+                                    >
+                                      {_}
+                                    </Link>
+                                  </li>
+                                );
+                              })}
+                          </ul>
                         </HStack>
                         <HStack>
                           <Text fontWeight={"bold"}>Expert: </Text>

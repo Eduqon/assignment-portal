@@ -13,6 +13,13 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
   Spinner,
   Text,
   useDisclosure,
@@ -74,264 +81,277 @@ function ConfirmedOrderMessage({
     }
   }
 
-  async function openMessageModal(data) {
-    setExpertChatData(data);
-    setOpenModalId(data.id);
-  }
+  // async function openMessageModal(data) {
+  //   setExpertChatData(data);
+  //   setOpenModalId(data.id);
+  // }
 
-  function MessageModal({ expertChatData, openModalId }) {
-    const MessageModalDis = useDisclosure();
+  // function MessageModal({ expertChatData, openModalId }) {
+  //   const MessageModalDis = useDisclosure();
 
-    useEffect(() => {
-      if (openModalId) {
-        MessageModalDis.onOpen();
-      } else {
-        MessageModalDis.onClose();
-      }
-    }, [openModalId]);
+  //   useEffect(() => {
+  //     if (openModalId) {
+  //       MessageModalDis.onOpen();
+  //     } else {
+  //       MessageModalDis.onClose();
+  //     }
+  //   }, [openModalId]);
 
-    const handleCloseModal = () => {
-      setOpenModalId(null);
-      MessageModalDis.onClose();
-    };
+  //   const handleCloseModal = () => {
+  //     setOpenModalId(null);
+  //     MessageModalDis.onClose();
+  //   };
 
-    return (
-      <Modal
-        size={"lg"}
-        onClose={handleCloseModal}
-        isOpen={MessageModalDis.isOpen}
-        onOpen={MessageModalDis.onOpen}
-        isCentered
-      >
-        <ModalOverlay />
-        <ModalContent maxH={"500px"}>
-          <ModalCloseButton />
-          <ModalBody>
-            <Box
-              display="block"
-              borderWidth="1px"
-              borderRadius="md"
-              width={"md"}
-            >
-              <Box p={4} bgColor="gray.200">
-                <HStack>
-                  <Heading fontSize={"xl"}>Operator Chat with Expert</Heading>
-                </HStack>
-              </Box>
-              <VStack
-                alignItems={"start"}
-                justifyContent={"space-between"}
-                margin={3}
-                minH={"sm"}
-                maxH={"sm"}
-              >
-                <VStack
-                  overflowY={"scroll"}
-                  alignItems={"start"}
-                  width={"100%"}
-                >
-                  {operatorExpertChat[openModalId] &&
-                    operatorExpertChat[openModalId].map((msg, index) => {
-                      return (
-                        <Box
-                          display={
-                            msg.type === "TEXT"
-                              ? "flex"
-                              : msg.type === "MEDIA"
-                              ? "flex"
-                              : "none"
-                          }
-                          alignSelf={
-                            msg.user === id ? "flex-end" : "flex-start"
-                          }
-                          flexWrap={true}
-                          padding={2}
-                          borderRadius={"md"}
-                          maxWidth="70%"
-                          bgColor={msg.user === id ? "blue.100" : "green.100"}
-                          key={index}
-                        >
-                          <VStack maxWidth="100%" overflowWrap={"break-word"}>
-                            <Text
-                              display={msg.type === "TEXT" ? "flex" : "none"}
-                              maxWidth={"100%"}
-                            >
-                              {msg.msg}
-                            </Text>
-                            <Link
-                              color={"blue"}
-                              fontWeight={"bold"}
-                              display={msg.type === "MEDIA" ? "flex" : "none"}
-                              maxWidth={"100%"}
-                              href={msg.msg}
-                            >
-                              {msg.msg && msg.msg.substring(62)}
-                            </Link>
-                          </VStack>
-                        </Box>
-                      );
-                    })}
-                </VStack>
-                <InputGroup>
-                  <Input type="text" id="addChatOperatorExpert" />
-                  <Input
-                    type="file"
-                    id="addFileOperatorExpert"
-                    onChange={async () => {
-                      let fileUrl = "";
-                      if (inputFileOperatorExpert) {
-                        onOpen();
-                        try {
-                          var config = {
-                            method: "put",
-                            url:
-                              "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
-                              encodeURIComponent(
-                                inputFileOperatorExpert.current.files[0].name
-                              ) +
-                              "?" +
-                              token,
-                            headers: {
-                              "x-ms-blob-type": "BlockBlob",
-                            },
-                            data: inputFileOperatorExpert.current.files[0],
-                          };
+  //   return (
+  //     <Modal
+  //       size={"lg"}
+  //       onClose={handleCloseModal}
+  //       isOpen={MessageModalDis.isOpen}
+  //       onOpen={MessageModalDis.onOpen}
+  //       isCentered
+  //     >
+  //       <ModalOverlay />
+  //       <ModalContent maxH={"500px"}>
+  //         <ModalCloseButton />
+  //         <ModalBody>
+  //           <Box
+  //             display="block"
+  //             borderWidth="1px"
+  //             borderRadius="md"
+  //             width={"md"}
+  //           >
+  //             <Box p={4} bgColor="gray.200">
+  //               <HStack>
+  //                 <Heading fontSize={"xl"}>Operator Chat with Expert</Heading>
+  //               </HStack>
+  //             </Box>
+  //             <VStack
+  //               alignItems={"start"}
+  //               justifyContent={"space-between"}
+  //               margin={3}
+  //               minH={"sm"}
+  //               maxH={"sm"}
+  //             >
+  //               <VStack
+  //                 overflowY={"scroll"}
+  //                 alignItems={"start"}
+  //                 width={"100%"}
+  //               >
+  //                 {operatorExpertChat[openModalId] &&
+  //                   operatorExpertChat[openModalId].map((msg, index) => {
+  //                     return (
+  //                       <Box
+  //                         display={
+  //                           msg.type === "TEXT"
+  //                             ? "flex"
+  //                             : msg.type === "MEDIA"
+  //                             ? "flex"
+  //                             : "none"
+  //                         }
+  //                         alignSelf={
+  //                           msg.user === id ? "flex-end" : "flex-start"
+  //                         }
+  //                         flexWrap={true}
+  //                         padding={2}
+  //                         borderRadius={"md"}
+  //                         maxWidth="70%"
+  //                         bgColor={msg.user === id ? "blue.100" : "green.100"}
+  //                         key={index}
+  //                       >
+  //                         <VStack maxWidth="100%" overflowWrap={"break-word"}>
+  //                           <Text
+  //                             display={msg.type === "TEXT" ? "flex" : "none"}
+  //                             maxWidth={"100%"}
+  //                           >
+  //                             {msg.msg}
+  //                           </Text>
+  //                           <Link
+  //                             color={"blue"}
+  //                             fontWeight={"bold"}
+  //                             display={msg.type === "MEDIA" ? "flex" : "none"}
+  //                             maxWidth={"100%"}
+  //                             href={msg.msg}
+  //                           >
+  //                             {msg.msg && msg.msg.substring(62)}
+  //                           </Link>
+  //                         </VStack>
+  //                       </Box>
+  //                     );
+  //                   })}
+  //               </VStack>
+  //               <InputGroup>
+  //                 <Input type="text" id="addChatOperatorExpert" />
+  //                 <Input
+  //                   type="file"
+  //                   id="addFileOperatorExpert"
+  //                   onChange={async () => {
+  //                     let fileUrl = "";
+  //                     if (inputFileOperatorExpert) {
+  //                       onOpen();
+  //                       try {
+  //                         var config = {
+  //                           method: "put",
+  //                           url:
+  //                             "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
+  //                             encodeURIComponent(
+  //                               inputFileOperatorExpert.current.files[0].name
+  //                             ) +
+  //                             "?" +
+  //                             token,
+  //                           headers: {
+  //                             "x-ms-blob-type": "BlockBlob",
+  //                           },
+  //                           data: inputFileOperatorExpert.current.files[0],
+  //                         };
 
-                          axios(config)
-                            .then(async function (response) {
-                              fileUrl =
-                                "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
-                                encodeURIComponent(
-                                  inputFileOperatorExpert.current.files[0].name
-                                );
-                              const message = await updateDoc(
-                                doc(
-                                  db,
-                                  "chat",
-                                  expertChatData.chat[
-                                    expertChatData.chat.length - 1
-                                  ].user +
-                                    "_" +
-                                    "operator_expert_chat" +
-                                    "_" +
-                                    openModalId
-                                ),
-                                {
-                                  conversation: arrayUnion({
-                                    msg: fileUrl,
-                                    time: Date.now(),
-                                    type: "MEDIA",
-                                    user: id,
-                                    operatorMsgCount:
-                                      operatorMessageCounter + 1,
-                                    expertMsgCount: 0,
-                                    newMessageCount: 0,
-                                  }),
-                                }
-                              );
-                            })
-                            .catch(function (error) {
-                              console.log(error);
-                            });
-                        } catch (error) {
-                          console.log(error);
-                        }
-                        onClose();
-                      }
-                    }}
-                    ref={inputFileOperatorExpert}
-                    style={{ display: "none" }}
-                  />
-                  <InputLeftElement h={"full"}>
-                    <Button
-                      id="attachButton"
-                      onClick={async () => {
-                        inputFileOperatorExpert.current.click();
-                      }}
-                    >
-                      <AttachmentIcon />
-                    </Button>
-                  </InputLeftElement>
-                  <InputRightElement h={"full"}>
-                    <Button
-                      id="sendButton"
-                      onClick={async () => {
-                        let userToken = localStorage.getItem("userToken");
-                        let Regex =
-                          /\b[\+]?[(]?[0-9]{2,6}[)]?[-\s\.]?[-\s\/\.0-9]{3,15}\b/m;
-                        let textInput = document.getElementById(
-                          "addChatOperatorExpert"
-                        );
-                        if (
-                          textInput.value !== "" &&
-                          textInput.value !== undefined
-                        ) {
-                          if (Regex.test(textInput.value)) {
-                            window.alert(
-                              "Sharing Phone Numbers through Chat is not allowed"
-                            );
-                          } else {
-                            const message = await updateDoc(
-                              doc(
-                                db,
-                                "chat",
-                                expertChatData.chat[
-                                  expertChatData.chat.length - 1
-                                ].user +
-                                  "_" +
-                                  "operator_expert_chat" +
-                                  "_" +
-                                  openModalId
-                              ),
-                              {
-                                conversation: arrayUnion({
-                                  msg: textInput.value,
-                                  time: Date.now(),
-                                  type: "TEXT",
-                                  user: id,
-                                  operatorMsgCount: operatorMessageCounter + 1,
-                                  expertMsgCount: 0,
-                                  newMessageCount: 0,
-                                }),
-                              }
-                            );
-                            let config = {
-                              headers: { Authorization: `Bearer ${userToken}` },
-                            };
-                            try {
-                              const response = await axios.post(
-                                apiUrl + "/messages",
-                                {
-                                  id: openModalId,
-                                  expertEmail:
-                                    expertChatData.chat[
-                                      expertChatData.chat.length - 1
-                                    ].user,
-                                },
-                                config
-                              );
-                              let resdata = response.data;
-                              if (resdata.success) {
-                                textInput.value = "";
-                              }
-                            } catch (err) {
-                              console.log(err);
-                            }
-                          }
-                        }
-                      }}
-                    >
-                      <ArrowForwardIcon />
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-              </VStack>
-            </Box>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    );
-  }
+  //                         axios(config)
+  //                           .then(async function (response) {
+  //                             fileUrl =
+  //                               "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
+  //                               encodeURIComponent(
+  //                                 inputFileOperatorExpert.current.files[0].name
+  //                               );
+  //                             const message = await updateDoc(
+  //                               doc(
+  //                                 db,
+  //                                 "chat",
+  //                                 expertChatData.chat[
+  //                                   expertChatData.chat.length - 1
+  //                                 ].user +
+  //                                   "_" +
+  //                                   "operator_expert_chat" +
+  //                                   "_" +
+  //                                   openModalId
+  //                               ),
+  //                               {
+  //                                 conversation: arrayUnion({
+  //                                   msg: fileUrl,
+  //                                   time: Date.now(),
+  //                                   type: "MEDIA",
+  //                                   user: id,
+  //                                   operatorMsgCount: 0,
+  //                                   expertMsgCount: 0,
+  //                                   newMessageCount: 0,
+  //                                 }),
+  //                               }
+  //                             );
+  //                           })
+  //                           .catch(function (error) {
+  //                             console.log(error);
+  //                           });
+  //                       } catch (error) {
+  //                         console.log(error);
+  //                       }
+  //                       onClose();
+  //                     }
+  //                   }}
+  //                   ref={inputFileOperatorExpert}
+  //                   style={{ display: "none" }}
+  //                 />
+  //                 <InputLeftElement h={"full"}>
+  //                   <Button
+  //                     id="attachButton"
+  //                     onClick={async () => {
+  //                       inputFileOperatorExpert.current.click();
+  //                     }}
+  //                   >
+  //                     <AttachmentIcon />
+  //                   </Button>
+  //                 </InputLeftElement>
+  //                 <InputRightElement h={"full"}>
+  //                   <Button
+  //                     id="sendButton"
+  //                     onClick={async () => {
+  //                       let userToken = localStorage.getItem("userToken");
+  //                       let Regex =
+  //                         /\b[\+]?[(]?[0-9]{2,6}[)]?[-\s\.]?[-\s\/\.0-9]{3,15}\b/m;
+  //                       let textInput = document.getElementById(
+  //                         "addChatOperatorExpert"
+  //                       );
+  //                       if (
+  //                         textInput.value !== "" &&
+  //                         textInput.value !== undefined
+  //                       ) {
+  //                         if (Regex.test(textInput.value)) {
+  //                           window.alert(
+  //                             "Sharing Phone Numbers through Chat is not allowed"
+  //                           );
+  //                         } else {
+  //                           let config = {
+  //                             headers: { Authorization: `Bearer ${userToken}` },
+  //                           };
+  //                           try {
+  //                             const response = await axios.post(
+  //                               apiUrl + "/assignment/messages",
+  //                               {
+  //                                 _id: openModalId,
+  //                                 message: textInput.value,
+  //                               },
+  //                               config
+  //                             );
+  //                             let resdata = response.data;
+  //                             if (resdata.success) {
+  //                               console.log({ resdata });
+  //                               const message = await updateDoc(
+  //                                 doc(
+  //                                   db,
+  //                                   "chat",
+  //                                   expertChatData.chat[
+  //                                     expertChatData.chat.length - 1
+  //                                   ].user +
+  //                                     "_" +
+  //                                     "operator_expert_chat" +
+  //                                     "_" +
+  //                                     openModalId
+  //                                 ),
+  //                                 {
+  //                                   conversation: arrayUnion({
+  //                                     msg: textInput.value,
+  //                                     time: Date.now(),
+  //                                     type: "TEXT",
+  //                                     user: id,
+  //                                     operatorMsgCount:
+  //                                       operatorMessageCounter + 1,
+  //                                     expertMsgCount: 0,
+  //                                     newMessageCount: 0,
+  //                                   }),
+  //                                 }
+  //                               );
+  //                               window.alert("Message sent to Expert");
+  //                             }
+  //                             const messageresponse = await axios.post(
+  //                               apiUrl + "/messages",
+  //                               {
+  //                                 id: openModalId,
+  //                                 expertEmail:
+  //                                   expertChatData.chat[
+  //                                     expertChatData.chat.length - 1
+  //                                   ].user,
+  //                               },
+  //                               config
+  //                             );
+  //                             let msgresdata = messageresponse.data;
+  //                             if (msgresdata.success) {
+  //                               textInput.value = "";
+  //                             }
+  //                           } catch (err) {
+  //                             console.log(err);
+  //                           }
+  //                         }
+  //                       }
+  //                     }}
+  //                   >
+  //                     <ArrowForwardIcon />
+  //                   </Button>
+  //                 </InputRightElement>
+  //               </InputGroup>
+  //             </VStack>
+  //           </Box>
+  //         </ModalBody>
+  //       </ModalContent>
+  //     </Modal>
+  //   );
+  // }
 
   async function readMessages(assignmentID) {
     try {
@@ -364,12 +384,12 @@ function ConfirmedOrderMessage({
 
   return (
     <>
-      {openModalId && (
+      {/* {openModalId && (
         <MessageModal
           expertChatData={expertChatData}
           openModalId={openModalId}
         />
-      )}
+      )} */}
       <Box
         display={"block"}
         borderWidth="1px"
@@ -456,14 +476,302 @@ function ConfirmedOrderMessage({
                           {data.chat.length !== 0 &&
                             data.chat[data.chat.length - 1].msg}
                         </strong>
-                        <Button
+                        <Popover
+                          placement="right-start"
+                          minW={{ base: "100%", lg: "max-content" }}
+                        >
+                          <PopoverTrigger>
+                            <Button
+                              onClick={async () => await readMessages(data.id)}
+                            >
+                              Reply
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <PopoverHeader fontWeight="semibold">
+                              Operator Chat with Expert
+                            </PopoverHeader>
+                            <PopoverArrow />
+                            <PopoverCloseButton />
+                            <PopoverBody>
+                              <Box
+                                display="block"
+                                borderWidth="1px"
+                                borderRadius="md"
+                              >
+                                <VStack
+                                  alignItems={"start"}
+                                  justifyContent={"space-between"}
+                                  margin={3}
+                                  minH={"sm"}
+                                  maxH={"sm"}
+                                >
+                                  <VStack
+                                    overflowY={"scroll"}
+                                    alignItems={"start"}
+                                    width={"100%"}
+                                  >
+                                    {operatorExpertChat[data.id] &&
+                                      operatorExpertChat[data.id].map(
+                                        (msg, index) => {
+                                          return (
+                                            <Box
+                                              display={
+                                                msg.type === "TEXT"
+                                                  ? "flex"
+                                                  : msg.type === "MEDIA"
+                                                  ? "flex"
+                                                  : "none"
+                                              }
+                                              alignSelf={
+                                                msg.user === id
+                                                  ? "flex-end"
+                                                  : "flex-start"
+                                              }
+                                              flexWrap={true}
+                                              padding={2}
+                                              borderRadius={"md"}
+                                              maxWidth="70%"
+                                              bgColor={
+                                                msg.user === id
+                                                  ? "blue.100"
+                                                  : "green.100"
+                                              }
+                                              key={index}
+                                            >
+                                              <VStack
+                                                maxWidth="100%"
+                                                overflowWrap={"break-word"}
+                                              >
+                                                <Text
+                                                  display={
+                                                    msg.type === "TEXT"
+                                                      ? "flex"
+                                                      : "none"
+                                                  }
+                                                  maxWidth={"100%"}
+                                                >
+                                                  {msg.msg}
+                                                </Text>
+                                                <Link
+                                                  color={"blue"}
+                                                  fontWeight={"bold"}
+                                                  display={
+                                                    msg.type === "MEDIA"
+                                                      ? "flex"
+                                                      : "none"
+                                                  }
+                                                  maxWidth={"100%"}
+                                                  href={msg.msg}
+                                                >
+                                                  {msg.msg &&
+                                                    msg.msg.substring(62)}
+                                                </Link>
+                                              </VStack>
+                                            </Box>
+                                          );
+                                        }
+                                      )}
+                                  </VStack>
+                                  <InputGroup>
+                                    <Input
+                                      type="text"
+                                      id="addChatOperatorExpert"
+                                    />
+                                    <Input
+                                      type="file"
+                                      id="addFileOperatorExpert"
+                                      onChange={async () => {
+                                        let fileUrl = "";
+                                        if (inputFileOperatorExpert) {
+                                          onOpen();
+                                          try {
+                                            var config = {
+                                              method: "put",
+                                              url:
+                                                "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
+                                                encodeURIComponent(
+                                                  inputFileOperatorExpert
+                                                    .current.files[0].name
+                                                ) +
+                                                "?" +
+                                                token,
+                                              headers: {
+                                                "x-ms-blob-type": "BlockBlob",
+                                              },
+                                              data: inputFileOperatorExpert
+                                                .current.files[0],
+                                            };
+
+                                            axios(config)
+                                              .then(async function (response) {
+                                                fileUrl =
+                                                  "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
+                                                  encodeURIComponent(
+                                                    inputFileOperatorExpert
+                                                      .current.files[0].name
+                                                  );
+                                                const message = await updateDoc(
+                                                  doc(
+                                                    db,
+                                                    "chat",
+                                                    data.chat[
+                                                      data.chat.length - 1
+                                                    ].user +
+                                                      "_" +
+                                                      "operator_expert_chat" +
+                                                      "_" +
+                                                      data.id
+                                                  ),
+                                                  {
+                                                    conversation: arrayUnion({
+                                                      msg: fileUrl,
+                                                      time: Date.now(),
+                                                      type: "MEDIA",
+                                                      user: id,
+                                                      operatorMsgCount:
+                                                        operatorMessageCounter +
+                                                        1,
+                                                      expertMsgCount: 0,
+                                                      newMessageCount: 0,
+                                                    }),
+                                                  }
+                                                );
+                                              })
+                                              .catch(function (error) {
+                                                console.log(error);
+                                              });
+                                          } catch (error) {
+                                            console.log(error);
+                                          }
+                                          onClose();
+                                        }
+                                      }}
+                                      ref={inputFileOperatorExpert}
+                                      style={{ display: "none" }}
+                                    />
+                                    <InputLeftElement h={"full"}>
+                                      <Button
+                                        id="attachButton"
+                                        onClick={async () => {
+                                          inputFileOperatorExpert.current.click();
+                                        }}
+                                      >
+                                        <AttachmentIcon />
+                                      </Button>
+                                    </InputLeftElement>
+                                    <InputRightElement h={"full"}>
+                                      <Button
+                                        id="sendButton"
+                                        onClick={async () => {
+                                          let userToken =
+                                            localStorage.getItem("userToken");
+                                          let Regex =
+                                            /\b[\+]?[(]?[0-9]{2,6}[)]?[-\s\.]?[-\s\/\.0-9]{3,15}\b/m;
+                                          let textInput =
+                                            document.getElementById(
+                                              "addChatOperatorExpert"
+                                            );
+                                          if (
+                                            textInput.value !== "" &&
+                                            textInput.value !== undefined
+                                          ) {
+                                            if (Regex.test(textInput.value)) {
+                                              window.alert(
+                                                "Sharing Phone Numbers through Chat is not allowed"
+                                              );
+                                            } else {
+                                              let config = {
+                                                headers: {
+                                                  Authorization: `Bearer ${userToken}`,
+                                                },
+                                              };
+                                              try {
+                                                const response =
+                                                  await axios.post(
+                                                    apiUrl +
+                                                      "/assignment/messages",
+                                                    {
+                                                      _id: data.id,
+                                                      message: textInput.value,
+                                                    },
+                                                    config
+                                                  );
+                                                let resdata = response.data;
+                                                if (resdata.success) {
+                                                  const message =
+                                                    await updateDoc(
+                                                      doc(
+                                                        db,
+                                                        "chat",
+                                                        data.chat[
+                                                          data.chat.length - 1
+                                                        ].user +
+                                                          "_" +
+                                                          "operator_expert_chat" +
+                                                          "_" +
+                                                          data.id
+                                                      ),
+                                                      {
+                                                        conversation:
+                                                          arrayUnion({
+                                                            msg: textInput.value,
+                                                            time: Date.now(),
+                                                            type: "TEXT",
+                                                            user: id,
+                                                            operatorMsgCount:
+                                                              operatorMessageCounter +
+                                                              1,
+                                                            expertMsgCount: 0,
+                                                            newMessageCount: 0,
+                                                          }),
+                                                      }
+                                                    );
+                                                  window.alert(
+                                                    "Message sent to Expert"
+                                                  );
+                                                }
+                                                const messageresponse =
+                                                  await axios.post(
+                                                    apiUrl + "/messages",
+                                                    {
+                                                      id: data.id,
+                                                      expertEmail:
+                                                        data.chat[
+                                                          data.chat.length - 1
+                                                        ].user,
+                                                    },
+                                                    config
+                                                  );
+                                                let msgresdata =
+                                                  messageresponse.data;
+                                                if (msgresdata.success) {
+                                                  textInput.value = "";
+                                                }
+                                              } catch (err) {
+                                                console.log(err);
+                                              }
+                                            }
+                                          }
+                                        }}
+                                      >
+                                        <ArrowForwardIcon />
+                                      </Button>
+                                    </InputRightElement>
+                                  </InputGroup>
+                                </VStack>
+                              </Box>
+                            </PopoverBody>
+                          </PopoverContent>
+                        </Popover>
+                        {/* <Button
                           onClick={async () => {
                             await openMessageModal(data);
                             await readMessages(data.id);
                           }}
                         >
                           Reply
-                        </Button>
+                        </Button> */}
                       </Box>
                     </Box>
                   );

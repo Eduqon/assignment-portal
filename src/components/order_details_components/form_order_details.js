@@ -697,6 +697,41 @@ export function FormOrderDetails() {
                     </InputRightAddon>
                   </InputGroup>
                 </FormControl>
+                <Box marginTop={2} padding={"0 1rem"}>
+                  {fileUrl?.map((_, index) => {
+                    return (
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                        marginBottom={1}
+                      >
+                        <Box>{_.split("/")[_.split("/").length - 1]}</Box>
+                        <Box>
+                          <Button
+                            onClick={() => {
+                              const finalArr = fileUrl.filter(
+                                (_, removedItemindex) =>
+                                  removedItemindex !== index
+                              );
+                              const finalFileNameList = fileName.filter(
+                                (_) =>
+                                  _ !==
+                                  fileUrl[index].split("/")[
+                                    fileUrl[index].split("/").length - 1
+                                  ]
+                              );
+                              setFileUrl(finalArr);
+                              setFileName(finalFileNameList);
+                            }}
+                          >
+                            Remove
+                          </Button>
+                        </Box>
+                      </Box>
+                    );
+                  })}
+                </Box>
               </Box>
               <Box>
                 <FormControl id="vendor">

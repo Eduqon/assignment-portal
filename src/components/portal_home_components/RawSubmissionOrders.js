@@ -46,6 +46,7 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
+import moment from "moment";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { apiUrl, callingNumbers } from "../../services/contants";
 import { db } from "../../services/firebase";
@@ -446,6 +447,7 @@ function RawSubmissionOrders({
 
   function ReworkModal() {
     const [qcComments, setQcComment] = useState("");
+    const [timeValid, setTimeValid] = useState(false);
     const [inputValue, setInputValue] = useState({
       date: "",
       time: "",
@@ -457,6 +459,14 @@ function RawSubmissionOrders({
       });
       ReworkModalDis.onClose();
     };
+
+    const timeValue =
+      assignments &&
+      assignments[selectedIndex] &&
+      assignments[selectedIndex].deadline.split(",")[0];
+
+    const maxTime =
+      timeValue && timeValue.split(":")[0] + ":" + timeValue.split(":")[1];
 
     return (
       <Modal
@@ -511,7 +521,26 @@ function RawSubmissionOrders({
                   type="date"
                   id="date"
                   value={inputValue.date}
+                  max={moment(
+                    assignments &&
+                      assignments[selectedIndex] &&
+                      assignments[selectedIndex].deadline.split(",")[1]
+                  ).format("YYYY-MM-DD")}
                   onChange={(e) => {
+                    const selectedDate = e.target.value;
+                    const deadlineDate = moment(
+                      assignments &&
+                        assignments[selectedIndex] &&
+                        assignments[selectedIndex].deadline.split(",")[1]
+                    ).format("YYYY-MM-DD");
+
+                    if (selectedDate === deadlineDate) {
+                      inputValue.time <= maxTime
+                        ? setTimeValid(true)
+                        : setTimeValid(false);
+                    } else {
+                      setTimeValid(true);
+                    }
                     setInputValue({
                       ...inputValue,
                       date: e.target.value,
@@ -521,8 +550,23 @@ function RawSubmissionOrders({
                 <Input
                   type="time"
                   id="time"
+                  max={maxTime}
+                  required
                   value={inputValue.time}
                   onChange={(e) => {
+                    const date = inputValue.date;
+                    const deadlineDate = moment(
+                      assignments &&
+                        assignments[selectedIndex] &&
+                        assignments[selectedIndex].deadline.split(",")[1]
+                    ).format("YYYY-MM-DD");
+                    if (date === deadlineDate) {
+                      e.target.validity.valid
+                        ? setTimeValid(true)
+                        : setTimeValid(false);
+                    } else {
+                      setTimeValid(true);
+                    }
                     setInputValue({
                       ...inputValue,
                       time: e.target.value,
@@ -530,6 +574,11 @@ function RawSubmissionOrders({
                   }}
                 />
               </HStack>
+              {!timeValid && inputValue.time && (
+                <span style={{ color: "red" }}>
+                  ** Time should not be greater than deadline time value
+                </span>
+              )}
               {error && (
                 <span style={{ color: "red" }}>
                   ** Expert Deadline is mandatory
@@ -539,6 +588,7 @@ function RawSubmissionOrders({
           </ModalBody>
           <ModalFooter>
             <Button
+              disabled={!timeValid}
               onClick={() => {
                 if (isUploading) {
                   window.alert("File is still being uploaded");
@@ -632,9 +682,24 @@ function RawSubmissionOrders({
                   submissions.map((submission, index) => (
                     <Tr key={submission._id}>
                       <Td maxW={"100px"}>
-                        <Link isExternal={true} href={submission.url}>
-                          {submission.name}
-                        </Link>
+                        <ul>
+                          {submission.name.length !== 0 &&
+                            submission.name.map((_) => {
+                              return (
+                                <li>
+                                  <Link
+                                    isExternal={true}
+                                    href={
+                                      "https://assignmentsanta.blob.core.windows.net/assignment-dscp/" +
+                                      _
+                                    }
+                                  >
+                                    {_}
+                                  </Link>
+                                </li>
+                              );
+                            })}
+                        </ul>
                       </Td>
                       <Td>{submission.category}</Td>
                       <Td>{submission.createdAt}</Td>
