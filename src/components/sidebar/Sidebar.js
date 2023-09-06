@@ -3,7 +3,7 @@ import { SideBarStore } from "../../services/stores/sidebar";
 // import { Link } from "react-router-dom";
 import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
 // import Assignments from '../../pages/admin/Assignments';
-import { clickk } from "../../pages/admin/assignments";
+import { clickk } from "../../pages/admin/Assignments";
 import { SubjectShow } from "../portal_home_components/Subjects";
 import { VendorShow } from "../portal_home_components/Vendors";
 
