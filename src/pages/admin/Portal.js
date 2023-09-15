@@ -163,7 +163,7 @@ function PortalLayout() {
               </TabPanels>
             </Tabs>
           </>
-        ) : userRole === "Admin" ? (
+        ) : userRole === "Admin" || userRole === "Super Admin" ? (
           <>
             <Tabs
               position={"absolute"}
