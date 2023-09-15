@@ -163,7 +163,7 @@ function PortalLayout() {
               </TabPanels>
             </Tabs>
           </>
-        ) : (
+        ) : userRole === "Admin" ? (
           <>
             <Tabs
               position={"absolute"}
@@ -204,6 +204,8 @@ function PortalLayout() {
               </TabPanels>
             </Tabs>
           </>
+        ) : (
+          ""
         )}
       </Box>
     </>
