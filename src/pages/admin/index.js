@@ -35,6 +35,10 @@ function AdminLayout() {
     });
 
     localStorage.removeItem("userEmail");
+    localStorage.removeItem("ordersTabIndex");
+    localStorage.removeItem("assignmentSantaBrowserToken");
+    localStorage.removeItem("backButton");
+    localStorage.removeItem("tabIndex");
     localStorage.removeItem("userName");
     localStorage.removeItem("userRole");
     localStorage.removeItem("userToken");

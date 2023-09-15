@@ -360,7 +360,7 @@ const NewUser = () => {
             spacing={8}
             mx={"auto"}
             maxW={"lg"}
-            minW={{ base: "sm", md: "md" }}
+            minW={{ base: "sm", md: "md", lg: "lg" }}
             py={12}
             px={6}
           >
@@ -377,22 +377,6 @@ const NewUser = () => {
             >
               <Stack spacing={6}>
                 <VStack>
-                  <Box width={"100%"}>
-                    <FormControl isRequired>
-                      <FormLabel>Subject</FormLabel>
-                      <Select id="subjectExpert">
-                        {subjects.length === 0 ? (
-                          <></>
-                        ) : (
-                          subjects.map((subject, index) => (
-                            <option value={subject._id} key={index}>
-                              {subject._id}
-                            </option>
-                          ))
-                        )}
-                      </Select>
-                    </FormControl>
-                  </Box>
                   <Box width={"100%"}>
                     <FormControl id="nameExpert" isRequired>
                       <FormLabel>Name</FormLabel>
@@ -429,26 +413,30 @@ const NewUser = () => {
                       <Input maxLength={10} type="tel" />
                     </FormControl>
                   </Box>
-                  <Box width={"100%"}>
+                  <Box width={"100%"} height={"300px"} overflow={"scroll"}>
                     <FormControl id="contactExpert" isRequired>
                       <FormLabel>Subjects</FormLabel>
-                      <Stack spacing={4} direction="column">
-                        {subjectcheck.map((res) => {
-                          return (
-                            <>
-                              <FlexDiv>
-                                <input
-                                  type="checkbox"
-                                  value={res}
-                                  onChange={() => getsubjects(res)}
-                                  mr={2}
-                                  className="sub"
-                                />
-                                <div ml="4">{res}</div>
-                              </FlexDiv>
-                            </>
-                          );
-                        })}
+                      <Stack
+                        display={"grid"}
+                        gridTemplateColumns={"auto auto"}
+                        gridGap={"1rem"}
+                      >
+                        {subjects.length === 0 ? (
+                          <></>
+                        ) : (
+                          subjects.map((subject, index) => (
+                            <FlexDiv>
+                              <input
+                                type="checkbox"
+                                value={subject._id}
+                                onChange={() => getsubjects(res)}
+                                mr={2}
+                                className="sub"
+                              />
+                              <div ml="4">{subject._id}</div>
+                            </FlexDiv>
+                          ))
+                        )}
                       </Stack>
                     </FormControl>
                   </Box>
