@@ -2534,6 +2534,7 @@ export async function getStaticPaths() {
   };
   const response = await axios.get(apiUrl + "/assignment/fetch", config);
   let data = await response.data.assignmentData;
+  console.log({ data });
   const paths = data.map((data) => ({
     params: { assignmentID: data._id },
   }));
@@ -2555,6 +2556,7 @@ export async function getStaticProps({ params }) {
     apiUrl + "/assignment/fetch?_id=" + assignmentID,
     config
   );
+  console.log({ response: response.data.assignmentData });
   let data = await response.data.assignmentData;
 
   return {
