@@ -45,6 +45,9 @@ import { FooterHome } from "../../components/home_components/footer_home";
 import { client } from "../_app";
 import Custom404 from "../404";
 import Faqschema from "../../components/home_components/Faqschema";
+import { loadBlogs } from "../../lib/load-blogs";
+import { loadServices } from "../../lib/load-services";
+import { loadFaqschemas } from "../../lib/load-faqschemas";
 
 export default function NavService({ blogsdata, services, faqschemas }) {
   const [pages, setPages] = useState(0);
@@ -625,9 +628,10 @@ export default function NavService({ blogsdata, services, faqschemas }) {
 }
 
 export async function getStaticPaths() {
-  const { data: blogData } = await client.query({
-    query: BLOGS,
-  });
+  // const { data: blogData } = await client.query({
+  //   query: BLOGS,
+  // });
+  const { data: blogData } = await loadBlogs();
   const allBlogs = blogData.blogs.data;
   const paths = allBlogs.map((path) => ({
     params: { blog: path.attributes.Slug },
@@ -646,19 +650,16 @@ export async function getStaticProps({ params }) {
     query: BLOG,
     variables: { blog: blog },
   });
-  const { data: serviceData } = await client.query({
-    query: SERVICES,
-  });
-  const { data: faqschemasData } = await client.query({
-    query: FAQSCHEMA,
-  });
-  console.log({ data });
+  const { data: serviceData } = await loadServices();
+  const { data: faqschemasData } = await loadFaqschemas();
+  // const { data: faqschemasData } = await client.query({
+  //   query: FAQSCHEMA,
+  // });
   return {
     props: {
       blogsdata: data.blogs,
       services: serviceData.services,
       faqschemas: faqschemasData.faqschemas,
     },
-    revalidate: 1,
   };
 }

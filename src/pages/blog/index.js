@@ -16,6 +16,9 @@ import { NavbarHome } from "../../components/home_components/navbar_home";
 import { BLOGS, mediaUrl, SEOTAGS, SERVICES } from "../../services/contants";
 import { client } from "../_app";
 import useFetch from "../../hooks/useFetch";
+import { loadBlogs } from "../../lib/load-blogs";
+import { loadServices } from "../../lib/load-services";
+import { loadSeotags } from "../../lib/load-seotags";
 
 export default function Blog({ services, seotags, blogs }) {
   const { data: blogData } = blogs;
@@ -158,24 +161,15 @@ export default function Blog({ services, seotags, blogs }) {
 }
 
 export async function getStaticProps() {
-  const { data: blogData } = await client.query({
-    query: BLOGS,
-  });
-  const { data: serviceData } = await client.query({
-    query: SERVICES,
-  });
-  const { data } = await client.query({
-    query: SEOTAGS,
-  });
+  const { data: blogData } = await loadBlogs();
+  const { data: serviceData } = await loadServices();
+  const { data } = await loadSeotags();
 
   return {
-    props:
-      data && serviceData && blogData
-        ? {
-            services: serviceData.services,
-            seotags: data.seotags,
-            blogs: blogData.blogs,
-          }
-        : {},
+    props: {
+      blogs: blogData.blogs,
+      services: serviceData.services,
+      seotags: data.seotags,
+    },
   };
 }

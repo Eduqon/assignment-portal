@@ -44,6 +44,7 @@ import Testomonial from "../../components/home_components/Testomonial";
 import Faqschema from "../../components/home_components/Faqschema";
 import { client } from "../_app";
 import Custom404 from "../404";
+import { loadServices } from "../../lib/load-services";
 
 export default function NavService({ servicesdata, services, faqschemas }) {
   const [pages, setPages] = useState(0);
@@ -693,9 +694,10 @@ export default function NavService({ servicesdata, services, faqschemas }) {
 }
 
 export async function getStaticPaths() {
-  const { data: serviceData } = await client.query({
-    query: SERVICES,
-  });
+  // const { data: serviceData } = await client.query({
+  //   query: SERVICES,
+  // });
+  const { data: serviceData } = await loadServices();
   const allServices = serviceData && serviceData.services.data;
   const paths = allServices.map((path) => ({
     params: { slug: path.attributes.slug },
@@ -714,19 +716,19 @@ export async function getStaticProps({ params }) {
     query: SERVICE,
     variables: { slug: slug },
   });
-  const { data: serviceData } = await client.query({
-    query: SERVICES,
-  });
-  const { data: faqschemasData } = await client.query({
-    query: FAQSCHEMA,
-  });
-  console.log({ serviceData });
+  // const { data: serviceData } = await client.query({
+  //   query: SERVICES,
+  // });
+  // const { data: faqschemasData } = await client.query({
+  //   query: FAQSCHEMA,
+  // });
+  const { data: serviceData } = await loadServices();
+  const { data: faqschemasData } = await loadFaqschemas();
   return {
     props: {
       servicesdata: data.services,
       services: serviceData.services,
       faqschemas: faqschemasData.faqschemas,
     },
-    revalidate: 1,
   };
 }
