@@ -45,6 +45,7 @@ import Faqschema from "../../components/home_components/Faqschema";
 import { client } from "../_app";
 import Custom404 from "../404";
 import { loadServices } from "../../lib/load-services";
+import { loadFaqschemas } from "../../lib/load-faqschemas";
 
 export default function NavService({ servicesdata, services, faqschemas }) {
   const [pages, setPages] = useState(0);
