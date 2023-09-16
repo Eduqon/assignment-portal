@@ -650,11 +650,15 @@ export async function getStaticProps({ params }) {
     query: BLOG,
     variables: { blog: blog },
   });
-  const { data: serviceData } = await loadServices();
-  const { data: faqschemasData } = await loadFaqschemas();
-  // const { data: faqschemasData } = await client.query({
-  //   query: FAQSCHEMA,
-  // });
+  // const { data: serviceData } = await loadServices();
+  // const { data: faqschemasData } = await loadFaqschemas();
+  const { data: serviceData } = await client.query({
+    query: SERVICES,
+  });
+  const { data: faqschemasData } = await client.query({
+    query: FAQSCHEMA,
+  });
+
   return {
     props: {
       blogsdata: data.blogs,

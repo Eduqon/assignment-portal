@@ -161,9 +161,18 @@ export default function Blog({ services, seotags, blogs }) {
 }
 
 export async function getStaticProps() {
-  const { data: blogData } = await loadBlogs();
-  const { data: serviceData } = await loadServices();
-  const { data } = await loadSeotags();
+  // const { data: blogData } = await loadBlogs();
+  // const { data: serviceData } = await loadServices();
+  // const { data } = await loadSeotags();
+  const { data: blogData } = await client.query({
+    query: BLOGS,
+  });
+  const { data: serviceData } = await client.query({
+    query: SERVICES,
+  });
+  const { data } = await client.query({
+    query: SEOTAGS,
+  });
 
   return {
     props: {

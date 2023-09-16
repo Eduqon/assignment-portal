@@ -19,8 +19,9 @@ export async function loadFaqschemas() {
         }`,
     }),
   });
+
   const faqschemas = await res.json();
-  console.log({ faqschemas });
+  // console.log({ faqschemas });
 
   return faqschemas;
 }

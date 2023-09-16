@@ -22,7 +22,7 @@ export async function loadSeotags() {
     }),
   });
   const seotags = await res.json();
-  console.log({ seotags });
+  // console.log({ seotags });
 
   return seotags;
 }

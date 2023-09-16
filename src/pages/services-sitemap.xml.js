@@ -1,4 +1,6 @@
 import { loadServices } from "../lib/load-services";
+import { SERVICES } from "../services/contants";
+import { client } from "./_app";
 
 const DATA_URL = "https://www.assignmentsanta.com";
 
@@ -19,7 +21,10 @@ function generateSiteMap(services) {
 }
 
 export async function getServerSideProps({ res }) {
-  const { data: serviceData } = await loadServices();
+  // const { data: serviceData } = await loadServices();
+  const { data: serviceData } = await client.query({
+    query: SERVICES,
+  });
   // Generate the XML sitemap with the blog data
   const sitemap = generateSiteMap(serviceData.services.data);
 

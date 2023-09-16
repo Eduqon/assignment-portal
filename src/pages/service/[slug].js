@@ -717,14 +717,14 @@ export async function getStaticProps({ params }) {
     query: SERVICE,
     variables: { slug: slug },
   });
-  // const { data: serviceData } = await client.query({
-  //   query: SERVICES,
-  // });
-  // const { data: faqschemasData } = await client.query({
-  //   query: FAQSCHEMA,
-  // });
-  const { data: serviceData } = await loadServices();
-  const { data: faqschemasData } = await loadFaqschemas();
+  const { data: serviceData } = await client.query({
+    query: SERVICES,
+  });
+  const { data: faqschemasData } = await client.query({
+    query: FAQSCHEMA,
+  });
+  // const { data: serviceData } = await loadServices();
+  // const { data: faqschemasData } = await loadFaqschemas();
   return {
     props: {
       servicesdata: data.services,
