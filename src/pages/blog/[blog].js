@@ -652,7 +652,7 @@ export async function getStaticProps({ params }) {
   const { data: faqschemasData } = await client.query({
     query: FAQSCHEMA,
   });
-
+  console.log({ data });
   return {
     props: {
       blogsdata: data.blogs,
