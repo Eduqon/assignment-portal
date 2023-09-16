@@ -19,7 +19,7 @@ const createSitemap = (services) => `<?xml version="1.0" encoding="UTF-8"?>
     `;
 
 class Sitemap extends React.Component {
-  static async getInitialProps({ res }) {
+  static async getServerSideProps({ res }) {
     const { data: serviceData } = await client.query({
       query: SERVICES,
     });
