@@ -19,14 +19,14 @@ const createSitemap = (blogs) => `<?xml version="1.0" encoding="UTF-8"?>
     `;
 
 // remove component
-export async function getServerSideProps({ res }) {
-  const { data: blogData } = await client.query({
-    query: BLOGS,
-  });
-  res.setHeader("Content-Type", "text/xml");
-  res.write(createSitemap(blogData.blogs.data));
-  res.end();
-}
+// export async function getServerSideProps({ res }) {
+//   const { data: blogData } = await client.query({
+//     query: BLOGS,
+//   });
+//   res.setHeader("Content-Type", "text/xml");
+//   res.write(createSitemap(blogData.blogs.data));
+//   res.end();
+// }
 
 // add component here
 export default () => null;

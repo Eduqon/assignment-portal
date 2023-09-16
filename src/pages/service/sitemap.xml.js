@@ -4,31 +4,31 @@ import { SERVICES } from "../../services/contants";
 
 const DATA_URL = "https://www.assignmentsanta.com";
 
-const createSitemap = (services) => `<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-        ${services
-          .map(({ attributes }) => {
-            return `
-                <url>
-                    <loc>${`${DATA_URL}/service/${attributes.slug}`}</loc>
-                </url>
-            `;
-          })
-          .join("")}
-    </urlset>
-    `;
+// const createSitemap = (services) => `<?xml version="1.0" encoding="UTF-8"?>
+//     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+//         ${services
+//           .map(({ attributes }) => {
+//             return `
+//                 <url>
+//                     <loc>${`${DATA_URL}/service/${attributes.slug}`}</loc>
+//                 </url>
+//             `;
+//           })
+//           .join("")}
+//     </urlset>
+//     `;
 
 // remove component
-export async function getServerSideProps({ res }) {
-  const { data: serviceData } = await client.query({
-    query: SERVICES,
-  });
-  console.log({ res });
+// export async function getServerSideProps({ res }) {
+//   const { data: serviceData } = await client.query({
+//     query: SERVICES,
+//   });
+//   console.log({ res });
 
-  res.setHeader("Content-Type", "text/xml");
-  res.write(createSitemap(serviceData.services.data));
-  res.end();
-}
+//   res.setHeader("Content-Type", "text/xml");
+//   res.write(createSitemap(serviceData.services.data));
+//   res.end();
+// }
 
 // add component here
 export default () => null;
