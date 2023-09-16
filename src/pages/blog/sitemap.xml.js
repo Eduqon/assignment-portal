@@ -18,15 +18,28 @@ const createSitemap = (blogs) => `<?xml version="1.0" encoding="UTF-8"?>
     </urlset>
     `;
 
-class Sitemap extends React.Component {
-  static async getServerSideProps({ res }) {
-    const { data: blogData } = await client.query({
-      query: BLOGS,
-    });
-    res.setHeader("Content-Type", "text/xml");
-    res.write(createSitemap(blogData.blogs.data));
-    res.end();
-  }
+// remove component
+export async function getServerSideProps({ res }) {
+  const { data: blogData } = await client.query({
+    query: BLOGS,
+  });
+  res.setHeader("Content-Type", "text/xml");
+  res.write(createSitemap(blogData.blogs.data));
+  res.end();
 }
 
-export default Sitemap;
+// add component here
+export default () => null;
+
+// class Sitemap extends React.Component {
+//   static async getServerSideProps({ res }) {
+//     const { data: blogData } = await client.query({
+//       query: BLOGS,
+//     });
+//     res.setHeader("Content-Type", "text/xml");
+//     res.write(createSitemap(blogData.blogs.data));
+//     res.end();
+//   }
+// }
+
+// export default Sitemap;

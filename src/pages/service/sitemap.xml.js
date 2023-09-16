@@ -18,17 +18,32 @@ const createSitemap = (services) => `<?xml version="1.0" encoding="UTF-8"?>
     </urlset>
     `;
 
-class Sitemap extends React.Component {
-  static async getServerSideProps({ res }) {
-    const { data: serviceData } = await client.query({
-      query: SERVICES,
-    });
-    console.log({ res });
+// remove component
+export async function getServerSideProps({ res }) {
+  const { data: serviceData } = await client.query({
+    query: SERVICES,
+  });
+  console.log({ res });
 
-    res.setHeader("Content-Type", "text/xml");
-    res.write(createSitemap(serviceData.services.data));
-    res.end();
-  }
+  res.setHeader("Content-Type", "text/xml");
+  res.write(createSitemap(serviceData.services.data));
+  res.end();
 }
 
-export default Sitemap;
+// add component here
+export default () => null;
+
+// class Sitemap extends React.Component {
+//   static async getServerSideProps({ res }) {
+//     const { data: serviceData } = await client.query({
+//       query: SERVICES,
+//     });
+//     console.log({ res });
+
+//     res.setHeader("Content-Type", "text/xml");
+//     res.write(createSitemap(serviceData.services.data));
+//     res.end();
+//   }
+// }
+
+// export default Sitemap;
