@@ -23,6 +23,7 @@ class Sitemap extends React.Component {
     const { data: serviceData } = await client.query({
       query: SERVICES,
     });
+    console.log({ res });
 
     res.setHeader("Content-Type", "text/xml");
     res.write(createSitemap(serviceData.services.data));
