@@ -658,12 +658,24 @@ export async function getStaticProps({ params }) {
   const { data: faqschemasData } = await client.query({
     query: FAQSCHEMA,
   });
+  if (
+    Object.keys(data.blogs).length === 0 ||
+    Object.keys(serviceData.services).length === 0 ||
+    Object.keys(faqschemasData.faqschemas).length === 0
+  ) {
+    return {
+      notFound: true,
+      props: {},
+      revalidate: 10,
+    };
+  }
 
   return {
     props: {
-      blogsdata: data.blogs,
-      services: serviceData.services,
-      faqschemas: faqschemasData.faqschemas,
+      blogsdata: data.blogs || null,
+      services: serviceData.services || null,
+      faqschemas: faqschemasData.faqschemas || null,
     },
+    revalidate: 10,
   };
 }

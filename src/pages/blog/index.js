@@ -176,9 +176,9 @@ export async function getStaticProps() {
 
   return {
     props: {
-      blogs: blogData.blogs,
-      services: serviceData.services,
-      seotags: data.seotags,
+      blogs: blogData.blogs || null,
+      services: serviceData.services || null,
+      seotags: data.seotags || null,
     },
   };
 }

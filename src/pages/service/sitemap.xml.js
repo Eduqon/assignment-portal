@@ -1,49 +1,39 @@
-import React from "react";
-import { client } from "../_app";
 import { SERVICES } from "../../services/contants";
+import { client } from "../_app";
 
-const DATA_URL = "https://www.assignmentsanta.com";
+const URL = "https://www.assignmentsanta.com";
 
-// const createSitemap = (services) => `<?xml version="1.0" encoding="UTF-8"?>
-//     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-//         ${services
-//           .map(({ attributes }) => {
-//             return `
-//                 <url>
-//                     <loc>${`${DATA_URL}/service/${attributes.slug}`}</loc>
-//                 </url>
-//             `;
-//           })
-//           .join("")}
-//     </urlset>
-//     `;
+function generateSiteMap({ services }) {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+     <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+       ${services.data
+         .map(({ attributes }) => {
+           return `
+             <url>
+                 <loc>${`${URL}/${attributes.slug}`}</loc>
+             </url>
+           `;
+         })
+         .join("")}
+     </urlset>
+   `;
+}
 
-// remove component
-// export async function getServerSideProps({ res }) {
-//   const { data: serviceData } = await client.query({
-//     query: SERVICES,
-//   });
-//   console.log({ res });
+export async function getServerSideProps({ res }) {
+  const { data: serviceData } = await client.query({
+    query: SERVICES,
+  });
 
-//   res.setHeader("Content-Type", "text/xml");
-//   res.write(createSitemap(serviceData.services.data));
-//   res.end();
-// }
+  // Generate the XML sitemap with the blog data
+  const sitemap = generateSiteMap(serviceData);
 
-// add component here
-export default () => null;
+  res.setHeader("Content-Type", "text/xml");
+  res.write(sitemap);
+  res.end();
 
-// class Sitemap extends React.Component {
-//   static async getServerSideProps({ res }) {
-//     const { data: serviceData } = await client.query({
-//       query: SERVICES,
-//     });
-//     console.log({ res });
+  return {
+    props: {},
+  };
+}
 
-//     res.setHeader("Content-Type", "text/xml");
-//     res.write(createSitemap(serviceData.services.data));
-//     res.end();
-//   }
-// }
-
-// export default Sitemap;
+export default function SiteMap() {}

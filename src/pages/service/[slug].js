@@ -711,8 +711,9 @@ export async function getStaticPaths() {
     : {};
 }
 
-export async function getStaticProps({ params }) {
-  const { slug } = params;
+export async function getStaticProps({ params: { slug } }) {
+  // const { slug } = params;
+  console.log(`Building Slug ${slug}`);
   const { data } = await client.query({
     query: SERVICE,
     variables: { slug: slug },
@@ -725,11 +726,23 @@ export async function getStaticProps({ params }) {
   });
   // const { data: serviceData } = await loadServices();
   // const { data: faqschemasData } = await loadFaqschemas();
+  if (
+    Object.keys(data.services).length === 0 ||
+    Object.keys(serviceData.services).length === 0 ||
+    Object.keys(faqschemasData.faqschemas).length === 0
+  ) {
+    return {
+      notFound: true,
+      props: {},
+      revalidate: 10,
+    };
+  }
   return {
     props: {
-      servicesdata: data.services,
-      services: serviceData.services,
-      faqschemas: faqschemasData.faqschemas,
+      servicesdata: data.services || null,
+      services: serviceData.services || null,
+      faqschemas: faqschemasData.faqschemas || null,
     },
+    revalidate: 10,
   };
 }
