@@ -694,24 +694,24 @@ export default function NavService({ servicesdata, services, faqschemas }) {
   );
 }
 
-// export async function getStaticPaths() {
-//   const { data: serviceData } = await client.query({
-//     query: SERVICES,
-//   });
-//   // const { data: serviceData } = await loadServices();
-//   const allServices = serviceData && serviceData.services.data;
-//   const paths = allServices.map((path) => ({
-//     params: { slug: path.attributes.slug },
-//   }));
-//   return paths && paths.length !== 0
-//     ? {
-//         paths,
-//         fallback: false,
-//       }
-//     : {};
-// }
+export async function getStaticPaths() {
+  const { data: serviceData } = await client.query({
+    query: SERVICES,
+  });
+  // const { data: serviceData } = await loadServices();
+  const allServices = serviceData && serviceData.services.data;
+  const paths = allServices.map((path) => ({
+    params: { slug: path.attributes.slug },
+  }));
+  return paths && paths.length !== 0
+    ? {
+        paths,
+        fallback: false,
+      }
+    : {};
+}
 
-export async function getInitialProps({ params: { slug } }) {
+export async function getStaticProps({ params: { slug } }) {
   // const { slug } = params;
   console.log(`Building Slug ${slug}`);
   const { data } = await client.query({

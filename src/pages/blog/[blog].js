@@ -627,24 +627,24 @@ export default function NavService({ blogsdata, services, faqschemas }) {
   );
 }
 
-// export async function getStaticPaths() {
-//   // const { data: blogData } = await client.query({
-//   //   query: BLOGS,
-//   // });
-//   const { data: blogData } = await loadBlogs();
-//   const allBlogs = blogData.blogs.data;
-//   const paths = allBlogs.map((path) => ({
-//     params: { blog: path.attributes.Slug },
-//   }));
-//   return paths && paths.length !== 0
-//     ? {
-//         paths,
-//         fallback: false,
-//       }
-//     : {};
-// }
+export async function getStaticPaths() {
+  const { data: blogData } = await client.query({
+    query: BLOGS,
+  });
+  // const { data: blogData } = await loadBlogs();
+  const allBlogs = blogData.blogs.data;
+  const paths = allBlogs.map((path) => ({
+    params: { blog: path.attributes.Slug },
+  }));
+  return paths && paths.length !== 0
+    ? {
+        paths,
+        fallback: false,
+      }
+    : {};
+}
 
-export async function getInitialProps({ params: { blog } }) {
+export async function getStaticProps({ params: { blog } }) {
   const { data } = await client.query({
     query: BLOG,
     variables: { blog: blog },
@@ -655,7 +655,6 @@ export async function getInitialProps({ params: { blog } }) {
   const { data: faqschemasData } = await client.query({
     query: FAQSCHEMA,
   });
-  // console.log({ data });
   if (
     Object.keys(data.blogs).length === 0 ||
     Object.keys(serviceData.services).length === 0 ||
