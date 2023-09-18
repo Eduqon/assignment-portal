@@ -658,6 +658,7 @@ export async function getStaticProps({ params }) {
   const { data: faqschemasData } = await client.query({
     query: FAQSCHEMA,
   });
+  console.log({ data });
   if (
     Object.keys(data.blogs).length === 0 ||
     Object.keys(serviceData.services).length === 0 ||
