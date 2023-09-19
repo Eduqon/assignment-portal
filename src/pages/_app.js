@@ -4,6 +4,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Script from "next/script";
 import { useEffect } from "react";
+// import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { strapiUrl } from "../services/contants";
 import * as gTag from "../../lib/gTag";
@@ -51,7 +52,6 @@ function App({ Component, pageProps }) {
           href="https://fonts.googleapis.com/css2?family=Abhaya+Libre&display=swap"
           rel="stylesheet"
         />
-        <title>Assignment Santa</title>
         <script
           dangerouslySetInnerHTML={{
             __html: `
