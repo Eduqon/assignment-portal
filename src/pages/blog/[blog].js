@@ -45,9 +45,6 @@ import { FooterHome } from "../../components/home_components/footer_home";
 import { client } from "../_app";
 import Custom404 from "../404";
 import Faqschema from "../../components/home_components/Faqschema";
-import { loadBlogs } from "../../lib/load-blogs";
-import { loadServices } from "../../lib/load-services";
-import { loadFaqschemas } from "../../lib/load-faqschemas";
 
 export default function NavService({ blogsdata, services, faqschemas }) {
   const [pages, setPages] = useState(0);
@@ -631,7 +628,6 @@ export async function getStaticPaths() {
   const { data: blogData } = await client.query({
     query: BLOGS,
   });
-  // const { data: blogData } = await loadBlogs();
   const allBlogs = blogData.blogs.data;
   const paths = allBlogs.map((path) => ({
     params: { blog: path.attributes.Slug },

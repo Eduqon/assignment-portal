@@ -44,8 +44,6 @@ import Testomonial from "../../components/home_components/Testomonial";
 import Faqschema from "../../components/home_components/Faqschema";
 import { client } from "../_app";
 import Custom404 from "../404";
-import { loadServices } from "../../lib/load-services";
-import { loadFaqschemas } from "../../lib/load-faqschemas";
 
 export default function NavService({ servicesdata, services, faqschemas }) {
   const [pages, setPages] = useState(0);
@@ -698,7 +696,6 @@ export async function getStaticPaths() {
   const { data: serviceData } = await client.query({
     query: SERVICES,
   });
-  // const { data: serviceData } = await loadServices();
   const allServices = serviceData && serviceData.services.data;
   const paths = allServices.map((path) => ({
     params: { slug: path.attributes.slug },
@@ -713,7 +710,6 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params: { slug } }) {
   // const { slug } = params;
-  console.log(`Building Slug ${slug}`);
   const { data } = await client.query({
     query: SERVICE,
     variables: { slug: slug },
@@ -725,8 +721,6 @@ export async function getStaticProps({ params: { slug } }) {
     query: FAQSCHEMA,
   });
   console.log({ serviceData });
-  // const { data: serviceData } = await loadServices();
-  // const { data: faqschemasData } = await loadFaqschemas();
   if (
     Object.keys(data.services).length === 0 ||
     Object.keys(serviceData.services).length === 0 ||
