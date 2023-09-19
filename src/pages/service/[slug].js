@@ -724,7 +724,7 @@ export async function getStaticProps({ params: { slug } }) {
   const { data: faqschemasData } = await client.query({
     query: FAQSCHEMA,
   });
-  console.log({ serviceData });
+  console.log({ serviceData, faqschemasData });
   // const { data: serviceData } = await loadServices();
   // const { data: faqschemasData } = await loadFaqschemas();
   if (
