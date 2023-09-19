@@ -14,6 +14,9 @@ const nextConfig = {
     );
     return config;
   },
+  experimental: {
+    largePageDataBytes: 400 * 100000,
+  },
 };
 
 module.exports = nextConfig;
