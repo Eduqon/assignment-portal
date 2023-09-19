@@ -4,6 +4,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Script from "next/script";
 import { useEffect } from "react";
+// import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { strapiUrl } from "../services/contants";
 import "../styles/globals.css";
