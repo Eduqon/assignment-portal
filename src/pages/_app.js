@@ -7,7 +7,6 @@ import { useEffect } from "react";
 // import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { strapiUrl } from "../services/contants";
-import "../styles/globals.css";
 import * as gTag from "../../lib/gTag";
 
 //Apollo client
@@ -46,6 +45,7 @@ function App({ Component, pageProps }) {
           rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"
         />
+        <link rel="stylesheet" href="/globals.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
