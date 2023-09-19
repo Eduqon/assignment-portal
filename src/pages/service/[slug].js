@@ -720,7 +720,7 @@ export async function getStaticProps({ params: { slug } }) {
   const { data: faqschemasData } = await client.query({
     query: FAQSCHEMA,
   });
-  console.log({ serviceData });
+  // console.log({ serviceData });
   if (
     Object.keys(data.services).length === 0 ||
     Object.keys(serviceData.services).length === 0 ||
