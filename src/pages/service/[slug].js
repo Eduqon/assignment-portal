@@ -692,23 +692,23 @@ export default function NavService({ servicesdata, services, faqschemas }) {
   );
 }
 
-export async function getStaticPaths() {
-  const { data: serviceData } = await client.query({
-    query: SERVICES,
-  });
-  const allServices = serviceData && serviceData.services.data;
-  const paths = allServices.map((path) => ({
-    params: { slug: path.attributes.slug },
-  }));
-  return paths && paths.length !== 0
-    ? {
-        paths,
-        fallback: false,
-      }
-    : {};
-}
+// export async function getStaticPaths() {
+//   const { data: serviceData } = await client.query({
+//     query: SERVICES,
+//   });
+//   const allServices = serviceData && serviceData.services.data;
+//   const paths = allServices.map((path) => ({
+//     params: { slug: path.attributes.slug },
+//   }));
+//   return paths && paths.length !== 0
+//     ? {
+//         paths,
+//         fallback: false,
+//       }
+//     : {};
+// }
 
-export async function getStaticProps({ params: { slug } }) {
+export async function getServerSideProps({ params: { slug } }) {
   // const { slug } = params;
   const { data } = await client.query({
     query: SERVICE,
@@ -720,7 +720,7 @@ export async function getStaticProps({ params: { slug } }) {
   const { data: faqschemasData } = await client.query({
     query: FAQSCHEMA,
   });
-  console.log({ serviceData });
+  // console.log({ serviceData });
   if (
     Object.keys(data.services).length === 0 ||
     Object.keys(serviceData.services).length === 0 ||
@@ -729,7 +729,6 @@ export async function getStaticProps({ params: { slug } }) {
     return {
       notFound: true,
       props: {},
-      revalidate: 10,
     };
   }
   return {
@@ -738,6 +737,5 @@ export async function getStaticProps({ params: { slug } }) {
       services: serviceData.services || null,
       faqschemas: faqschemasData.faqschemas || null,
     },
-    revalidate: 10,
   };
 }

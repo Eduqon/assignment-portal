@@ -624,23 +624,23 @@ export default function NavService({ blogsdata, services, faqschemas }) {
   );
 }
 
-export async function getStaticPaths() {
-  const { data: blogData } = await client.query({
-    query: BLOGS,
-  });
-  const allBlogs = blogData.blogs.data;
-  const paths = allBlogs.map((path) => ({
-    params: { blog: path.attributes.Slug },
-  }));
-  return paths && paths.length !== 0
-    ? {
-        paths,
-        fallback: false,
-      }
-    : {};
-}
+// export async function getStaticPaths() {
+//   const { data: blogData } = await client.query({
+//     query: BLOGS,
+//   });
+//   const allBlogs = blogData.blogs.data;
+//   const paths = allBlogs.map((path) => ({
+//     params: { blog: path.attributes.Slug },
+//   }));
+//   return paths && paths.length !== 0
+//     ? {
+//         paths,
+//         fallback: false,
+//       }
+//     : {};
+// }
 
-export async function getStaticProps({ params: { blog } }) {
+export async function getServerSideProps({ params: { blog } }) {
   const { data } = await client.query({
     query: BLOG,
     variables: { blog: blog },
@@ -660,7 +660,6 @@ export async function getStaticProps({ params: { blog } }) {
     return {
       notFound: true,
       props: {},
-      revalidate: 10,
     };
   }
 
@@ -670,6 +669,5 @@ export async function getStaticProps({ params: { blog } }) {
       services: serviceData.services || null,
       faqschemas: faqschemasData.faqschemas || null,
     },
-    revalidate: 10,
   };
 }
