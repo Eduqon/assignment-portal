@@ -10,7 +10,7 @@ function generateSiteMap({ services }) {
        .map(({ attributes }) => {
          return `
            <url>
-               <loc>${`${URL}/${attributes.slug}`}</loc>
+               <loc>${`${URL}/service/${attributes.slug}`}</loc>
            </url>
          `;
        })
