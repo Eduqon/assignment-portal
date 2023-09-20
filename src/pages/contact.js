@@ -1,12 +1,11 @@
 import React from "react";
 import Link from "next/link";
+import { FcContacts } from "react-icons/fc";
 import { NavbarHome } from "../components/home_components/navbar_home";
 import { FooterHome } from "../components/home_components/footer_home";
-import { FcContacts } from "react-icons/fc";
 import { FaRegAddressCard, FaPhoneAlt } from "react-icons/fa";
 import HeadLayout from "../components/home_components/HeadLayout";
 import { client } from "./_app";
-import AnonymousChat from "../components/chat_components/anonymous_chat";
 import { SEOTAGS, SERVICES } from "../services/contants";
 
 export default function Contact({ services, seotags }) {
