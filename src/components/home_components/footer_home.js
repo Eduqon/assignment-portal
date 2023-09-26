@@ -1,82 +1,167 @@
+import { Box, Divider, Heading, Text } from "@chakra-ui/react";
+import Image from "next/image";
+import { LiaMapMarkerSolid } from "react-icons/lia";
+import { AiOutlineMail } from "react-icons/ai";
+import {
+  TiSocialLinkedinCircular,
+  TiSocialFacebookCircular,
+  TiSocialTwitterCircular,
+} from "react-icons/ti";
 import Link from "next/link";
 
 export function FooterHome() {
   return (
-    <div className="row p-0 m-0 set-back">
-      <div className="col-12 ">
-        <div className="row pt-4 m-0  d-flex align-items-center">
-          <div className="col-md-3 col-12">
-            <div className="details">
-              <h2 className="Fs-4 font-weight-bolder mb-3">Contact Details</h2>
-              <div className="address">
-                301 Historical dr, Aintree, Melbourne, Australia
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3 col-12">
-            <div className="details">
-              <h2 className="Fs-4 font-weight-bolder mb-3">Quick Links</h2>
-              <div className="address">
-                <Link href="/privacy-policy">
-                  <a className="nav-link">Privacy Policy</a>
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3 col-12">
-            <div className="payment d-flex flex-column flex-lg-row flex-sm-column align-items-center justify-content-around">
-              <div className="set_">100% Secure Payment </div>
-              <img src="/assets/payment.png" alt="" />
-            </div>
-          </div>
-          <div className="col-md-3 col-12">
-            <h2 className="Fs-4 d-flex  font-weight-bolder mb-3 justify-content-center text-white align-items-center ">
-              Get In Touch
-            </h2>
-            <div className="social d-flex align-items-center ml-md-4 justify-content-center">
-              <a
-                href="https://www.facebook.com/assignmentsanta/"
-                target="_blank"
+    <Box
+      className="set-back"
+      display={"flex"}
+      justifyContent={"center"}
+      padding={"2rem"}
+      flexDirection={["column", "row"]}
+    >
+      <Box width={"100%"}>
+        <Box
+          display={"flex"}
+          alignItems={["center", "flex-start"]}
+          justifyContent={"space-between"}
+          flexDirection={["column", "row"]}
+        >
+          <Box width={["100%", "25%"]}>
+            <Box className="details">
+              <Box className="image-section" width={"15rem"}>
+                <img
+                  src="/assets/newDesigns/FooterLogo.png"
+                  alt=""
+                  style={{ width: "100%" }}
+                />
+              </Box>
+              <Box
+                className="text-section"
+                fontSize={"12px"}
+                fontWeight={"400"}
               >
-                <img src="/assets/foter/facebook.png" />
-              </a>
-              <a
-                href="https://www.instagram.com/assignmentsanta04/"
-                target="_blank"
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa
+                gravida posuere molestie ultrices
+              </Box>
+            </Box>
+          </Box>
+          <Box>
+            <div className="details">
+              <Heading
+                fontSize={"12px"}
+                fontWeight={"400"}
+                className="Fs-4 font-weight-bolder mb-3"
               >
-                <img src="/assets/foter/insta.png" />
-              </a>
-              <a href="https://twitter.com/AssignmentSanta" target="_blank">
-                <img src="/assets/foter/twitter.png" />
-              </a>
-              <a href="#" target="_blank">
-                <img src="/assets/foter/youtube.png" />
-              </a>
+                About Us
+              </Heading>
+              <Heading
+                fontSize={"12px"}
+                fontWeight={"400"}
+                className="Fs-4 font-weight-bolder mb-3"
+              >
+                Terms of use
+              </Heading>
+              <Heading
+                fontSize={"12px"}
+                fontWeight={"400"}
+                className="Fs-4 font-weight-bolder mb-3"
+              >
+                Disclaimer
+              </Heading>
             </div>
-          </div>
-        </div>
+          </Box>
+          <Box>
+            <div className="details">
+              <Heading
+                fontSize={"12px"}
+                fontWeight={"400"}
+                className="Fs-4 font-weight-bolder mb-3"
+              >
+                <Link href="/contact">Contact Us</Link>
+              </Heading>
+              <Heading
+                fontSize={"12px"}
+                fontWeight={"400"}
+                className="Fs-4 font-weight-bolder mb-3"
+              >
+                <Link href="/privacy-policy">Privacy Policy</Link>
+              </Heading>
+              <Heading
+                fontSize={"12px"}
+                fontWeight={"400"}
+                className="Fs-4 font-weight-bolder mb-3"
+              >
+                FAQs
+              </Heading>
+            </div>
+          </Box>
+          <Box>
+            <Box
+              className="details"
+              display={"flex"}
+              flexDirection={"column"}
+              gap={"0.5rem"}
+            >
+              <Box
+                display={"flex"}
+                alignItems={"center"}
+                gap={"0.4rem"}
+                fontSize={"12px"}
+                fontWeight={"400"}
+              >
+                <LiaMapMarkerSolid />
+                <span>301 Hostorical dr, Aintree, Melbourne, Australia</span>
+              </Box>
+              <Box
+                display={"flex"}
+                alignItems={"center"}
+                gap={"0.4rem"}
+                fontSize={"12px"}
+                fontWeight={"400"}
+              >
+                <AiOutlineMail />
+                <span>contact@assignmentsanta.com</span>
+              </Box>
+              <Box
+                display={"flex"}
+                alignItems={"center"}
+                gap={"0.4rem"}
+                fontSize={"2rem"}
+                fontWeight={"400"}
+              >
+                <TiSocialLinkedinCircular />
+                <TiSocialFacebookCircular />
+                <TiSocialTwitterCircular />
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+        <Box display={"flex"} flexDirection={"column"} gap="1rem">
+          <Text
+            className="text-white"
+            fontSize={"14px"}
+            fontWeight={"400"}
+            marginTop={"1rem"}
+          >
+            Disclaimer: The reference papers provided by Assignment Santa should
+            be used as model papers only. Students are not to copy or submit
+            them as is. These reference papers are strictly intended for
+            research and reference.
+          </Text>
 
-        {/* <div className="first_footer"> */}
+          <Divider />
 
-        <p className="set_text_footer text-white p-4 text-center">
-          <b>Disclaimer:</b> The reference papers provided by Assignment Santa
-          should be used as model papers only. Students are not to copy or
-          submit them as is. These reference papers are strictly intended for
-          research and reference purposes only.
-        </p>
-        {/* </div> */}
-
-        <hr />
-
-        {/* <div className="second_footer"> */}
-        <div className="row second-fo">
-          <div className="col p-3">
-            © 2023 Assignment Santa. All rights reserved
-          </div>
-
-          {/* </div> */}
-        </div>
-      </div>
-    </div>
+          <Box
+            color={"#fff"}
+            display={"flex"}
+            justifyContent={"space-between"}
+            flexDirection={["column", "row"]}
+            gap={["1rem", "0rem"]}
+          >
+            <Text>A product of Assignmentsanta.com</Text>
+            <Text>© 2023 Assignmentsanta.com Media. All rights reserved</Text>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 }
