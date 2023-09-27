@@ -63,7 +63,6 @@ function Header({ services, onOpen }) {
             <NavDropdown title="Services" id="navbarScrollingDropdown">
               {services &&
                 services.data.map((service) => {
-                  console.log({ service });
                   return (
                     <NavDropdown.Item
                       href={`/service/${service.attributes.slug}`}

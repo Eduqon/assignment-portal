@@ -36,6 +36,8 @@ export default function Blog({ services, seotags, blogs }) {
   const [fontSize, setFontSize] = useState("19px");
   const [flexDir, setFlexDir] = useState("row");
   const [blogList, setBlogList] = useState([]);
+  const [input, setInput] = useState("");
+  const [results, setResults] = useState([]);
 
   const { data: blogData } = blogs;
 
@@ -124,6 +126,27 @@ export default function Blog({ services, seotags, blogs }) {
     }
     setBlogList(array);
   };
+
+  const fetchSearchData = (value) => {
+    const results =
+      blogs &&
+      blogs.data &&
+      blogs.data.filter((data) => {
+        return (
+          value &&
+          data.attributes &&
+          data.attributes.Heading &&
+          data.attributes.Heading.toLowerCase().includes(value)
+        );
+      });
+    setResults(results);
+  };
+
+  const onChangeHandler = (value) => {
+    setInput(value.toLowerCase());
+    fetchSearchData(value);
+  };
+
   return (
     <>
       <HeadLayout slug="blog" seotags={seotags} />
@@ -151,7 +174,7 @@ export default function Blog({ services, seotags, blogs }) {
           >
             <Heading
               mb={["0rem", "1rem"]}
-              fontSize={["1.5rem", "4.5rem"]}
+              fontSize={["1.5rem", "56px"]}
               fontWeight={"700"}
             >
               Blog: Insights and Inspiration
@@ -185,49 +208,85 @@ export default function Blog({ services, seotags, blogs }) {
             mx="auto"
           />
         </Box>
+      </Box>
+      <Box
+        position={"relative"}
+        width={"100%"}
+        bottom={["0rem", "3rem"]}
+        display={"flex"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        padding={"1rem 2rem"}
+        flexDirection={"column"}
+      >
         <Box
-          position={"absolute"}
-          width={"100%"}
-          bottom={["-10rem", "-6rem"]}
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          padding={"1rem 2rem"}
+          id="search-box"
+          background={"#fff"}
+          width={["100%", "70%"]}
+          padding={["1rem", "2rem 1rem"]}
+          borderRadius="1rem"
+          border="1px solid #eee"
         >
+          <Form
+            className="d-flex align-items-center gap-2"
+            style={{ flexDirection: flexDir }}
+          >
+            <InputGroup size="md">
+              <InputLeftElement pointerEvents="none">
+                <Search2Icon color="#EF2B4B" />
+              </InputLeftElement>
+              <Input
+                type="text"
+                placeholder="Search Blog"
+                id="searchBox"
+                value={input}
+                onChange={(e) => onChangeHandler(e.target.value)}
+              />
+            </InputGroup>
+            <Button
+              variant="outline-success"
+              backgroundColor="#EF2B4B"
+              borderRadius="94px"
+              color="#fff"
+              border="none"
+              padding="12px 40px 12px 40px"
+              fontWeight={700}
+              onClick={() => filteredArray(searchBox.value)}
+            >
+              Search
+            </Button>
+          </Form>
+        </Box>
+        {results && results.length !== 0 && (
           <Box
-            id="search-box"
+            id="search-result-box"
             background={"#fff"}
             width={["100%", "70%"]}
             padding={["1rem", "2rem 1rem"]}
             borderRadius="1rem"
             border="1px solid #eee"
+            maxH={"320px"}
+            overflowY={"scroll"}
           >
-            <Form
-              className="d-flex align-items-center gap-2"
-              style={{ flexDirection: flexDir }}
-            >
-              <InputGroup size="md">
-                <InputLeftElement pointerEvents="none">
-                  <Search2Icon color="#EF2B4B" />
-                </InputLeftElement>
-                <Input type="text" placeholder="Search Blog" id="searchBox" />
-              </InputGroup>
-              <Button
-                variant="outline-success"
-                backgroundColor="#EF2B4B"
-                borderRadius="94px"
-                color="#fff"
-                border="none"
-                padding="12px 40px 12px 40px"
-                fontWeight={700}
-                onClick={() => filteredArray(searchBox.value)}
-              >
-                Search
-              </Button>
-            </Form>
+            {results &&
+              results.map((result, id) => {
+                return (
+                  <Box
+                    _hover={{ cursor: "pointer" }}
+                    onClick={(e) => {
+                      setInput(e.target.textContent);
+                      setResults([]);
+                    }}
+                  >
+                    {result.attributes.Heading}
+                    <Divider />
+                  </Box>
+                );
+              })}
           </Box>
-        </Box>
+        )}
       </Box>
+
       <Box
         padding={["0.3rem", "2rem"]}
         display={"flex"}
@@ -235,7 +294,7 @@ export default function Blog({ services, seotags, blogs }) {
         gap={"1rem"}
         border={["none", "1px solid #eee"]}
         width={["100%", "90%"]}
-        margin="10rem auto 2rem"
+        margin="0rem auto 2rem"
         borderRadius="10px"
       >
         {blogList.map((blog) => {

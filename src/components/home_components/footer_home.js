@@ -3,9 +3,10 @@ import Image from "next/image";
 import { LiaMapMarkerSolid } from "react-icons/lia";
 import { AiOutlineMail } from "react-icons/ai";
 import {
-  TiSocialLinkedinCircular,
   TiSocialFacebookCircular,
+  TiSocialInstagramCircular,
   TiSocialTwitterCircular,
+  TiSocialYoutube,
 } from "react-icons/ti";
 import Link from "next/link";
 
@@ -39,8 +40,10 @@ export function FooterHome() {
                 fontSize={"12px"}
                 fontWeight={"400"}
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa
-                gravida posuere molestie ultrices
+                Assignment Santa provides online academic assistance across the
+                globe. Due to our extensive expertise in academic writing, we
+                offer high-quality work at competitive prices that meet specific
+                needs of students.
               </Box>
             </Box>
           </Box>
@@ -119,7 +122,7 @@ export function FooterHome() {
                 fontWeight={"400"}
               >
                 <AiOutlineMail />
-                <span>contact@assignmentsanta.com</span>
+                <span>info@assignmentsanta.com</span>
               </Box>
               <Box
                 display={"flex"}
@@ -128,9 +131,24 @@ export function FooterHome() {
                 fontSize={"2rem"}
                 fontWeight={"400"}
               >
-                <TiSocialLinkedinCircular />
-                <TiSocialFacebookCircular />
-                <TiSocialTwitterCircular />
+                <Link
+                  href="https://www.instagram.com/assignmentsanta04/"
+                  style={{
+                    fontSize: "1.5rem",
+                    marginRight: "0.4rem",
+                  }}
+                >
+                  <TiSocialInstagramCircular />
+                </Link>
+                <Link href="https://www.facebook.com/assignmentsanta/">
+                  <TiSocialFacebookCircular />
+                </Link>
+                <Link href="https://twitter.com/AssignmentSanta">
+                  <TiSocialTwitterCircular />
+                </Link>
+                <Link href="https://www.youtube.com/channel/UCiuHzMoZc4GQ7dMG2quupbg">
+                  <TiSocialYoutube />
+                </Link>
               </Box>
             </Box>
           </Box>
