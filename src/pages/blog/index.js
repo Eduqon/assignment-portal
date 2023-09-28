@@ -35,9 +35,9 @@ export default function Blog({ services, seotags, blogs }) {
   const [width, setWidth] = useState("515px");
   const [fontSize, setFontSize] = useState("19px");
   const [flexDir, setFlexDir] = useState("row");
-  const [blogList, setBlogList] = useState([]);
   const [input, setInput] = useState("");
   const [results, setResults] = useState([]);
+  const [blogListData, setBlogListData] = useState([]);
 
   const { data: blogData } = blogs;
 
@@ -67,7 +67,13 @@ export default function Blog({ services, seotags, blogs }) {
 
     return width <= 768;
   };
+
   const isMobileView = useCheckMobileScreen();
+
+  useEffect(() => {
+    handleSort();
+  }, [page]);
+
   useEffect(() => {
     if (isMobileView) {
       setWidth("20rem");
@@ -80,10 +86,6 @@ export default function Blog({ services, seotags, blogs }) {
     }
   }, [isMobileView]);
 
-  useEffect(() => {
-    getBlogs();
-  }, [page]);
-
   let totalPage = Math.ceil(blogData.length / limit);
 
   const filteredArray = (searchValue) => {
@@ -91,13 +93,9 @@ export default function Blog({ services, seotags, blogs }) {
       const result =
         blogData &&
         blogData.filter((data) => data.attributes.Heading === searchValue);
-      setBlogList(result);
+      setBlogListData(result);
     } else {
-      let array = [];
-      for (let i = (page - 1) * limit; i < page * limit; i++) {
-        array.push(blogData[i]);
-      }
-      setBlogList(array);
+      handleSort();
     }
   };
 
@@ -119,12 +117,19 @@ export default function Blog({ services, seotags, blogs }) {
     }
   };
 
-  const getBlogs = () => {
+  const handleSort = () => {
+    const sortedData = [...blogData];
     let array = [];
+
+    sortedData.sort((a, b) => {
+      const dateA = new Date(a.attributes.createdAt);
+      const dateB = new Date(b.attributes.createdAt);
+      return dateB - dateA;
+    });
     for (let i = (page - 1) * limit; i < page * limit; i++) {
-      array.push(blogData[i]);
+      array.push(sortedData[i]);
     }
-    setBlogList(array);
+    setBlogListData(array);
   };
 
   const fetchSearchData = (value) => {
@@ -297,7 +302,7 @@ export default function Blog({ services, seotags, blogs }) {
         margin="0rem auto 2rem"
         borderRadius="10px"
       >
-        {blogList.map((blog) => {
+        {blogListData.map((blog) => {
           return (
             blog && (
               <Box
@@ -309,13 +314,13 @@ export default function Blog({ services, seotags, blogs }) {
                 display={"flex"}
                 flexDirection={"column"}
                 position={"relative"}
+                justifyContent={"space-between"}
               >
                 {blogImage && blogImage.length !== 0 && (
                   <Box width={"100%"} height={"200px"}>
                     <Box
                       width={"100%"}
                       height={"100%"}
-                      // backgroundImage="url(/assets/newDesigns/CardImage.png)"
                       backgroundImage={`url(https://assignmentsantastrapi.fly.dev${blogImage[0].url})`}
                       backgroundSize={"cover"}
                       backgroundPosition={"center"}
@@ -327,63 +332,62 @@ export default function Blog({ services, seotags, blogs }) {
                     <Heading
                       my="4"
                       fontWeight={"600"}
-                      fontSize={"24px"}
+                      fontSize={"20px"}
                       size="md"
                       cursor={"pointer"}
                     >
                       <Link href={`/blog/${blog.attributes.Slug}`}>
-                        {blog.attributes.Heading}
+                        {`${blog.attributes.Heading.substring(0, 40)}...`}
                       </Link>
                     </Heading>
-                  </Box>
-                )}
-
-                {blog && blog.attributes && blog.attributes.Slug && (
-                  <Box position={"absolute"} bottom={"1rem"} width={"85%"}>
-                    <Text fontSize={"12px"} fontWeight={"400"} color="#8391A1">
-                      {blog.attributes.body
-                        .substring(0, 50)
-                        .split("**")
-                        .join("")}{" "}
-                      [...]
-                    </Text>
-                    <HStack
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <HStack
-                        mt="5"
-                        spacing="3"
-                        color="gray.500"
-                        width={"100%"}
-                        justifyContent={"space-between"}
-                      >
-                        <span
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.4rem",
-                          }}
+                    {blog && blog.attributes && blog.attributes.Slug && (
+                      <Box>
+                        <Text
+                          fontSize={"15px"}
+                          fontWeight={"400"}
+                          color="#8391A1"
                         >
-                          <FiUsers color="#26AE60" />
-                          {blog.attributes.Author}
-                        </span>
+                          {blog.attributes.body
+                            .substring(0, 50)
+                            .split("**")
+                            .join("")}{" "}
+                          [...]
+                        </Text>
+                        <HStack>
+                          <HStack
+                            mt="5"
+                            spacing="3"
+                            color="gray.500"
+                            width={"100%"}
+                            justifyContent={"space-between"}
+                          >
+                            <span
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "0.4rem",
+                              }}
+                            >
+                              <FiUsers color="#26AE60" />
+                              {blog.attributes.Author}
+                            </span>
 
-                        <span
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.4rem",
-                          }}
-                        >
-                          <BiTime color="#FD7D6F" />
-                          {new Date(
-                            blog.attributes.createdAt
-                          ).toLocaleDateString()}
-                        </span>
-                      </HStack>
-                    </HStack>
+                            <span
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "0.4rem",
+                              }}
+                            >
+                              <BiTime color="#FD7D6F" />
+                              {new Date(
+                                blog.attributes.createdAt
+                              ).toLocaleDateString()}
+                            </span>
+                          </HStack>
+                        </HStack>
+                      </Box>
+                    )}
                   </Box>
                 )}
               </Box>

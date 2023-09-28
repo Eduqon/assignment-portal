@@ -193,7 +193,11 @@ export default function LoadForm() {
 
               <div className="row set-dis">
                 <div className="col-2 ">
-                  <img src="/assets/Logo.png" alt="" className="set_width1" />
+                  <img
+                    src="/assets/newDesigns/Logo.png"
+                    alt=""
+                    className="set_width1"
+                  />
                 </div>
                 <div className="col-2">
                   {/* <label>Email</label> */}

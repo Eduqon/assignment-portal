@@ -117,6 +117,32 @@ export function NavbarHome({ services }) {
   return (
     <>
       <EmailModal />
+      <div className="row  pt-3 m-0 d-flex justify-content-end">
+        <div
+          className="col-12 d-flex justify-content-between flex-row align-items-center"
+          style={{
+            width: "65%",
+          }}
+        >
+          <div className="labelss">
+            <button className="btn btn-mine ">
+              Get 50% OFF On Your First Order
+            </button>
+          </div>
+          <div>
+            <span
+              id="number-section"
+              style={{
+                marginRight: "20px",
+                fontSize: "20px",
+                fontFamily: "monospace",
+              }}
+            >
+              +61-48889-3287
+            </span>
+          </div>
+        </div>
+      </div>
       <Header services={services} onOpen={onOpen} />
       {/* <MegaMenu services={services} /> */}
     </>

@@ -10,7 +10,7 @@
   );
   --red: #eb174cea;
   --iconcolor: #5a9cd5;
-  --navred: #dc3545;
+  --navred: #ef2b4b;
   --footerBack: #222222;
 }
 * {
@@ -513,8 +513,8 @@ input:focus {
 }
 
 .set_btn {
-  background-color: var(--red);
-  color: white;
+  background-color: var(--navred) !important;
+  color: white !important;
 }
 
 .set_list li {
@@ -658,12 +658,11 @@ button.btn.btn-mine::after {
 }
 
 .btn-Set {
-  background-color: var(--navred);
-  /* opacity: 0.9; */
-  color: white;
-  font-weight: 600;
-  padding: 10px 20px;
-  border-radius: 5px;
+  background-color: var(--navred) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding: 10px 20px !important;
+  border-radius: 5px !important;
 }
 
 #clr {
@@ -790,6 +789,7 @@ button.btn.btn-mine::after {
   opacity: 1;
   position: fixed;
   top: 0%;
+  width: 100%;
 }
 
 .non-active {

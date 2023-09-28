@@ -131,24 +131,27 @@ export function FooterHome() {
                 fontSize={"2rem"}
                 fontWeight={"400"}
               >
-                <Link
+                <a
                   href="https://www.instagram.com/assignmentsanta04/"
-                  style={{
-                    fontSize: "1.5rem",
-                    marginRight: "0.4rem",
-                  }}
+                  target="_blank"
                 >
                   <TiSocialInstagramCircular />
-                </Link>
-                <Link href="https://www.facebook.com/assignmentsanta/">
+                </a>
+                <a
+                  href="https://www.facebook.com/assignmentsanta/"
+                  target="_blank"
+                >
                   <TiSocialFacebookCircular />
-                </Link>
-                <Link href="https://twitter.com/AssignmentSanta">
+                </a>
+                <a href="https://twitter.com/AssignmentSanta" target="_blank">
                   <TiSocialTwitterCircular />
-                </Link>
-                <Link href="https://www.youtube.com/channel/UCiuHzMoZc4GQ7dMG2quupbg">
+                </a>
+                <a
+                  href="https://www.youtube.com/channel/UCiuHzMoZc4GQ7dMG2quupbg"
+                  target="_blank"
+                >
                   <TiSocialYoutube />
-                </Link>
+                </a>
               </Box>
             </Box>
           </Box>
