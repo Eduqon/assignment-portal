@@ -121,3 +121,21 @@ export const BLOG = gql`
     }
   }
 `;
+
+export const REVIEWS = gql`
+  query {
+    reviews(pagination: { limit: 100 }) {
+      data {
+        id
+        attributes {
+          Review_heading
+          Main_heading
+          Sub_heading
+          Rating
+          UserID
+          Date
+        }
+      }
+    }
+  }
+`;

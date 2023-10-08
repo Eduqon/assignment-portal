@@ -19,7 +19,6 @@ const Pagination = ({
   const [justifyContent, setJustifyContent] = useState(
     "justify-content-center"
   );
-  const [border, setBorder] = useState("1px solid #eee");
   const [padding, setPadding] = useState("1rem");
   const [fontSize, setFontSize] = useState("20px");
   const [marginRight, setMarginRight] = useState("0.5rem");
@@ -27,13 +26,11 @@ const Pagination = ({
   useEffect(() => {
     if (isMobileView) {
       setJustifyContent("justify-content-start");
-      setBorder("none");
       setPadding("0.2rem");
       setFontSize("15px");
       setMarginRight("0.2rem");
     } else {
       setJustifyContent("justify-content-center");
-      setBorder("1px solid #eee");
       setPadding("1rem");
       setFontSize("20px");
       setMarginRight("0.5rem");
@@ -43,11 +40,10 @@ const Pagination = ({
     <ul
       className={`pagination pagination-md ${justifyContent}`}
       style={{
-        border: border,
+        border: "1px solid #eee",
         padding: padding,
-        width: "98%",
+        width: "100%",
         borderRadius: "15px",
-        marginTop: "-15px",
         flexWrap: "wrap",
       }}
     >

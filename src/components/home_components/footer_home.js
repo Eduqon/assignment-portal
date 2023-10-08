@@ -22,7 +22,7 @@ export function FooterHome() {
       <Box width={"100%"}>
         <Box
           display={"flex"}
-          alignItems={["center", "flex-start"]}
+          alignItems={"flex-start"}
           justifyContent={"space-between"}
           flexDirection={["column", "row"]}
         >
@@ -156,7 +156,12 @@ export function FooterHome() {
             </Box>
           </Box>
         </Box>
-        <Box display={"flex"} flexDirection={"column"} gap="1rem">
+        <Box
+          display={"flex"}
+          flexDirection={"column"}
+          gap="1rem"
+          textAlign={["center", "left"]}
+        >
           <Text
             className="text-white"
             fontSize={"14px"}

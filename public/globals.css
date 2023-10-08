@@ -33,6 +33,12 @@ code {
 .activeChargeTab {
   border: 2px solid;
 }
+.activePagination {
+  background: var(--navred);
+  padding: 0 1rem;
+  border-radius: 15px;
+  color: #fff;
+}
 
 .navbar-brand {
   width: 12rem;
@@ -621,14 +627,15 @@ input:focus {
   align-items: center !important;
 }
 
-button.btn.btn-mine {
+.btn-mine {
   position: relative;
   width: 340px;
   font-size: 15px;
   font-weight: bolder;
+  text-align: center;
 }
 
-button.btn.btn-mine::before {
+.btn-mine::before {
   position: absolute;
   content: "";
   width: 0px;
@@ -636,15 +643,12 @@ button.btn.btn-mine::before {
   border-style: solid;
   border-width: 18px 40px 31px 0px;
   border-color: transparent #ffffff transparent transparent;
-  /* display: inline-block; */
-  /* vertical-align: middle; */
-  /* margin-right: 5px; */
   left: -14px;
-  top: 0;
+  top: -0.4rem;
   transform: rotate(-65deg);
 }
 
-button.btn.btn-mine::after {
+.btn-mine::after {
   position: absolute;
   content: "";
   width: 0px;
@@ -653,7 +657,7 @@ button.btn.btn-mine::after {
   border-width: 18px 52px 25px 0px;
   border-color: transparent #ffffff transparent transparent;
   right: -33px;
-  top: -3px;
+  top: -0.5rem;
   right: -15px;
 }
 
@@ -1645,7 +1649,7 @@ h1.set-privacy-policy {
   .details {
     color: white !important;
     display: flex;
-    align-items: center;
+    align-items: start;
     flex-direction: column;
     justify-content: center;
     margin-bottom: 13px;

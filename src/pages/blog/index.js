@@ -32,8 +32,6 @@ import Pagination from "../../components/pagination_component/pagination";
 export default function Blog({ services, seotags, blogs }) {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
-  const [width, setWidth] = useState("515px");
-  const [fontSize, setFontSize] = useState("19px");
   const [flexDir, setFlexDir] = useState("row");
   const [input, setInput] = useState("");
   const [results, setResults] = useState([]);
@@ -49,6 +47,10 @@ export default function Blog({ services, seotags, blogs }) {
     apiData.filter((data) =>
       blogData.find((val) => val.attributes.Slug === data.name)
     );
+
+  useEffect(() => {
+    handleSort();
+  }, [page]);
 
   const useCheckMobileScreen = () => {
     const [width, setWidth] = useState(
@@ -69,22 +71,6 @@ export default function Blog({ services, seotags, blogs }) {
   };
 
   const isMobileView = useCheckMobileScreen();
-
-  useEffect(() => {
-    handleSort();
-  }, [page]);
-
-  useEffect(() => {
-    if (isMobileView) {
-      setWidth("20rem");
-      setFontSize("10px");
-      setFlexDir("column");
-    } else {
-      setWidth("515px");
-      setFontSize("19px");
-      setFlexDir("row");
-    }
-  }, [isMobileView]);
 
   let totalPage = Math.ceil(blogData.length / limit);
 
@@ -159,7 +145,7 @@ export default function Blog({ services, seotags, blogs }) {
       <Divider />
       <Box position={"relative"}>
         <Box
-          height={["420px", "310px"]}
+          height={["200px", "310px"]}
           background="#EF2B4B"
           borderBottomLeftRadius={"3rem"}
           borderBottomRightRadius={"3rem"}
@@ -179,31 +165,30 @@ export default function Blog({ services, seotags, blogs }) {
           >
             <Heading
               mb={["0rem", "1rem"]}
-              fontSize={["1.5rem", "56px"]}
+              fontSize={["2rem", "56px"]}
               fontWeight={"700"}
+              textAlign={"center"}
             >
               Blog: Insights and Inspiration
             </Heading>
-            <span
-              style={{
-                width: width,
-                fontSize: fontSize,
-                textAlign: "center",
-                fontWeight: 400,
-              }}
+            <Text
+              width={["16rem", "515px"]}
+              fontSize={["0.8rem", "19px"]}
+              textAlign={"center"}
+              fontWeight={"400"}
             >
               Discover a world of knowledge and inspiration on our captivating
               blog
-            </span>
+            </Text>
           </Box>
         </Box>
         <Box
           id="image_part"
           display="flex"
           position={"absolute"}
-          width={["auto", "30rem"]}
-          top={["1rem", "-5rem"]}
-          right={0}
+          width={["40%", "30rem"]}
+          top={["3rem", "-5rem"]}
+          right={["-3rem", 0]}
         >
           <Image
             src="/assets/newDesigns/SantaIcon.png"
@@ -217,11 +202,11 @@ export default function Blog({ services, seotags, blogs }) {
       <Box
         position={"relative"}
         width={"100%"}
-        bottom={["0rem", "3rem"]}
+        bottom={["4rem", "3rem"]}
         display={"flex"}
         alignItems={"center"}
         justifyContent={"center"}
-        padding={"1rem 2rem"}
+        padding={"1rem"}
         flexDirection={"column"}
       >
         <Box
@@ -234,7 +219,7 @@ export default function Blog({ services, seotags, blogs }) {
         >
           <Form
             className="d-flex align-items-center gap-2"
-            style={{ flexDirection: flexDir }}
+            style={{ flexDirection: "column" }}
           >
             <InputGroup size="md">
               <InputLeftElement pointerEvents="none">
@@ -249,6 +234,7 @@ export default function Blog({ services, seotags, blogs }) {
               />
             </InputGroup>
             <Button
+              width={["100%", "auto"]}
               variant="outline-success"
               backgroundColor="#EF2B4B"
               borderRadius="94px"
@@ -407,13 +393,13 @@ export default function Blog({ services, seotags, blogs }) {
       <Box
         width={"100%"}
         position={"relative"}
-        height={"540px"}
+        height={["20rem", "540px"]}
         marginTop={"2rem"}
       >
         <Box
           backgroundImage={"url(/assets/newDesigns/FooterBg.png)"}
           backgroundSize={"cover"}
-          height={"90%"}
+          height={["83%", "90%"]}
           width={"100%"}
           position={"absolute"}
           bottom={0}
@@ -425,6 +411,7 @@ export default function Blog({ services, seotags, blogs }) {
             bottom={0}
             width={["15rem", "30rem"]}
             transform={["translateX(-50%)", "none"]}
+            display={["none", "block"]}
           >
             <img src="/assets/newDesigns/FooterSanta.png" alt="" />
           </Box>
@@ -433,7 +420,7 @@ export default function Blog({ services, seotags, blogs }) {
           id="wait-longer-section"
           background={"#FFF3DB"}
           width={["20rem", "580px"]}
-          height={["60%", "100%"]}
+          height={"100%"}
           position={"relative"}
           marginLeft={["1rem", "3rem"]}
         >
