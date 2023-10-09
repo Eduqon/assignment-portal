@@ -280,116 +280,123 @@ export default function Blog({ services, seotags, blogs }) {
 
       <Box
         padding={["0.3rem", "2rem"]}
-        display={"grid"}
-        flexWrap={"wrap"}
-        gap={"1rem"}
         border={["none", "1px solid #eee"]}
         width={["100%", "90%"]}
         margin="0rem auto"
-        gridTemplateColumns={"auto auto auto auto"}
-        justifyContent={"center"}
         borderRadius="10px"
+        display={"flex"}
+        flexDirection={"column"}
+        gap={"1rem"}
       >
-        {blogListData.map((blog) => {
-          return (
-            blog && (
-              <Box
-                maxW={["auto", "345px"]}
-                height={"30rem"}
-                border="1px solid #eee"
-                p="6"
-                borderRadius="15px"
-                display={"flex"}
-                flexDirection={"column"}
-                position={"relative"}
-                justifyContent={"space-between"}
-              >
-                {blogImage && blogImage.length !== 0 && (
-                  <Box width={"100%"} height={"200px"}>
-                    <Box
-                      width={"100%"}
-                      height={"100%"}
-                      backgroundImage={`url(https://assignmentsantastrapi.fly.dev${blogImage[0].url})`}
-                      backgroundSize={"cover"}
-                      backgroundPosition={"center"}
-                    />
-                  </Box>
-                )}
-                {blog && blog.attributes && blog.attributes.Slug && (
-                  <Box>
-                    <Heading
-                      my="4"
-                      fontWeight={"600"}
-                      fontSize={"20px"}
-                      size="md"
-                      cursor={"pointer"}
-                    >
-                      <Link href={`/blog/${blog.attributes.Slug}`}>
-                        {`${blog.attributes.Heading.substring(0, 40)}...`}
-                      </Link>
-                    </Heading>
-                    {blog && blog.attributes && blog.attributes.Slug && (
-                      <Box>
-                        <Text
-                          fontSize={"15px"}
-                          fontWeight={"400"}
-                          color="#8391A1"
-                        >
-                          {blog.attributes.body
-                            .substring(0, 50)
-                            .split("**")
-                            .join("")}{" "}
-                          [...]
-                        </Text>
-                        <HStack>
-                          <HStack
-                            mt="5"
-                            spacing="3"
-                            color="gray.500"
-                            width={"100%"}
-                            justifyContent={"space-between"}
+        <Box
+          display={"grid"}
+          gridTemplateColumns={["auto", "auto auto auto auto"]}
+          justifyContent={"center"}
+          gap={"1rem"}
+        >
+          {blogListData.map((blog) => {
+            return (
+              blog && (
+                <Box
+                  maxW={["auto", "345px"]}
+                  height={"30rem"}
+                  border="1px solid #eee"
+                  p="6"
+                  borderRadius="15px"
+                  display={"flex"}
+                  flexDirection={"column"}
+                  position={"relative"}
+                  justifyContent={"space-between"}
+                >
+                  {blogImage && blogImage.length !== 0 && (
+                    <Box width={"100%"} height={"200px"}>
+                      <Box
+                        width={"100%"}
+                        height={"100%"}
+                        backgroundImage={`url(https://assignmentsantastrapi.fly.dev${blogImage[0].url})`}
+                        backgroundSize={"cover"}
+                        backgroundPosition={"center"}
+                      />
+                    </Box>
+                  )}
+                  {blog && blog.attributes && blog.attributes.Slug && (
+                    <Box>
+                      <Heading
+                        my="4"
+                        fontWeight={"600"}
+                        fontSize={"20px"}
+                        size="md"
+                        cursor={"pointer"}
+                      >
+                        <Link href={`/blog/${blog.attributes.Slug}`}>
+                          {`${blog.attributes.Heading.substring(0, 40)}...`}
+                        </Link>
+                      </Heading>
+                      {blog && blog.attributes && blog.attributes.Slug && (
+                        <Box>
+                          <Text
+                            fontSize={"15px"}
+                            fontWeight={"400"}
+                            color="#8391A1"
                           >
-                            <span
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "0.4rem",
-                              }}
+                            {blog.attributes.body
+                              .substring(0, 50)
+                              .split("**")
+                              .join("")}{" "}
+                            [...]
+                          </Text>
+                          <HStack>
+                            <HStack
+                              mt="5"
+                              spacing="3"
+                              color="gray.500"
+                              width={"100%"}
+                              justifyContent={"space-between"}
                             >
-                              <FiUsers color="#26AE60" />
-                              {blog.attributes.Author}
-                            </span>
+                              <span
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "0.4rem",
+                                }}
+                              >
+                                <FiUsers color="#26AE60" />
+                                {blog.attributes.Author}
+                              </span>
 
-                            <span
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "0.4rem",
-                              }}
-                            >
-                              <BiTime color="#FD7D6F" />
-                              {new Date(
-                                blog.attributes.createdAt
-                              ).toLocaleDateString()}
-                            </span>
+                              <span
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: "0.4rem",
+                                }}
+                              >
+                                <BiTime color="#FD7D6F" />
+                                {new Date(
+                                  blog.attributes.createdAt
+                                ).toLocaleDateString()}
+                              </span>
+                            </HStack>
                           </HStack>
-                        </HStack>
-                      </Box>
-                    )}
-                  </Box>
-                )}
-              </Box>
-            )
-          );
-        })}
-        <Pagination
-          totalPage={totalPage}
-          page={page}
-          limit={limit}
-          siblings={1}
-          onPageChange={handlePageHandler}
-          isMobileView={isMobileView}
-        />
+                        </Box>
+                      )}
+                    </Box>
+                  )}
+                </Box>
+              )
+            );
+          })}
+        </Box>
+        <Box>
+          <Pagination
+            totalPage={totalPage}
+            page={page}
+            limit={limit}
+            siblings={1}
+            onPageChange={handlePageHandler}
+            isMobileView={isMobileView}
+          />
+        </Box>
       </Box>
 
       <Box
