@@ -241,6 +241,7 @@ export default function Review({ services, seotags, reviews }) {
           padding={["0rem", "2rem"]}
           display={"grid"}
           gridTemplateColumns={["auto", "auto auto auto auto"]}
+          justifyContent={"center"}
           gap={"2rem"}
           marginTop={["1rem", "0rem"]}
         >

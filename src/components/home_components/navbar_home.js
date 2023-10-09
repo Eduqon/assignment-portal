@@ -117,7 +117,12 @@ export function NavbarHome({ services }) {
   return (
     <>
       <EmailModal />
-      <Box display={"flex"} justifyContent={"flex-end"}>
+      <Box
+        display={"flex"}
+        justifyContent={"flex-end"}
+        width={["100%", "97%"]}
+        margin={"0 auto"}
+      >
         <Box
           display={"flex"}
           width={["100%", "60%"]}

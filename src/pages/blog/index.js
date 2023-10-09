@@ -280,12 +280,14 @@ export default function Blog({ services, seotags, blogs }) {
 
       <Box
         padding={["0.3rem", "2rem"]}
-        display={"flex"}
+        display={"grid"}
         flexWrap={"wrap"}
         gap={"1rem"}
         border={["none", "1px solid #eee"]}
         width={["100%", "90%"]}
-        margin="0rem auto 2rem"
+        margin="0rem auto"
+        gridTemplateColumns={"auto auto auto auto"}
+        justifyContent={"center"}
         borderRadius="10px"
       >
         {blogListData.map((blog) => {
