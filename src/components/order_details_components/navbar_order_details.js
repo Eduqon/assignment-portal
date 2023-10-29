@@ -15,7 +15,7 @@ export function NavbarOrderDetails() {
         align={"center"}
       >
         <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          <Image src="/assets/newDesigns/Logo.png" w={20} />
+          <Image src="/assets/newDesigns/Logo.png" w={40} />
         </Flex>
       </Flex>
     </Box>

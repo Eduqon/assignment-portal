@@ -120,18 +120,34 @@ export function NavbarHome({ services }) {
       <Box
         display={"flex"}
         justifyContent={"flex-end"}
-        width={["100%", "97%"]}
+        width={["100%", "100%", "97%", "97%"]}
         margin={"0 auto"}
       >
         <Box
           display={"flex"}
-          width={["100%", "60%"]}
-          justifyContent={["center", "space-between"]}
+          width={["100%", "100%", "100%", "60%"]}
+          justifyContent={[
+            "center",
+            "center",
+            "space-between",
+            "space-between",
+          ]}
         >
-          <Box display={["none", "block"]}>
-            <Text className="btn-mine">Get 50% OFF On Your First Order</Text>
+          <Box
+            display={["none", "none", "flex", "block"]}
+            width={["auto", "auto", "65%", "auto"]}
+            alignItems={"center"}
+          >
+            <Text
+              className="btn-mine"
+              width={["340px", "340px", "315px", "340px"]}
+            >
+              Get 50% OFF On Your First Order
+            </Text>
           </Box>
-          <Box fontSize={"1.2rem"}>+61-48889-3287</Box>
+          <Box fontSize={["1.5rem", "1.5rem", "1.6rem", "1.2rem"]}>
+            +61-48889-3287
+          </Box>
         </Box>
       </Box>
       <Header services={services} onOpen={onOpen} />

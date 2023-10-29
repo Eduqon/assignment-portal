@@ -23,6 +23,7 @@ import {
   Td,
   Tbody,
   Link,
+  Select,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
@@ -46,6 +47,41 @@ import { client } from "../_app";
 import Custom404 from "../404";
 import Faqschema from "../../components/home_components/Faqschema";
 
+const data = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "AssignmentSanta",
+  url: "https://www.assignmentsanta.com",
+  logo: "https://www.assignmentsanta.com/assets/newDesigns/Logo.png",
+  sameAs: [
+    "https://www.facebook.com/assignmentsanta/",
+    "https://twitter.com/AssignmentSanta",
+    "https://www.instagram.com/assignmentsanta04/",
+    "https://www.youtube.com/channel/UCiuHzMoZc4GQ7dMG2quupbg",
+  ],
+
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      telephone: "+16042562312",
+      email: "info@assignmentsanta.com",
+      contactType: "customer service",
+    },
+  ],
+};
+
+const productData = {
+  "@context": "http://schema.org/",
+  "@type": "product",
+  name: "assignmentsanta",
+  image: "https://www.assignmentsanta.com/assets/newDesigns/Logo.png",
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.9",
+    ratingCount: "5473",
+  },
+};
+
 export default function NavService({ blogsdata, services, faqschemas }) {
   const [pages, setPages] = useState(0);
 
@@ -57,6 +93,31 @@ export default function NavService({ blogsdata, services, faqschemas }) {
   const setStorePages = AssignmentFormStore((state) => state.setPages);
   let navigate = useRouter();
   const { blog } = navigate.query;
+  const [subjects, setSubjects] = useState([]);
+
+  useEffect(() => {
+    _fetchSubjects();
+  }, []);
+
+  async function _fetchSubjects() {
+    try {
+      const response = await axios.get(apiUrl + "/util/subject/fetch");
+      let data = await response.data.res;
+      let tempList = [];
+      if (data.length !== 0) {
+        for (let index = 0; index < data.length; index++) {
+          tempList.push({
+            _id: data[index]._id,
+          });
+        }
+      } else {
+        console.log("No Subjects Found");
+      }
+      setSubjects(tempList);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     let date = document.getElementById("date");
@@ -229,6 +290,14 @@ export default function NavService({ blogsdata, services, faqschemas }) {
             {description && <meta name="description" content={description} />}
             {keyword && <meta name="keyword" content={keyword} />}
             {canonicalURL && <link rel="canonical" href={canonicalURL} />}
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+            />
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(productData) }}
+            />
           </Head>
           <Link href="/samples">
             <img src="/assets/foter/View.png" alt="" className="view" />
@@ -241,26 +310,20 @@ export default function NavService({ blogsdata, services, faqschemas }) {
             margin="15px auto"
             display="flex"
             justifyContent="space-around"
-            flexDirection={["column", "row"]}
+            flexDirection={["column", "column", "column", "row"]}
           >
             <Box
               id="left_section"
-              w={["100%", "65%"]}
+              w={["100%", "100%", "100%", "65%"]}
               h="100%"
               border="1px solid #eee"
               padding="1rem"
               boxShadow="lg"
               borderRadius="10px"
             >
-              <h1
-                style={
-                  isMobileView
-                    ? { fontSize: "2.5rem", fontWeight: "bold" }
-                    : { fontSize: "2rem", fontWeight: "bold" }
-                }
-              >
+              <Heading fontSize={["1.6rem", "2rem"]}>
                 {blogsdata.data[0].attributes.Heading}
-              </h1>
+              </Heading>
               <HStack mt="1rem">
                 <span>
                   Published by <i class="fa fa-user" aria-hidden="true"></i>{" "}
@@ -497,7 +560,7 @@ export default function NavService({ blogsdata, services, faqschemas }) {
             </Box>
             <Box
               id="right_section"
-              w={["100%", "30%"]}
+              w={["100%", "100%", "100%", "30%"]}
               h="100%"
               border="1px solid #eee"
               padding={["1rem 0", "1rem"]}
@@ -551,7 +614,20 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                         <Box>
                           <FormControl id="subject" isRequired>
                             <FormLabel>Subject</FormLabel>
-                            <Input placeholder="Enter Subject" type="text" />
+                            <Select
+                              id="subjectExpert"
+                              placeholder="Enter Subject"
+                            >
+                              {subjects.length === 0 ? (
+                                <></>
+                              ) : (
+                                subjects.map((subject, index) => (
+                                  <option value={subject._id} key={index}>
+                                    {subject._id}
+                                  </option>
+                                ))
+                              )}
+                            </Select>
                           </FormControl>
                         </Box>
                       </div>
@@ -623,22 +699,6 @@ export default function NavService({ blogsdata, services, faqschemas }) {
     </>
   );
 }
-
-// export async function getStaticPaths() {
-//   const { data: blogData } = await client.query({
-//     query: BLOGS,
-//   });
-//   const allBlogs = blogData.blogs.data;
-//   const paths = allBlogs.map((path) => ({
-//     params: { blog: path.attributes.Slug },
-//   }));
-//   return paths && paths.length !== 0
-//     ? {
-//         paths,
-//         fallback: false,
-//       }
-//     : {};
-// }
 
 export async function getServerSideProps({ params: { blog } }) {
   const { data } = await client.query({

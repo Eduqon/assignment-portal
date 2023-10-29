@@ -1,4 +1,3 @@
-import { EditIcon } from "@chakra-ui/icons";
 import {
   Box,
   Flex,
@@ -6,9 +5,13 @@ import {
   Image,
   useColorModeValue,
   HStack,
+  Button,
+  Link,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 export function NavbarAssignments() {
+  const [signOut, setSignOut] = useState(false);
   return (
     <Box>
       <Flex
@@ -23,10 +26,22 @@ export function NavbarAssignments() {
         align={"center"}
       >
         <Flex flex={{ base: 1 }} justify={{ base: "start", md: "start" }}>
-          <Image src="/assets/newDesigns/Logo.png" w={20} />
+          <Image src="/assets/newDesigns/Logo.png" w={"10rem"} />
         </Flex>
-        <HStack spacing={5}>
-          <Avatar />
+        <HStack
+          spacing={5}
+          display={"flex"}
+          flexDirection={"column"}
+          gap={"1rem"}
+        >
+          <Avatar onClick={() => setSignOut(true)} cursor={"pointer"} />
+          <Box>
+            {signOut && (
+              <Button>
+                <Link href="/">Sign Out</Link>
+              </Button>
+            )}
+          </Box>
         </HStack>
       </Flex>
     </Box>

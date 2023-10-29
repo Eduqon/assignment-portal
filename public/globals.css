@@ -102,6 +102,13 @@ ul.dropOrder li {
   font-weight: 500;
 }
 
+.bg-image {
+  background-image: url("/assets/three.webp");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 /* accodion */
 .clickShow {
   display: block;
@@ -629,7 +636,6 @@ input:focus {
 
 .btn-mine {
   position: relative;
-  width: 340px;
   font-size: 15px;
   font-weight: bolder;
   text-align: center;
@@ -1127,19 +1133,6 @@ div#gb-widget-2171 {
 
 .start_date {
   color: rgb(158, 158, 158);
-}
-
-.bg-image {
-  /* The image used */
-  background-image: url("/assets/three.webp");
-
-  /* Add the blur effect */
-
-  height: 100vh;
-  width: 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 
 .set-pos-blur {
@@ -1689,32 +1682,6 @@ h1.set-privacy-policy {
 
   .set-pp {
     padding-top: 0px !important;
-  }
-
-  .bg-image {
-    /* The image used */
-    background-image: url("/assets/three.webp");
-
-    /* Add the blur effect */
-    filter: blur(5px);
-    -webkit-filter: blur(5px);
-    height: 100vh;
-    width: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .bg-image {
-    /* background-image: url(http://localhost:3000/static/media/three.c7b43a1….webp); */
-    filter: blur(5px);
-    -webkit-filter: blur(5px);
-    height: 130vh !important;
-    width: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    margin-bottom: 30px;
   }
 
   .client_heading {

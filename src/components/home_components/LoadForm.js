@@ -180,8 +180,8 @@ export default function LoadForm() {
 
   return (
     <>
-      <Box display={{ base: "none", sm: "block", md: "block" }}>
-        <div className={navbar ? "activee" : "non-active"}>
+      <Box display={["none", "none", "none", "block"]}>
+        <Box className={navbar ? "activee" : "non-active"}>
           <div className="row w-100 set-form m-0">
             <div className="col-md-12 col-12">
               <div className="row">
@@ -190,7 +190,6 @@ export default function LoadForm() {
                   Assignment at The Lowest Price Now!
                 </div>
               </div>
-
               <div className="row set-dis">
                 <div className="col-2 ">
                   <img
@@ -200,8 +199,6 @@ export default function LoadForm() {
                   />
                 </div>
                 <div className="col-2">
-                  {/* <label>Email</label> */}
-                  {/* <FormLabel>Email</FormLabel> */}
                   <input
                     className="form-control shadow-none add_border"
                     placeholder="Email"
@@ -215,8 +212,6 @@ export default function LoadForm() {
                   />
                 </div>
                 <div className="col-2">
-                  {/* <label>Subject</label> */}
-                  {/* <FormLabel>Subject</FormLabel> */}
                   <input
                     type="text"
                     placeholder="Subject"
@@ -227,7 +222,6 @@ export default function LoadForm() {
                 </div>
                 <div className="col-3">
                   <FormControl id="words">
-                    {/* <FormLabel>No. of Words/Pages</FormLabel> */}
                     <InputGroup>
                       <InputLeftElement h={"full"}>
                         <Button
@@ -266,10 +260,6 @@ export default function LoadForm() {
                 </div>
                 <div className="col-2">
                   <FormControl id="deadline">
-                    {/* <FormLabel>Deadline</FormLabel> */}
-                    {/* <HStack> */}
-                    {/* <Input  type="date" id='dateNew'  className='mr-3 add_border'/>
-                                            <Input type="time" id='timeNew'  className='add_border'/> */}
                     <div className="d-flex justify-content-center align-itmes-center">
                       <input
                         type="date"
@@ -282,7 +272,6 @@ export default function LoadForm() {
                         className="w-50 form-control add_border"
                       />
                     </div>
-                    {/* </HStack> */}
                   </FormControl>
                 </div>
                 <div className="col-1 d-flex justify-content-center align-items-center">
@@ -298,7 +287,7 @@ export default function LoadForm() {
               </div>
             </div>
           </div>
-        </div>
+        </Box>
       </Box>
     </>
   );

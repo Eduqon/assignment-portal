@@ -28,7 +28,10 @@ export function FooterHome() {
         >
           <Box width={["100%", "25%"]}>
             <Box className="details">
-              <Box className="image-section" width={"15rem"}>
+              <Box
+                className="image-section"
+                width={["auto", "auto", "auto", "15rem"]}
+              >
                 <img
                   src="/assets/newDesigns/FooterLogo.png"
                   alt=""
@@ -79,14 +82,30 @@ export function FooterHome() {
                 fontWeight={"400"}
                 className="Fs-4 font-weight-bolder mb-3"
               >
-                <Link href="/contact">Contact Us</Link>
+                <a
+                  href="/contact"
+                  style={{
+                    color: "#fff",
+                    textDecoration: "none",
+                  }}
+                >
+                  Contact Us
+                </a>
               </Heading>
               <Heading
                 fontSize={"12px"}
                 fontWeight={"400"}
                 className="Fs-4 font-weight-bolder mb-3"
               >
-                <Link href="/privacy-policy">Privacy Policy</Link>
+                <a
+                  href="/privacy-policy"
+                  style={{
+                    color: "#fff",
+                    textDecoration: "none",
+                  }}
+                >
+                  Privacy Policy
+                </a>
               </Heading>
               <Heading
                 fontSize={"12px"}
@@ -134,21 +153,36 @@ export function FooterHome() {
                 <a
                   href="https://www.instagram.com/assignmentsanta04/"
                   target="_blank"
+                  style={{
+                    color: "#fff",
+                  }}
                 >
                   <TiSocialInstagramCircular />
                 </a>
                 <a
                   href="https://www.facebook.com/assignmentsanta/"
                   target="_blank"
+                  style={{
+                    color: "#fff",
+                  }}
                 >
                   <TiSocialFacebookCircular />
                 </a>
-                <a href="https://twitter.com/AssignmentSanta" target="_blank">
+                <a
+                  href="https://twitter.com/AssignmentSanta"
+                  target="_blank"
+                  style={{
+                    color: "#fff",
+                  }}
+                >
                   <TiSocialTwitterCircular />
                 </a>
                 <a
                   href="https://www.youtube.com/channel/UCiuHzMoZc4GQ7dMG2quupbg"
                   target="_blank"
+                  style={{
+                    color: "#fff",
+                  }}
                 >
                   <TiSocialYoutube />
                 </a>

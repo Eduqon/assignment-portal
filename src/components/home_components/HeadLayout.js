@@ -46,6 +46,7 @@ const HeadLayout = ({ slug, seotags }) => {
   return (
     <>
       <Head>
+        <html lang="en" />
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="keyword" content={keyword} />

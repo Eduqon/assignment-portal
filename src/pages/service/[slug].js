@@ -21,6 +21,8 @@ import {
   Td,
   Tbody,
   Link,
+  Text,
+  Select,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { AddIcon, MinusIcon, Search2Icon } from "@chakra-ui/icons";
@@ -45,6 +47,41 @@ import Faqschema from "../../components/home_components/Faqschema";
 import { client } from "../_app";
 import Custom404 from "../404";
 
+const data = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "AssignmentSanta",
+  url: "https://www.assignmentsanta.com",
+  logo: "https://www.assignmentsanta.com/assets/newDesigns/Logo.png",
+  sameAs: [
+    "https://www.facebook.com/assignmentsanta/",
+    "https://twitter.com/AssignmentSanta",
+    "https://www.instagram.com/assignmentsanta04/",
+    "https://www.youtube.com/channel/UCiuHzMoZc4GQ7dMG2quupbg",
+  ],
+
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      telephone: "+16042562312",
+      email: "info@assignmentsanta.com",
+      contactType: "customer service",
+    },
+  ],
+};
+
+const productData = {
+  "@context": "http://schema.org/",
+  "@type": "product",
+  name: "assignmentsanta",
+  image: "https://www.assignmentsanta.com/assets/newDesigns/Logo.png",
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.9",
+    ratingCount: "5473",
+  },
+};
+
 export default function NavService({ servicesdata, services, faqschemas }) {
   const [pages, setPages] = useState(0);
 
@@ -56,6 +93,32 @@ export default function NavService({ servicesdata, services, faqschemas }) {
   const setStorePages = AssignmentFormStore((state) => state.setPages);
   let navigate = useRouter();
   const { slug } = navigate.query;
+
+  const [subjects, setSubjects] = useState([]);
+
+  useEffect(() => {
+    _fetchSubjects();
+  }, []);
+
+  async function _fetchSubjects() {
+    try {
+      const response = await axios.get(apiUrl + "/util/subject/fetch");
+      let data = await response.data.res;
+      let tempList = [];
+      if (data.length !== 0) {
+        for (let index = 0; index < data.length; index++) {
+          tempList.push({
+            _id: data[index]._id,
+          });
+        }
+      } else {
+        console.log("No Subjects Found");
+      }
+      setSubjects(tempList);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     let date = document.getElementById("date");
@@ -209,60 +272,84 @@ export default function NavService({ servicesdata, services, faqschemas }) {
       {getURL ? (
         <>
           <Head>
+            <html lang="en" />
             {title && <title>{title}</title>}
             {description && <meta name="description" content={description} />}
             {keyword && <meta name="keyword" content={keyword} />}
             {canonicalURL && <link rel="canonical" href={canonicalURL} />}
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+            />
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(productData) }}
+            />
           </Head>
           <Link href="/samples">
             <img src="/assets/foter/View.png" alt="" className="view" />
           </Link>
           <NavbarHome services={services} />
-          <div className="contain position-relative">
-            <div
+          <Box
+            className="contain"
+            position={"relative"}
+            height={["100vh", "100vh", "100vh", "70vh"]}
+            marginBottom={"2rem"}
+          >
+            <Box
               className="bg-image"
-              style={{ height: "70vh", filter: "blur(2px)" }}
-            ></div>
-            <div className="row w-100 h-100 set-pos-blur">
-              <div
-                id="top-section"
-                className="col-md-6 col-12 d-flex align-items-center flex-column justify-content-center p-4"
-              >
-                <Box id="heading-section" color={"white"} width={"500px"}>
-                  <h1 style={{ fontSize: "2.25rem", fontWeight: "bold" }}>
+              height={"100%"}
+              width={"100%"}
+              filter={"blur(2px)"}
+              position={"absolute"}
+            ></Box>
+            <Box
+              position={"absolute"}
+              display={"flex"}
+              alignItems={"center"}
+              justifyContent={"space-around"}
+              width={"100%"}
+              flexDirection={["column", "row"]}
+              top={"50%"}
+              transform={"translateY(-50%)"}
+            >
+              <Box width={["auto", "500px"]} marginTop={["1rem", "0rem"]}>
+                <Box color={"white"} textAlign={["center", "left"]}>
+                  <Heading fontSize={["1.5rem", "2.25rem"]} fontWeight={"bold"}>
                     {servicesdata && servicesdata.data[0].attributes.title}
-                  </h1>
-                  <Heading size={"md"} lineHeight={"1.5"}>
+                  </Heading>
+                  <Heading
+                    size={"md"}
+                    lineHeight={"1.5"}
+                    fontSize={["1rem", "1.25rem"]}
+                  >
                     {servicesdata && servicesdata.data[0].attributes.Sub_Title}
                   </Heading>
-                  <p>
+                  <Text>
                     {servicesdata &&
                       servicesdata.data[0].attributes.Sub_Title_2}
-                  </p>
+                  </Text>
                 </Box>
-              </div>
-              <div id="form-section" className="col-md-6 col-12 p-4">
-                <Stack
-                  spacing={4}
-                  mx={"auto"}
-                  maxW={"lg"}
-                  px={6}
-                  className="set-pp"
-                >
-                  {!isMobile && (
-                    <Stack align={"center"}>
-                      <Heading className="top_class" size={"xl"}>
-                        {servicesdata &&
-                          servicesdata.data[0].attributes.Formheading}
-                      </Heading>
-                      <p className="top_class_sub text-capitalize">
-                        Take help from best writing service !!
-                      </p>
-                    </Stack>
-                  )}
-                  <Box rounded={"lg"} bg={bgColor} boxShadow={"lg"} p={8}>
+              </Box>
+              <Box id="form-section" width={["100%", "50%"]}>
+                <Stack spacing={4} mx={"auto"} maxW={"lg"} px={6}>
+                  <Box display={["none", "block"]} color={"#fff"}>
+                    <Heading size={"xl"}>
+                      {servicesdata &&
+                        servicesdata.data[0].attributes.Formheading}
+                    </Heading>
+                    <Text textTransform={"capitalize"}>
+                      Take help from best writing service !!
+                    </Text>
+                  </Box>
+                  <Box
+                    rounded={"lg"}
+                    background={"#fff"}
+                    boxShadow={"lg"}
+                    p={8}
+                  >
                     <Stack spacing={4}>
-                      <div className="d-flex flex-column flex-md-row flex-sm-row flex-lg-row">
+                      <Box className="d-flex flex-column flex-md-row flex-sm-row flex-lg-row">
                         <Box>
                           <FormControl id="email" isRequired>
                             <FormLabel>Email</FormLabel>
@@ -284,10 +371,23 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                         <Box>
                           <FormControl id="subject" isRequired>
                             <FormLabel>Subject</FormLabel>
-                            <Input placeholder="Enter Subject" type="text" />
+                            <Select
+                              id="subjectExpert"
+                              placeholder="Enter Subject"
+                            >
+                              {subjects.length === 0 ? (
+                                <></>
+                              ) : (
+                                subjects.map((subject, index) => (
+                                  <option value={subject._id} key={index}>
+                                    {subject._id}
+                                  </option>
+                                ))
+                              )}
+                            </Select>
                           </FormControl>
                         </Box>
-                      </div>
+                      </Box>
                       <FormControl id="words">
                         <FormLabel>No. of Words/Pages</FormLabel>
                         <InputGroup>
@@ -344,9 +444,9 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                     </Stack>
                   </Box>
                 </Stack>
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Box>
+          </Box>
           <Box className="row w-100 h-100 d-flex" margin={"0"}>
             <div
               id="bottom-section"
@@ -692,24 +792,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
   );
 }
 
-// export async function getStaticPaths() {
-//   const { data: serviceData } = await client.query({
-//     query: SERVICES,
-//   });
-//   const allServices = serviceData && serviceData.services.data;
-//   const paths = allServices.map((path) => ({
-//     params: { slug: path.attributes.slug },
-//   }));
-//   return paths && paths.length !== 0
-//     ? {
-//         paths,
-//         fallback: false,
-//       }
-//     : {};
-// }
-
 export async function getServerSideProps({ params: { slug } }) {
-  // const { slug } = params;
   const { data } = await client.query({
     query: SERVICE,
     variables: { slug: slug },
@@ -720,7 +803,6 @@ export async function getServerSideProps({ params: { slug } }) {
   const { data: faqschemasData } = await client.query({
     query: FAQSCHEMA,
   });
-  // console.log({ serviceData });
   if (
     Object.keys(data.services).length === 0 ||
     Object.keys(serviceData.services).length === 0 ||

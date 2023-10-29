@@ -13,6 +13,7 @@ import {
   Text,
   useColorModeValue,
   InputLeftElement,
+  Select,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
@@ -32,6 +33,31 @@ export const FormHome = () => {
   const setSubject = AssignmentFormStore((state) => state.setSubject);
   const setDeadline = AssignmentFormStore((state) => state.setDeadline);
   const setStorePages = AssignmentFormStore((state) => state.setPages);
+  const [subjects, setSubjects] = useState([]);
+
+  useEffect(() => {
+    _fetchSubjects();
+  }, []);
+
+  async function _fetchSubjects() {
+    try {
+      const response = await axios.get(apiUrl + "/util/subject/fetch");
+      let data = await response.data.res;
+      let tempList = [];
+      if (data.length !== 0) {
+        for (let index = 0; index < data.length; index++) {
+          tempList.push({
+            _id: data[index]._id,
+          });
+        }
+      } else {
+        console.log("No Subjects Found");
+      }
+      setSubjects(tempList);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   let navigate = useRouter();
 
@@ -162,18 +188,26 @@ export const FormHome = () => {
 
   return (
     <>
-      <div className="contain position-relative">
-        <div className="bg-image"></div>
-        <div className="row w-100 set-pos-blur">
-          <div className="col-md-6 col-12 d-flex align-items-center flex-column justify-content-center p-4">
-            <Box
-              id="set-left"
-              display={{ base: "none", sm: "block", md: "block" }}
-            >
-              <Slider />
-            </Box>
-          </div>
-          <div className="col-md-6 col-12 p-0">
+      <Box position={"relative"} height={["105vh", "105vh", "105vh", "70vh"]}>
+        <Box className="bg-image" height={"100%"}></Box>
+        <Box
+          position={"absolute"}
+          top={0}
+          width={"100%"}
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"space-around"}
+          padding={"1rem"}
+          flexDirection={["column", "column", "column", "row"]}
+          gap={[0, 0, "1rem", 0]}
+        >
+          <Box
+            width={["100%", "100%", "65%", "35%"]}
+            display={["none", "none", "block", "block"]}
+          >
+            <Slider />
+          </Box>
+          <Box width={["100%", "100%", "100%", "50%"]}>
             <Stack
               spacing={8}
               mx={"auto"}
@@ -182,11 +216,23 @@ export const FormHome = () => {
               px={6}
               className="set-pp"
             >
-              <Stack align={"center"}>
-                <h1 className="top_class">Assignment Santa</h1>
-                <p className="top_class_sub text-capitalize">
+              <Stack align={["start", "center"]}>
+                <Heading
+                  color={"#fff"}
+                  fontSize={["1.6rem", "3rem"]}
+                  textShadow={"5px 2px 10px #000"}
+                  letterSpacing={"0.1rem"}
+                >
+                  Assignment Santa
+                </Heading>
+                <Text
+                  textTransform={"capitalize"}
+                  color={"#fff"}
+                  textShadow={"5px 2px 10px #000"}
+                  letterSpacing={"0.1rem"}
+                >
                   Take help from best writing service !!
-                </p>
+                </Text>
               </Stack>
               <Box
                 rounded={"lg"}
@@ -215,7 +261,17 @@ export const FormHome = () => {
                     <Box>
                       <FormControl id="subject" isRequired>
                         <FormLabel>Subject</FormLabel>
-                        <Input placeholder="Enter Subject" type="text" />
+                        <Select id="subjectExpert" placeholder="Enter Subject">
+                          {subjects.length === 0 ? (
+                            <></>
+                          ) : (
+                            subjects.map((subject, index) => (
+                              <option value={subject._id} key={index}>
+                                {subject._id}
+                              </option>
+                            ))
+                          )}
+                        </Select>
                       </FormControl>
                     </Box>
                   </div>
@@ -275,9 +331,9 @@ export const FormHome = () => {
                 </Stack>
               </Box>
             </Stack>
-          </div>
-        </div>
-      </div>
+          </Box>
+        </Box>
+      </Box>
     </>
   );
 };

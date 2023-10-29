@@ -165,7 +165,7 @@ export default function Blog({ services, seotags, blogs }) {
           >
             <Heading
               mb={["0rem", "1rem"]}
-              fontSize={["2rem", "56px"]}
+              fontSize={["2rem", "2rem", "2.5rem", "56px"]}
               fontWeight={"700"}
               textAlign={"center"}
             >
@@ -186,9 +186,9 @@ export default function Blog({ services, seotags, blogs }) {
           id="image_part"
           display="flex"
           position={"absolute"}
-          width={["40%", "30rem"]}
-          top={["3rem", "-5rem"]}
-          right={["-3rem", 0]}
+          width={["40%", "40%", "20rem", "30rem"]}
+          top={["3rem", "3rem", "2rem", "-5rem"]}
+          right={["-3rem", "-3rem", "-5rem", 0]}
         >
           <Image
             src="/assets/newDesigns/SantaIcon.png"
@@ -328,9 +328,15 @@ export default function Blog({ services, seotags, blogs }) {
                         size="md"
                         cursor={"pointer"}
                       >
-                        <Link href={`/blog/${blog.attributes.Slug}`}>
+                        <a
+                          href={`/blog/${blog.attributes.Slug}`}
+                          style={{
+                            color: "#000",
+                            textDecoration: "none",
+                          }}
+                        >
                           {`${blog.attributes.Heading.substring(0, 40)}...`}
-                        </Link>
+                        </a>
                       </Heading>
                       {blog && blog.attributes && blog.attributes.Slug && (
                         <Box>
@@ -420,7 +426,7 @@ export default function Blog({ services, seotags, blogs }) {
             bottom={0}
             width={["15rem", "30rem"]}
             transform={["translateX(-50%)", "none"]}
-            display={["none", "block"]}
+            display={["none", "none", "none", "block"]}
           >
             <img src="/assets/newDesigns/FooterSanta.png" alt="" />
           </Box>
