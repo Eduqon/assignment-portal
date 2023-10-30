@@ -28,6 +28,8 @@ export async function getStaticProps() {
     query: SEOTAGS,
   });
 
+  console.log({ serviceData, data });
+
   return {
     props: {
       services: serviceData.services,

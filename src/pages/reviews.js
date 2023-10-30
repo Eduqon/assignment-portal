@@ -482,6 +482,7 @@ export async function getStaticProps() {
   const { data: reviewsData } = await client.query({
     query: REVIEWS,
   });
+  console.log({ serviceData, data, reviewsData });
 
   return {
     props: {
