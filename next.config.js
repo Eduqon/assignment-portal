@@ -1,9 +1,5 @@
 const webpack = require("webpack");
 const nextConfig = {
-  i18n: {
-    locales: ["en"],
-    defaultLocale: "en",
-  },
   reactStrictMode: true,
   devIndicators: {
     buildActivity: false,
