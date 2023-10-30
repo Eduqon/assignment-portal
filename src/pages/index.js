@@ -6,32 +6,34 @@ import HeadLayout from "../components/home_components/HeadLayout.js";
 import { client } from "./_app.js";
 import { SEOTAGS, SERVICES } from "../services/contants.js";
 
-function Home({ services, seotags }) {
+// function Home({ services, seotags }) {
+function Home() {
   return (
     <>
-      <HeadLayout slug="home" seotags={seotags} />
+      Hello
+      {/* <HeadLayout slug="home" seotags={seotags} />
       <NavbarHome services={services} />
       <FormHome />
       <FeaturesHome />
-      <FooterHome />
+      <FooterHome /> */}
     </>
   );
 }
 
 export default Home;
 
-export async function getStaticProps() {
-  const { data: serviceData } = await client.query({
-    query: SERVICES,
-  });
-  const { data } = await client.query({
-    query: SEOTAGS,
-  });
+// export async function getStaticProps() {
+//   const { data: serviceData } = await client.query({
+//     query: SERVICES,
+//   });
+//   const { data } = await client.query({
+//     query: SEOTAGS,
+//   });
 
-  return {
-    props: {
-      services: serviceData.services,
-      seotags: data.seotags,
-    },
-  };
-}
+//   return {
+//     props: {
+//       services: serviceData.services,
+//       seotags: data.seotags,
+//     },
+//   };
+// }
