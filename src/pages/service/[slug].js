@@ -292,7 +292,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
           <Box
             className="contain"
             position={"relative"}
-            height={["100vh", "100vh", "100vh", "70vh"]}
+            height={["100vh", "100vh", "55vh", "70vh"]}
             marginBottom={"2rem"}
           >
             <Box
@@ -308,12 +308,15 @@ export default function NavService({ servicesdata, services, faqschemas }) {
               alignItems={"center"}
               justifyContent={"space-around"}
               width={"100%"}
-              flexDirection={["column", "row"]}
+              flexDirection={["column", "column", "column", "row"]}
               top={"50%"}
               transform={"translateY(-50%)"}
             >
               <Box width={["auto", "500px"]} marginTop={["1rem", "0rem"]}>
-                <Box color={"white"} textAlign={["center", "left"]}>
+                <Box
+                  color={"white"}
+                  textAlign={["center", "center", "center", "left"]}
+                >
                   <Heading fontSize={["1.5rem", "2.25rem"]} fontWeight={"bold"}>
                     {servicesdata && servicesdata.data[0].attributes.title}
                   </Heading>
@@ -330,9 +333,12 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                   </Text>
                 </Box>
               </Box>
-              <Box id="form-section" width={["100%", "50%"]}>
+              <Box id="form-section" width={["100%", "100%", "100%", "50%"]}>
                 <Stack spacing={4} mx={"auto"} maxW={"lg"} px={6}>
-                  <Box display={["none", "block"]} color={"#fff"}>
+                  <Box
+                    display={["none", "none", "none", "block"]}
+                    color={"#fff"}
+                  >
                     <Heading size={"xl"}>
                       {servicesdata &&
                         servicesdata.data[0].attributes.Formheading}
