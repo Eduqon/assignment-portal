@@ -11,8 +11,8 @@ function Home({ services, seotags }) {
     <>
       <HeadLayout slug="home" seotags={seotags} />
       <NavbarHome services={services} />
-      {/* <FormHome />
-      <FeaturesHome /> */}
+      <FormHome />
+      <FeaturesHome />
       <FooterHome />
     </>
   );
