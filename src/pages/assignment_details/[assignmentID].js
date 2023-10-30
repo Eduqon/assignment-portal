@@ -2514,7 +2514,6 @@ export async function getStaticProps({ params }) {
     config
   );
   let data = await response.data.assignmentData;
-  console.log({ data });
   return {
     props: {
       data,

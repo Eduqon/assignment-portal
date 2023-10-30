@@ -303,7 +303,6 @@ export async function getStaticProps() {
   const { data: serviceData } = await client.query({
     query: SERVICES,
   });
-  console.log({ serviceData });
 
   return {
     props: {

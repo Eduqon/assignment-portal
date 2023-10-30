@@ -64,7 +64,6 @@ export default function PrivacyPolicy({ services, seotags }) {
           </div>
         </div>
       </div>
-
       <FooterHome />
     </>
   );
@@ -77,7 +76,6 @@ export async function getStaticProps() {
   const { data } = await client.query({
     query: SEOTAGS,
   });
-  console.log({ serviceData, data });
 
   return {
     props: {

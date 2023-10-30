@@ -71,13 +71,13 @@ function App({ Component, pageProps }) {
             `,
           }}
         />
-        {/* <script
+        <script
           type="text/javascript"
           id="zsiqchat"
           dangerouslySetInnerHTML={{
             __html: `var $zoho=$zoho || {};$zoho.salesiq = $zoho.salesiq || {widgetcode: "a36b3ffffcedd553fccebd8493a26684750aed18e35bcd81cdedf68aae279135", values:{},ready:function(){}};var d=document;s=d.createElement("script");s.type="text/javascript";s.id="zsiqscript";s.defer=true;s.src="https://salesiq.zoho.com/widget";t=d.getElementsByTagName("script")[0];t.parentNode.insertBefore(s,t);`,
           }}
-        /> */}
+        />
         <script
           src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
           integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
