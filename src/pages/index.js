@@ -7,16 +7,13 @@ import { client } from "./_app.js";
 import { SEOTAGS, SERVICES } from "../services/contants.js";
 
 function Home({ services, seotags }) {
-  // function Home() {
-  console.log({ services, seotags });
   return (
     <>
-      {/* Hello */}
       <HeadLayout slug="home" seotags={seotags} />
-      {/*<NavbarHome services={services} />
+      <NavbarHome services={services} />
       <FormHome />
       <FeaturesHome />
-      <FooterHome /> */}
+      <FooterHome />
     </>
   );
 }
