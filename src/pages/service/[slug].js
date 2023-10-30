@@ -272,7 +272,6 @@ export default function NavService({ servicesdata, services, faqschemas }) {
       {getURL ? (
         <>
           <Head>
-            <html lang="en" />
             {title && <title>{title}</title>}
             {description && <meta name="description" content={description} />}
             {keyword && <meta name="keyword" content={keyword} />}
