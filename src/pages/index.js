@@ -11,9 +11,9 @@ function Home({ services, seotags }) {
   console.log({ services, seotags });
   return (
     <>
-      Hello
-      {/* <HeadLayout slug="home" seotags={seotags} />
-      <NavbarHome services={services} />
+      {/* Hello */}
+      <HeadLayout slug="home" seotags={seotags} />
+      {/*<NavbarHome services={services} />
       <FormHome />
       <FeaturesHome />
       <FooterHome /> */}
