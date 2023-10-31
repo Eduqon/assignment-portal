@@ -1,3 +1,4 @@
+"use client";
 import { NavbarHome } from "../components/home_components/navbar_home.js";
 import { FormHome } from "../components/home_components/form_home.js";
 import { FeaturesHome } from "../components/home_components/features_home.js";

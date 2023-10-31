@@ -4,9 +4,10 @@ export const apiUrl = "https://assignment-santa-api.azurewebsites.net";
 export const chatUrl =
   "https://assignment-santa-communication.communication.azure.com/";
 export const frontEndUrl = "https://www.assignmentsanta.com";
-export const strapiUrl = "https://assignmentsantastrapi.fly.dev";
-// export const strapiUrl =
-//   "https://assignmentsanta-strapi-app-rloc8.ondigitalocean.app";
+// export const strapiUrl = "https://assignmentsantastrapi.fly.dev";
+// export const strapiUrl = "http://localhost:1337";
+export const strapiUrl =
+  "https://assignmentsanta-strapi-app-rloc8.ondigitalocean.app";
 export const mediaUrl = "https://assignmentsantastrapi.fly.dev/api";
 export const callingNumbers = ["India", "+442033180057", "+17182134395"];
 
