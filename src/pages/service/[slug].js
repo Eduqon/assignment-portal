@@ -145,7 +145,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
   //   servicesdata &&
   //   getURL &&
   //   servicesdata.data[0].attributes.Media.data.attributes.url;
-  // console.log({ serviceImage });
+  console.log({ servicesdata });
 
   async function _submit() {
     let email = document.getElementById("email");
