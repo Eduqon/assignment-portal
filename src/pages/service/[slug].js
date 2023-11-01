@@ -493,7 +493,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                     <Box
                       width={"100%"}
                       height={"100%"}
-                      backgroundImage={`url(https://assignmentsantastrapi.fly.dev${serviceImage})`}
+                      backgroundImage={`url(${serviceImage})`}
                       backgroundSize={"cover"}
                       backgroundPosition={"center"}
                     />
