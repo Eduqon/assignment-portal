@@ -141,11 +141,11 @@ export default function NavService({ servicesdata, services, faqschemas }) {
     servicesdata && getURL && servicesdata.data[0].attributes.Seocntag;
   const SchemaTitle =
     servicesdata && getURL && servicesdata.data[0].attributes.SchemaTitle;
-  // const serviceImage =
-  //   servicesdata &&
-  //   getURL &&
-  //   servicesdata.data[0].attributes.Media.data.attributes.url;
-  console.log({ servicesdata });
+  const serviceImage =
+    servicesdata &&
+    getURL &&
+    servicesdata.data[0].attributes.Media.data[0].attributes.url;
+  console.log({ servicesdata, serviceImage });
 
   async function _submit() {
     let email = document.getElementById("email");
@@ -263,14 +263,14 @@ export default function NavService({ servicesdata, services, faqschemas }) {
 
   // const bgColor = useColorModeValue("white", "gray.700");
 
-  const { apiData } = useFetch(mediaUrl + "/upload/files");
-  const serviceImage =
-    apiData &&
-    servicesdata &&
-    getURL &&
-    apiData.filter(
-      (data) => data.name === servicesdata.data[0].attributes.slug
-    );
+  // const { apiData } = useFetch(mediaUrl + "/upload/files");
+  // const serviceImage =
+  //   apiData &&
+  //   servicesdata &&
+  //   getURL &&
+  //   apiData.filter(
+  //     (data) => data.name === servicesdata.data[0].attributes.slug
+  //   );
 
   return (
     <>
@@ -479,7 +479,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                 </ReactMarkdown>
               </Box>
               <br />
-              {serviceImage && serviceImage.length !== 0 && (
+              {serviceImage && (
                 <>
                   <Box
                     display={"flex"}
@@ -493,7 +493,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                     <Box
                       width={"100%"}
                       height={"100%"}
-                      backgroundImage={`url(https://assignmentsantastrapi.fly.dev${serviceImage[0].url})`}
+                      backgroundImage={`url(https://assignmentsantastrapi.fly.dev${serviceImage})`}
                       backgroundSize={"cover"}
                       backgroundPosition={"center"}
                     />
