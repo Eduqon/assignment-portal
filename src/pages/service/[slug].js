@@ -141,6 +141,11 @@ export default function NavService({ servicesdata, services, faqschemas }) {
     servicesdata && getURL && servicesdata.data[0].attributes.Seocntag;
   const SchemaTitle =
     servicesdata && getURL && servicesdata.data[0].attributes.SchemaTitle;
+  const serviceImage =
+    servicesdata &&
+    getURL &&
+    servicesdata.data[0].attributes.Media.data.attributes.url;
+  console.log({ serviceImage });
 
   async function _submit() {
     let email = document.getElementById("email");
@@ -256,16 +261,16 @@ export default function NavService({ servicesdata, services, faqschemas }) {
     }
   }
 
-  const bgColor = useColorModeValue("white", "gray.700");
+  // const bgColor = useColorModeValue("white", "gray.700");
 
-  const { apiData } = useFetch(mediaUrl + "/upload/files");
-  const serviceImage =
-    apiData &&
-    servicesdata &&
-    getURL &&
-    apiData.filter(
-      (data) => data.name === servicesdata.data[0].attributes.slug
-    );
+  // const { apiData } = useFetch(mediaUrl + "/upload/files");
+  // const serviceImage =
+  //   apiData &&
+  //   servicesdata &&
+  //   getURL &&
+  //   apiData.filter(
+  //     (data) => data.name === servicesdata.data[0].attributes.slug
+  //   );
 
   return (
     <>

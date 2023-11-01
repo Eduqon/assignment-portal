@@ -48,7 +48,6 @@ export const SERVICE = gql`
           Media {
             data {
               attributes {
-                name
                 url
               }
             }
