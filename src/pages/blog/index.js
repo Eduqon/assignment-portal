@@ -38,23 +38,16 @@ export default function Blog({ services, seotags, blogs }) {
 
   const { data: blogData } = blogs;
 
-  // const blogImage_new =
-  //   blogData &&
-  //   blogData.data.length !== 0 &&
-  //   blogData.data[0].attributes.Image &&
-  //   blogData.data[0].attributes.Image.data.length !== 0 &&
-  //   blogData.data[0].attributes.Image.data[0].attributes.url;
-
   console.log({ blogData });
 
-  const { apiData } = useFetch(mediaUrl + "/upload/files");
+  // const { apiData } = useFetch(mediaUrl + "/upload/files");
 
-  const blogImage =
-    apiData &&
-    blogData &&
-    apiData.filter((data) =>
-      blogData.find((val) => val.attributes.Slug === data.name)
-    );
+  // const blogImage =
+  //   apiData &&
+  //   blogData &&
+  //   apiData.filter((data) =>
+  //     blogData.find((val) => val.attributes.Slug === data.name)
+  //   );
 
   useEffect(() => {
     handleSort();
@@ -316,17 +309,22 @@ export default function Blog({ services, seotags, blogs }) {
                   position={"relative"}
                   justifyContent={"space-between"}
                 >
-                  {blogImage && blogImage.length !== 0 && (
-                    <Box width={"100%"} height={"200px"}>
-                      <Box
-                        width={"100%"}
-                        height={"100%"}
-                        backgroundImage={`url(https://assignmentsantastrapi.fly.dev${blogImage[0].url})`}
-                        backgroundSize={"cover"}
-                        backgroundPosition={"center"}
-                      />
-                    </Box>
-                  )}
+                  {blog.attributes &&
+                    blog.attributes.Image &&
+                    blog.attributes.Image.data &&
+                    blog.attributes.Image.data.length !== 0 &&
+                    blog.attributes.Image.data[0].attributes &&
+                    blog.attributes.Image.data[0].attributes.url && (
+                      <Box width={"100%"} height={"200px"}>
+                        <Box
+                          width={"100%"}
+                          height={"100%"}
+                          backgroundImage={`url(${blog.attributes.Image.data[0].attributes.url})`}
+                          backgroundSize={"cover"}
+                          backgroundPosition={"center"}
+                        />
+                      </Box>
+                    )}
                   {blog && blog.attributes && blog.attributes.Slug && (
                     <Box>
                       <Heading
