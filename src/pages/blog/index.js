@@ -309,13 +309,13 @@ export default function Blog({ services, seotags, blogs }) {
                   position={"relative"}
                   justifyContent={"space-between"}
                 >
-                  {blog.attributes &&
-                    blog.attributes.Image &&
-                    blog.attributes.Image.data &&
-                    blog.attributes.Image.data.length !== 0 &&
-                    blog.attributes.Image.data[0].attributes &&
-                    blog.attributes.Image.data[0].attributes.url && (
-                      <Box width={"100%"} height={"200px"}>
+                  <Box width={"100%"} height={"200px"}>
+                    {blog.attributes &&
+                      blog.attributes.Image &&
+                      blog.attributes.Image.data &&
+                      blog.attributes.Image.data.length !== 0 &&
+                      blog.attributes.Image.data[0].attributes &&
+                      blog.attributes.Image.data[0].attributes.url && (
                         <Box
                           width={"100%"}
                           height={"100%"}
@@ -323,8 +323,8 @@ export default function Blog({ services, seotags, blogs }) {
                           backgroundSize={"cover"}
                           backgroundPosition={"center"}
                         />
-                      </Box>
-                    )}
+                      )}
+                  </Box>
                   {blog && blog.attributes && blog.attributes.Slug && (
                     <Box>
                       <Heading
