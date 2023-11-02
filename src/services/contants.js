@@ -101,6 +101,13 @@ export const BLOGS = gql`
           body
           Author
           createdAt
+          Media {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
         }
       }
     }
@@ -127,6 +134,13 @@ export const BLOG = gql`
           SchemaTitle
           table_heading
           table_data
+          Media {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
         }
       }
     }

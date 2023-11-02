@@ -38,14 +38,14 @@ export default function Blog({ services, seotags, blogs }) {
 
   const { data: blogData } = blogs;
 
-  // const blogImage_new =
-  //   blogData &&
-  //   blogData.data.length !== 0 &&
-  //   blogData.data[0].attributes.Media &&
-  //   blogData.data[0].attributes.Media.data.length !== 0 &&
-  //   blogData.data[0].attributes.Media.data[0].attributes.url;
+  const blogImage_new =
+    blogData &&
+    blogData.data.length !== 0 &&
+    blogData.data[0].attributes.Image &&
+    blogData.data[0].attributes.Image.data.length !== 0 &&
+    blogData.data[0].attributes.Image.data[0].attributes.url;
 
-  console.log({ blogData });
+  console.log({ blogData, blogImage_new });
 
   const { apiData } = useFetch(mediaUrl + "/upload/files");
 
