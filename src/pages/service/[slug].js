@@ -541,6 +541,9 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                         servicesdata &&
                         servicesdata.data[0].attributes.body_title
                       }`}
+                      style={{
+                        width: "100%",
+                      }}
                     />
                     {/* <Box
                       width={"100%"}
