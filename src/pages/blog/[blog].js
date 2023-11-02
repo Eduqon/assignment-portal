@@ -284,6 +284,7 @@ export default function NavService({ blogsdata, services, faqschemas }) {
     blogsdata.data[0].attributes.Image.data.length !== 0 &&
     blogsdata.data[0].attributes.Image.data[0].attributes.url;
 
+  console.log({ blogImage, blogsdata });
   // const { apiData } = useFetch(mediaUrl + "/upload/files");
   // const blogImage =
   //   apiData &&
@@ -371,7 +372,7 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                     <img
                       src={`${blogImage}`}
                       alt={`${
-                        blogImage && blogImage.data[0].attributes.Heading
+                        blogsdata && blogsdata.data[0].attributes.Heading
                       }`}
                       style={{
                         width: "100%",
