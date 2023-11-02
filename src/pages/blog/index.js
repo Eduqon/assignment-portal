@@ -32,12 +32,20 @@ import Pagination from "../../components/pagination_component/pagination";
 export default function Blog({ services, seotags, blogs }) {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
-  const [flexDir, setFlexDir] = useState("row");
   const [input, setInput] = useState("");
   const [results, setResults] = useState([]);
   const [blogListData, setBlogListData] = useState([]);
 
   const { data: blogData } = blogs;
+
+  // const blogImage_new =
+  //   blogData &&
+  //   blogData.data.length !== 0 &&
+  //   blogData.data[0].attributes.Media &&
+  //   blogData.data[0].attributes.Media.data.length !== 0 &&
+  //   blogData.data[0].attributes.Media.data[0].attributes.url;
+
+  console.log({ blogData });
 
   const { apiData } = useFetch(mediaUrl + "/upload/files");
 

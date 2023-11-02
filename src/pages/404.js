@@ -39,6 +39,33 @@ const Custom404 = ({ services }) => {
   const setSubject = AssignmentFormStore((state) => state.setSubject);
   const setDeadline = AssignmentFormStore((state) => state.setDeadline);
   const setStorePages = AssignmentFormStore((state) => state.setPages);
+  const [subjects, setSubjects] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchResult, setSearchResult] = useState("");
+
+  useEffect(() => {
+    _fetchSubjects();
+  }, []);
+
+  async function _fetchSubjects() {
+    try {
+      const response = await axios.get(apiUrl + "/util/subject/fetch");
+      let data = await response.data.res;
+      let tempList = [];
+      if (data.length !== 0) {
+        for (let index = 0; index < data.length; index++) {
+          tempList.push({
+            _id: data[index]._id.toLowerCase(),
+          });
+        }
+      } else {
+        console.log("No Subjects Found");
+      }
+      setSubjects(tempList);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const navigate = useRouter();
 
@@ -161,6 +188,21 @@ const Custom404 = ({ services }) => {
     }
   }
 
+  const fetchSearchData = (value) => {
+    const results =
+      subjects &&
+      subjects.filter((data) => {
+        return data && data._id.toLowerCase().includes(value);
+      });
+    setSearchResult(results);
+  };
+
+  const onChangeHandler = (value) => {
+    const searchValue = value.toLowerCase();
+    setSearchInput(searchValue);
+    fetchSearchData(searchValue);
+  };
+
   return (
     <>
       <Head>
@@ -225,11 +267,49 @@ const Custom404 = ({ services }) => {
                   <Box display={{ base: "none", sm: "block", md: "block" }}>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                   </Box>
-                  <Box className="w-100">
+                  <Box position={"relative"} className="w-100">
                     <FormControl id="subject" isRequired>
                       <FormLabel>Subject</FormLabel>
-                      <Input placeholder="Enter Subject" type="text" />
+                      <Input
+                        placeholder="Enter Your Subject"
+                        type="text"
+                        value={searchInput}
+                        onChange={(e) => onChangeHandler(e.target.value)}
+                      />
                     </FormControl>
+                    {searchInput &&
+                      searchResult &&
+                      searchResult.length !== 0 && (
+                        <Box
+                          id="search-result-box"
+                          background={"#fff"}
+                          width={["100%"]}
+                          padding={["1rem"]}
+                          borderRadius="1rem"
+                          border="1px solid #eee"
+                          maxH={["35vh", "35vh", "35vh", "20vh"]}
+                          overflowY={"scroll"}
+                          position={"absolute"}
+                          zIndex={9}
+                        >
+                          {searchResult &&
+                            searchResult.map((result, id) => {
+                              return (
+                                <Box
+                                  _hover={{ cursor: "pointer" }}
+                                  onClick={(e) => {
+                                    setSearchInput(e.target.textContent);
+                                    setSearchResult([]);
+                                  }}
+                                >
+                                  {result._id.charAt(0).toUpperCase() +
+                                    result._id.slice(1)}
+                                  <Divider />
+                                </Box>
+                              );
+                            })}
+                        </Box>
+                      )}
                   </Box>
                 </div>
                 <FormControl id="words">

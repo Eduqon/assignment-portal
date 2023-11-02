@@ -23,6 +23,7 @@ import {
   Link,
   Text,
   Select,
+  Divider,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { AddIcon, MinusIcon, Search2Icon } from "@chakra-ui/icons";
@@ -95,6 +96,8 @@ export default function NavService({ servicesdata, services, faqschemas }) {
   const { slug } = navigate.query;
 
   const [subjects, setSubjects] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchResult, setSearchResult] = useState("");
 
   useEffect(() => {
     _fetchSubjects();
@@ -274,6 +277,21 @@ export default function NavService({ servicesdata, services, faqschemas }) {
   //     (data) => data.name === servicesdata.data[0].attributes.slug
   //   );
 
+  const fetchSearchData = (value) => {
+    const results =
+      subjects &&
+      subjects.filter((data) => {
+        return data && data._id.toLowerCase().includes(value);
+      });
+    setSearchResult(results);
+  };
+
+  const onChangeHandler = (value) => {
+    const searchValue = value.toLowerCase();
+    setSearchInput(searchValue);
+    fetchSearchData(searchValue);
+  };
+
   return (
     <>
       {getURL ? (
@@ -380,24 +398,49 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                         >
                           &nbsp;&nbsp;&nbsp;&nbsp;
                         </Box>
-                        <Box>
+                        <Box position={"relative"}>
                           <FormControl id="subject" isRequired>
                             <FormLabel>Subject</FormLabel>
-                            <Select
-                              id="subjectExpert"
-                              placeholder="Enter Subject"
-                            >
-                              {subjects.length === 0 ? (
-                                <></>
-                              ) : (
-                                subjects.map((subject, index) => (
-                                  <option value={subject._id} key={index}>
-                                    {subject._id}
-                                  </option>
-                                ))
-                              )}
-                            </Select>
+                            <Input
+                              placeholder="Enter Your Subject"
+                              type="text"
+                              value={searchInput}
+                              onChange={(e) => onChangeHandler(e.target.value)}
+                            />
                           </FormControl>
+                          {searchInput &&
+                            searchResult &&
+                            searchResult.length !== 0 && (
+                              <Box
+                                id="search-result-box"
+                                background={"#fff"}
+                                width={["100%"]}
+                                padding={["1rem"]}
+                                borderRadius="1rem"
+                                border="1px solid #eee"
+                                maxH={["35vh", "35vh", "35vh", "20vh"]}
+                                overflowY={"scroll"}
+                                position={"absolute"}
+                                zIndex={9}
+                              >
+                                {searchResult &&
+                                  searchResult.map((result, id) => {
+                                    return (
+                                      <Box
+                                        _hover={{ cursor: "pointer" }}
+                                        onClick={(e) => {
+                                          setSearchInput(e.target.textContent);
+                                          setSearchResult([]);
+                                        }}
+                                      >
+                                        {result._id.charAt(0).toUpperCase() +
+                                          result._id.slice(1)}
+                                        <Divider />
+                                      </Box>
+                                    );
+                                  })}
+                              </Box>
+                            )}
                         </Box>
                       </Box>
                       <FormControl id="words">
@@ -492,13 +535,20 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                     marginTop={2}
                     padding={"0px 2rem"}
                   >
-                    <Box
+                    <img
+                      src={`${serviceImage}`}
+                      alt={`${
+                        servicesdata &&
+                        servicesdata.data[0].attributes.body_title
+                      }`}
+                    />
+                    {/* <Box
                       width={"100%"}
                       height={"100%"}
                       backgroundImage={`url(${serviceImage})`}
                       backgroundSize={"cover"}
                       backgroundPosition={"center"}
-                    />
+                    /> */}
                   </Box>
                   <br />
                 </>
