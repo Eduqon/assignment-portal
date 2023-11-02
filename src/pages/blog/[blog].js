@@ -277,12 +277,19 @@ export default function NavService({ blogsdata, services, faqschemas }) {
 
   const bgColor = useColorModeValue("white", "gray.700");
 
-  const { apiData } = useFetch(mediaUrl + "/upload/files");
   const blogImage =
-    apiData &&
     blogsdata &&
     getURL &&
-    apiData.filter((data) => data.name === blogsdata.data[0].attributes.Slug);
+    blogsdata.data[0].attributes.Image &&
+    blogsdata.data[0].attributes.Image.data.length !== 0 &&
+    blogsdata.data[0].attributes.Image.data[0].attributes.url;
+
+  // const { apiData } = useFetch(mediaUrl + "/upload/files");
+  // const blogImage =
+  //   apiData &&
+  //   blogsdata &&
+  //   getURL &&
+  //   apiData.filter((data) => data.name === blogsdata.data[0].attributes.Slug);
 
   const fetchSearchData = (value) => {
     const results =
@@ -351,7 +358,7 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                   ).toLocaleDateString()}
                 </span>
               </HStack>
-              {blogImage && blogImage.length !== 0 && (
+              {blogImage && (
                 <>
                   <Box
                     display={"flex"}
@@ -361,13 +368,22 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                     height={"500px"}
                     marginTop={2}
                   >
-                    <Box
+                    <img
+                      src={`${blogImage}`}
+                      alt={`${
+                        blogImage && blogImage.data[0].attributes.Heading
+                      }`}
+                      style={{
+                        width: "100%",
+                      }}
+                    />
+                    {/* <Box
                       width={"100%"}
                       height={"100%"}
                       backgroundImage={`url(https://assignmentsantastrapi.fly.dev${blogImage[0].url})`}
                       backgroundSize={"cover"}
                       backgroundPosition={"center"}
-                    />
+                    /> */}
                   </Box>
                   <br />
                 </>

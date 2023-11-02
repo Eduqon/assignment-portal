@@ -38,8 +38,6 @@ export default function Blog({ services, seotags, blogs }) {
 
   const { data: blogData } = blogs;
 
-  console.log({ blogData });
-
   // const { apiData } = useFetch(mediaUrl + "/upload/files");
 
   // const blogImage =
