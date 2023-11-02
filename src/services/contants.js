@@ -101,7 +101,7 @@ export const BLOGS = gql`
           body
           Author
           createdAt
-          Media {
+          Image {
             data {
               attributes {
                 url
@@ -134,7 +134,7 @@ export const BLOG = gql`
           SchemaTitle
           table_heading
           table_data
-          Media {
+          Image {
             data {
               attributes {
                 url
