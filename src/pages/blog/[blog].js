@@ -382,15 +382,16 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                     width={"100%"}
                     height={"500px"}
                     marginTop={2}
+                    overflow="hidden"
                   >
-                    <Box>
+                    <Box width={"100%"}>
                       <img
                         src={`${blogImage}`}
                         alt={`${blogImageAltText}`}
                         data-name={`${blogImageNameText}`}
-                        // style={{
-                        //   width: "100%",
-                        // }}
+                        style={{
+                          width: "100%",
+                        }}
                       />
                     </Box>
 

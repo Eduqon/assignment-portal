@@ -308,7 +308,7 @@ export default function Blog({ services, seotags, blogs }) {
                   position={"relative"}
                   justifyContent={"space-between"}
                 >
-                  <Box width={"100%"} height={"200px"}>
+                  <Box width={"100%"} height={"40vh"}>
                     {blog.attributes &&
                       blog.attributes.Image &&
                       blog.attributes.Image.data &&
@@ -320,7 +320,7 @@ export default function Blog({ services, seotags, blogs }) {
                           height={"100%"}
                           backgroundImage={`url(${blog.attributes.Image.data[0].attributes.url})`}
                           backgroundSize={"cover"}
-                          backgroundPosition={"center"}
+                          backgroundPosition={"start"}
                         />
                       )}
                   </Box>
