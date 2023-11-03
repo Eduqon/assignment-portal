@@ -105,6 +105,8 @@ export const BLOGS = gql`
             data {
               attributes {
                 url
+                name
+                alternativeText
               }
             }
           }
@@ -138,6 +140,8 @@ export const BLOG = gql`
             data {
               attributes {
                 url
+                name
+                alternativeText
               }
             }
           }
