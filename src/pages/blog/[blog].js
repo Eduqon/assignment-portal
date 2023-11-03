@@ -369,15 +369,18 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                     height={"500px"}
                     marginTop={2}
                   >
-                    <img
-                      src={`${blogImage}`}
-                      alt={`${
-                        blogsdata && blogsdata.data[0].attributes.Heading
-                      }`}
-                      style={{
-                        width: "100%",
-                      }}
-                    />
+                    <Box>
+                      <img
+                        src={`${blogImage}`}
+                        alt={`${
+                          blogsdata && blogsdata.data[0].attributes.Heading
+                        }`}
+                        // style={{
+                        //   width: "100%",
+                        // }}
+                      />
+                    </Box>
+
                     {/* <Box
                       width={"100%"}
                       height={"100%"}
