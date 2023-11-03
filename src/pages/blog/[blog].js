@@ -284,6 +284,20 @@ export default function NavService({ blogsdata, services, faqschemas }) {
     blogsdata.data[0].attributes.Image.data.length !== 0 &&
     blogsdata.data[0].attributes.Image.data[0].attributes.url;
 
+  const blogImageAltText =
+    blogsdata &&
+    getURL &&
+    blogsdata.data[0].attributes.Image &&
+    blogsdata.data[0].attributes.Image.data.length !== 0 &&
+    blogsdata.data[0].attributes.Image.data[0].attributes.alternativeText;
+
+  const blogImageNameText =
+    blogsdata &&
+    getURL &&
+    blogsdata.data[0].attributes.Image &&
+    blogsdata.data[0].attributes.Image.data.length !== 0 &&
+    blogsdata.data[0].attributes.Image.data[0].attributes.name;
+
   console.log({ blogImage, blogsdata });
   // const { apiData } = useFetch(mediaUrl + "/upload/files");
   // const blogImage =
@@ -372,9 +386,8 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                     <Box>
                       <img
                         src={`${blogImage}`}
-                        alt={`${
-                          blogsdata && blogsdata.data[0].attributes.Heading
-                        }`}
+                        alt={`${blogImageAltText}`}
+                        data-name={`${blogImageNameText}`}
                         // style={{
                         //   width: "100%",
                         // }}
