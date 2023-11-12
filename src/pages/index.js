@@ -8,7 +8,6 @@ import { client } from "./_app.js";
 import { SEOTAGS, SERVICES } from "../services/contants.js";
 
 function Home({ services, seotags }) {
-  console.log({ seotags });
   return (
     <>
       <HeadLayout slug="home" seotags={seotags} />

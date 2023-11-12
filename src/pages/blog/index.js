@@ -138,7 +138,6 @@ export default function Blog({ services, seotags, blogs }) {
     fetchSearchData(value);
   };
 
-  console.log({ blogListData, blogData, seotags });
   return (
     <>
       <HeadLayout slug="blog" seotags={seotags} />

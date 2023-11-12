@@ -2,8 +2,12 @@ import React from "react";
 import Head from "next/head";
 
 const HeadLayout = ({ slug, seotags }) => {
+  console.log({ seotags, attributes: seotags.data });
   const homeTags =
-    seotags && seotags.data.filter((val) => val.attributes.Slug === slug);
+    seotags &&
+    seotags.data.filter(
+      (val) => val && val.attributes && val.attributes.Slug === slug
+    );
   const title = homeTags && homeTags[0].attributes.title;
   const description = homeTags && homeTags[0].attributes.description;
   const keyword = homeTags && homeTags[0].attributes.keyword;
