@@ -21,6 +21,7 @@ import { REVIEWS, SEOTAGS, SERVICES } from "../services/contants";
 import Star from "../components/Star";
 
 export default function Review({ services, seotags, reviews }) {
+  console.log({ seotags });
   const [currentPage, setCurrentPage] = useState(0);
   const [rating, setRating] = useState(null);
   const [hover, setHover] = useState(null);
