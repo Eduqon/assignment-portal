@@ -277,12 +277,12 @@ export default function NavService({ blogsdata, services, faqschemas }) {
 
   const bgColor = useColorModeValue("white", "gray.700");
 
-  const blogImage =
-    blogsdata &&
-    getURL &&
-    blogsdata.data[0].attributes.Image &&
-    blogsdata.data[0].attributes.Image.data.length !== 0 &&
-    blogsdata.data[0].attributes.Image.data[0].attributes.url;
+  // const blogImage =
+  //   blogsdata &&
+  //   getURL &&
+  //   blogsdata.data[0].attributes.Image &&
+  //   blogsdata.data[0].attributes.Image.data.length !== 0 &&
+  //   blogsdata.data[0].attributes.Image.data[0].attributes.url;
 
   const blogImageAltText =
     blogsdata &&
@@ -291,14 +291,28 @@ export default function NavService({ blogsdata, services, faqschemas }) {
     blogsdata.data[0].attributes.Image.data.length !== 0 &&
     blogsdata.data[0].attributes.Image.data[0].attributes.alternativeText;
 
-  const blogImageNameText =
+  // const blogImageNameText =
+  //   blogsdata &&
+  //   getURL &&
+  //   blogsdata.data[0].attributes.Image &&
+  //   blogsdata.data[0].attributes.Image.data.length !== 0 &&
+  //   blogsdata.data[0].attributes.Image.data[0].attributes.name;
+
+  const blogImageHash =
     blogsdata &&
     getURL &&
     blogsdata.data[0].attributes.Image &&
     blogsdata.data[0].attributes.Image.data.length !== 0 &&
-    blogsdata.data[0].attributes.Image.data[0].attributes.name;
+    blogsdata.data[0].attributes.Image.data[0].attributes.hash;
 
-  console.log({ blogImage, blogsdata });
+  const blogImageExt =
+    blogsdata &&
+    getURL &&
+    blogsdata.data[0].attributes.Image &&
+    blogsdata.data[0].attributes.Image.data.length !== 0 &&
+    blogsdata.data[0].attributes.Image.data[0].attributes.ext;
+
+  // console.log({ blogImage, blogsdata });
   // const { apiData } = useFetch(mediaUrl + "/upload/files");
   // const blogImage =
   //   apiData &&
@@ -373,7 +387,7 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                   ).toLocaleDateString()}
                 </span>
               </HStack>
-              {blogImage && (
+              {blogImageHash && (
                 <>
                   <Box
                     display={"flex"}
@@ -386,9 +400,11 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                   >
                     <Box width={"100%"}>
                       <img
-                        src={`${blogImage}`}
+                        src={`https://media.assignmentsanta.com/${
+                          blogImageHash + blogImageExt
+                        }`}
                         alt={`${blogImageAltText}`}
-                        data-name={`${blogImageNameText}`}
+                        // data-name={`${blogImageNameText}`}
                         style={{
                           width: "100%",
                         }}

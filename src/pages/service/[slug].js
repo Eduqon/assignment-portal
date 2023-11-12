@@ -144,13 +144,35 @@ export default function NavService({ servicesdata, services, faqschemas }) {
     servicesdata && getURL && servicesdata.data[0].attributes.Seocntag;
   const SchemaTitle =
     servicesdata && getURL && servicesdata.data[0].attributes.SchemaTitle;
-  const serviceImage =
+
+  const serviceImageAltText =
     servicesdata &&
     getURL &&
     servicesdata.data[0].attributes.Media &&
     servicesdata.data[0].attributes.Media.data.length !== 0 &&
-    servicesdata.data[0].attributes.Media.data[0].attributes.url;
-  console.log({ servicesdata, serviceImage });
+    servicesdata.data[0].attributes.Media.data[0].attributes.alternativeText;
+
+  const serviceImageHash =
+    servicesdata &&
+    getURL &&
+    servicesdata.data[0].attributes.Media &&
+    servicesdata.data[0].attributes.Media.data.length !== 0 &&
+    servicesdata.data[0].attributes.Media.data[0].attributes.hash;
+
+  const serviceImageExt =
+    servicesdata &&
+    getURL &&
+    servicesdata.data[0].attributes.Media &&
+    servicesdata.data[0].attributes.Media.data.length !== 0 &&
+    servicesdata.data[0].attributes.Media.data[0].attributes.ext;
+
+  // const serviceImage =
+  //   servicesdata &&
+  //   getURL &&
+  //   servicesdata.data[0].attributes.Media &&
+  //   servicesdata.data[0].attributes.Media.data.length !== 0 &&
+  //   servicesdata.data[0].attributes.Media.data[0].attributes.url;
+  // console.log({ servicesdata, serviceImage });
 
   async function _submit() {
     let email = document.getElementById("email");
@@ -524,7 +546,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                 </ReactMarkdown>
               </Box>
               <br />
-              {serviceImage && (
+              {serviceImageHash && (
                 <>
                   <Box
                     display={"flex"}
@@ -536,11 +558,10 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                     padding={"0px 2rem"}
                   >
                     <img
-                      src={`${serviceImage}`}
-                      alt={`${
-                        servicesdata &&
-                        servicesdata.data[0].attributes.body_title
+                      src={`https://media.assignmentsanta.com/${
+                        serviceImageHash + serviceImageExt
                       }`}
+                      alt={`${serviceImageAltText}`}
                       style={{
                         width: "100%",
                       }}

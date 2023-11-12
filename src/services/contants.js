@@ -50,6 +50,9 @@ export const SERVICE = gql`
             data {
               attributes {
                 url
+                hash
+                ext
+                alternativeText
               }
             }
           }
@@ -141,6 +144,8 @@ export const BLOG = gql`
               attributes {
                 url
                 name
+                hash
+                ext
                 alternativeText
               }
             }
