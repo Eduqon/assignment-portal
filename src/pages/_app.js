@@ -13,6 +13,9 @@ export const client = new ApolloClient({
   uri: `${strapiUrl}/graphql`,
   // uri: "http://localhost:1337/graphql",
   cache: new InMemoryCache(),
+  onError: (error) => {
+    console.error("Apollo Client Error:", error);
+  },
 });
 
 function App({ Component, pageProps }) {

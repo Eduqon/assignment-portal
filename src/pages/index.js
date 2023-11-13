@@ -28,11 +28,11 @@ export async function getStaticProps() {
   const { data } = await client.query({
     query: SEOTAGS,
   });
-
+  console.log({ serviceData: serviceData.services });
   return {
     props: {
-      services: serviceData.services,
-      seotags: data.seotags,
+      services: serviceData.services || null,
+      seotags: data.seotags || null,
     },
   };
 }

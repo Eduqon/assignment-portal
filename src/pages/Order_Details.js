@@ -23,7 +23,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      seotags: data.seotags,
+      seotags: data.seotags || null,
     },
   };
 }
