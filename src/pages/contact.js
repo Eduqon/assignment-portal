@@ -9,7 +9,7 @@ import { client } from "./_app";
 import { SEOTAGS, SERVICES } from "../services/contants";
 
 export default function Contact({ services, seotags }) {
-  console.log({ seotags: seotags.data });
+  // console.log({ seotags: seotags.data });
   return (
     <>
       <HeadLayout slug="contact" seotags={seotags} />

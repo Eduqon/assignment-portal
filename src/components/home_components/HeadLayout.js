@@ -2,8 +2,10 @@ import React from "react";
 import Head from "next/head";
 
 const HeadLayout = ({ slug, seotags }) => {
+  console.log({ seotags });
   const homeTags =
     seotags &&
+    seotags.data.length !== 0 &&
     seotags.data.filter(
       (val) => val && val.attributes && val.attributes.Slug === slug
     );
