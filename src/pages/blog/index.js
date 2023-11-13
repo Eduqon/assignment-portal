@@ -30,7 +30,7 @@ import { Search2Icon } from "@chakra-ui/icons";
 import Pagination from "../../components/pagination_component/pagination";
 
 export default function Blog({ services, seotags, blogs }) {
-  console.log({ blogs, services, seotags });
+  // console.log({ blogs, services, seotags });
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
   const [input, setInput] = useState("");

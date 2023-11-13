@@ -803,7 +803,6 @@ export async function getServerSideProps({ params: { blog } }) {
   const { data: faqschemasData } = await client.query({
     query: FAQSCHEMA,
   });
-  // console.log({ serviceData });
   if (
     Object.keys(data.blogs).length === 0 ||
     Object.keys(serviceData.services).length === 0 ||
