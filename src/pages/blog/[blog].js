@@ -277,14 +277,14 @@ export default function NavService({ blogsdata, services, faqschemas }) {
 
   const bgColor = useColorModeValue("white", "gray.700");
 
-  const blogImage =
-    blogsdata &&
-    getURL &&
-    blogsdata.data[0].attributes.Image &&
-    blogsdata.data[0].attributes.Image.data.length !== 0 &&
-    blogsdata.data[0].attributes.Image.data[0].attributes.url;
+  // const blogImage =
+  //   blogsdata &&
+  //   getURL &&
+  //   blogsdata.data[0].attributes.Image &&
+  //   blogsdata.data[0].attributes.Image.data.length !== 0 &&
+  //   blogsdata.data[0].attributes.Image.data[0].attributes.url;
 
-  console.log({ blogImage });
+  console.log({ blogsdata });
 
   const blogImageAltText =
     blogsdata &&
@@ -402,7 +402,8 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                   >
                     <Box width={"100%"}>
                       <img
-                        src={`${blogImage}`}
+                        src=""
+                        // src={`${blogImage}`}
                         alt={`${blogImageAltText}`}
                         // data-name={`${blogImageNameText}`}
                         style={{
