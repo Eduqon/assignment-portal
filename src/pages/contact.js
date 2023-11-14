@@ -165,8 +165,8 @@ export async function getStaticProps() {
 
   return {
     props: {
-      services: serviceData.services || null,
-      seotags: data.seotags || null,
+      services: serviceData.services,
+      seotags: data.seotags,
     },
   };
 }
