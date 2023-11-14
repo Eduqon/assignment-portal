@@ -14,7 +14,7 @@ const HeadLayout = ({ slug, seotags }) => {
     homeTags.length !== 0 && homeTags[0].attributes.description;
   const keyword = homeTags.length !== 0 && homeTags[0].attributes.keyword;
   const canonicalURL = homeTags.length !== 0 && homeTags[0].attributes.cntag;
-  console.log({ title, description, keyword, canonicalURL });
+  console.log({ title, description, keyword, canonicalURL, homeTags });
   const data = {
     "@context": "https://schema.org",
     "@type": "Organization",
