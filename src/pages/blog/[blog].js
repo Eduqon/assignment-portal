@@ -284,6 +284,8 @@ export default function NavService({ blogsdata, services, faqschemas }) {
     blogsdata.data[0].attributes.Image.data.length !== 0 &&
     blogsdata.data[0].attributes.Image.data[0].attributes.url;
 
+  console.log({ blogImage });
+
   const blogImageAltText =
     blogsdata &&
     getURL &&

@@ -172,7 +172,8 @@ export default function NavService({ servicesdata, services, faqschemas }) {
     servicesdata.data[0].attributes.Media &&
     servicesdata.data[0].attributes.Media.data.length !== 0 &&
     servicesdata.data[0].attributes.Media.data[0].attributes.url;
-  // console.log({ servicesdata, serviceImage });
+
+  console.log({ servicesdata, serviceImage });
 
   async function _submit() {
     let email = document.getElementById("email");
@@ -558,11 +559,11 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                     padding={"0px 2rem"}
                   >
                     <img
-                      src={`${serviceImage}`}
+                      src={serviceImage}
                       // src={`https://media.assignmentsanta.com/${
                       //   serviceImageHash + serviceImageExt
                       // }`}
-                      alt={`${serviceImageAltText}`}
+                      alt={serviceImageAltText}
                       style={{
                         width: "100%",
                       }}
