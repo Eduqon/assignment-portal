@@ -394,6 +394,7 @@ export async function getStaticProps() {
   const { data } = await client.query({
     query: SEOTAGS,
   });
+  console.log("Samples", { serviceData, data });
 
   return {
     props: {
