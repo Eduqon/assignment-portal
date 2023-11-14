@@ -152,26 +152,26 @@ export default function NavService({ servicesdata, services, faqschemas }) {
     servicesdata.data[0].attributes.Media.data.length !== 0 &&
     servicesdata.data[0].attributes.Media.data[0].attributes.alternativeText;
 
-  const serviceImageHash =
-    servicesdata &&
-    getURL &&
-    servicesdata.data[0].attributes.Media &&
-    servicesdata.data[0].attributes.Media.data.length !== 0 &&
-    servicesdata.data[0].attributes.Media.data[0].attributes.hash;
-
-  const serviceImageExt =
-    servicesdata &&
-    getURL &&
-    servicesdata.data[0].attributes.Media &&
-    servicesdata.data[0].attributes.Media.data.length !== 0 &&
-    servicesdata.data[0].attributes.Media.data[0].attributes.ext;
-
-  // const serviceImage =
+  // const serviceImageHash =
   //   servicesdata &&
   //   getURL &&
   //   servicesdata.data[0].attributes.Media &&
   //   servicesdata.data[0].attributes.Media.data.length !== 0 &&
-  //   servicesdata.data[0].attributes.Media.data[0].attributes.url;
+  //   servicesdata.data[0].attributes.Media.data[0].attributes.hash;
+
+  // const serviceImageExt =
+  //   servicesdata &&
+  //   getURL &&
+  //   servicesdata.data[0].attributes.Media &&
+  //   servicesdata.data[0].attributes.Media.data.length !== 0 &&
+  //   servicesdata.data[0].attributes.Media.data[0].attributes.ext;
+
+  const serviceImage =
+    servicesdata &&
+    getURL &&
+    servicesdata.data[0].attributes.Media &&
+    servicesdata.data[0].attributes.Media.data.length !== 0 &&
+    servicesdata.data[0].attributes.Media.data[0].attributes.url;
   // console.log({ servicesdata, serviceImage });
 
   async function _submit() {
@@ -558,9 +558,10 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                     padding={"0px 2rem"}
                   >
                     <img
-                      src={`https://media.assignmentsanta.com/${
-                        serviceImageHash + serviceImageExt
-                      }`}
+                      src={`${serviceImage}`}
+                      // src={`https://media.assignmentsanta.com/${
+                      //   serviceImageHash + serviceImageExt
+                      // }`}
                       alt={`${serviceImageAltText}`}
                       style={{
                         width: "100%",

@@ -277,12 +277,12 @@ export default function NavService({ blogsdata, services, faqschemas }) {
 
   const bgColor = useColorModeValue("white", "gray.700");
 
-  // const blogImage =
-  //   blogsdata &&
-  //   getURL &&
-  //   blogsdata.data[0].attributes.Image &&
-  //   blogsdata.data[0].attributes.Image.data.length !== 0 &&
-  //   blogsdata.data[0].attributes.Image.data[0].attributes.url;
+  const blogImage =
+    blogsdata &&
+    getURL &&
+    blogsdata.data[0].attributes.Image &&
+    blogsdata.data[0].attributes.Image.data.length !== 0 &&
+    blogsdata.data[0].attributes.Image.data[0].attributes.url;
 
   const blogImageAltText =
     blogsdata &&
@@ -298,19 +298,19 @@ export default function NavService({ blogsdata, services, faqschemas }) {
   //   blogsdata.data[0].attributes.Image.data.length !== 0 &&
   //   blogsdata.data[0].attributes.Image.data[0].attributes.name;
 
-  const blogImageHash =
-    blogsdata &&
-    getURL &&
-    blogsdata.data[0].attributes.Image &&
-    blogsdata.data[0].attributes.Image.data.length !== 0 &&
-    blogsdata.data[0].attributes.Image.data[0].attributes.hash;
+  // const blogImageHash =
+  //   blogsdata &&
+  //   getURL &&
+  //   blogsdata.data[0].attributes.Image &&
+  //   blogsdata.data[0].attributes.Image.data.length !== 0 &&
+  //   blogsdata.data[0].attributes.Image.data[0].attributes.hash;
 
-  const blogImageExt =
-    blogsdata &&
-    getURL &&
-    blogsdata.data[0].attributes.Image &&
-    blogsdata.data[0].attributes.Image.data.length !== 0 &&
-    blogsdata.data[0].attributes.Image.data[0].attributes.ext;
+  // const blogImageExt =
+  //   blogsdata &&
+  //   getURL &&
+  //   blogsdata.data[0].attributes.Image &&
+  //   blogsdata.data[0].attributes.Image.data.length !== 0 &&
+  //   blogsdata.data[0].attributes.Image.data[0].attributes.ext;
 
   // console.log({ blogImage, blogsdata });
   // const { apiData } = useFetch(mediaUrl + "/upload/files");
@@ -400,9 +400,7 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                   >
                     <Box width={"100%"}>
                       <img
-                        src={`https://media.assignmentsanta.com/${
-                          blogImageHash + blogImageExt
-                        }`}
+                        src={`${blogImage}`}
                         alt={`${blogImageAltText}`}
                         // data-name={`${blogImageNameText}`}
                         style={{
