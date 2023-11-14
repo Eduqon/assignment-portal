@@ -167,14 +167,14 @@ export default function NavService({ servicesdata, services, faqschemas }) {
   //   servicesdata.data[0].attributes.Media.data.length !== 0 &&
   //   servicesdata.data[0].attributes.Media.data[0].attributes.ext;
 
-  // const serviceImage =
-  //   servicesdata &&
-  //   getURL &&
-  //   servicesdata.data[0].attributes.Media &&
-  //   servicesdata.data[0].attributes.Media.data.length !== 0 &&
-  //   servicesdata.data[0].attributes.Media.data[0].attributes.url;
+  const serviceImage =
+    servicesdata &&
+    getURL &&
+    servicesdata.data[0].attributes.Media &&
+    servicesdata.data[0].attributes.Media.data.length !== 0 &&
+    servicesdata.data[0].attributes.Media.data[0].attributes.url;
 
-  console.log({ servicesdata });
+  console.log({ servicesdata, serviceImage });
 
   async function _submit() {
     let email = document.getElementById("email");
