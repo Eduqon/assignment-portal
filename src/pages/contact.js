@@ -9,7 +9,8 @@ import { client } from "./_app";
 import { SEOTAGS, SERVICES } from "../services/contants";
 
 export default function Contact({ services, seotags }) {
-  // console.log({ seotags: seotags.data });
+  console.log("Contact", { services, seotags });
+
   return (
     <>
       <HeadLayout slug="contact" seotags={seotags} />
@@ -162,7 +163,6 @@ export async function getStaticProps() {
   const { data } = await client.query({
     query: SEOTAGS,
   });
-  console.log("Contact", { serviceData, data });
 
   return {
     props: {
