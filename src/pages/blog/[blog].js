@@ -389,7 +389,7 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                   ).toLocaleDateString()}
                 </span>
               </HStack>
-              {blogImageHash && (
+              {blogImage && (
                 <>
                   <Box
                     display={"flex"}
@@ -402,9 +402,8 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                   >
                     <Box width={"100%"}>
                       <img
-                        src=""
-                        // src={`${blogImage}`}
-                        alt={`${blogImageAltText}`}
+                        src={blogImage}
+                        alt={blogImageAltText}
                         // data-name={`${blogImageNameText}`}
                         style={{
                           width: "100%",

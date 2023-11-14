@@ -84,7 +84,6 @@ const productData = {
 };
 
 export default function NavService({ servicesdata, services, faqschemas }) {
-  console.log({ services, servicesdata });
   const [pages, setPages] = useState(0);
 
   const setEmail = ClientStore((state) => state.setId);
@@ -173,8 +172,6 @@ export default function NavService({ servicesdata, services, faqschemas }) {
     servicesdata.data[0].attributes.Media &&
     servicesdata.data[0].attributes.Media.data.length !== 0 &&
     servicesdata.data[0].attributes.Media.data[0].attributes.url;
-
-  console.log({ servicesdata, serviceImage });
 
   async function _submit() {
     let email = document.getElementById("email");
@@ -318,8 +315,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
 
   return (
     <>
-      Hell
-      {/* {getURL ? (
+      {getURL ? (
         <>
           <Head>
             {title && <title>{title}</title>}
@@ -549,7 +545,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                 </ReactMarkdown>
               </Box>
               <br />
-              {serviceImageHash && (
+              {serviceImage && (
                 <>
                   <Box
                     display={"flex"}
@@ -561,7 +557,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                     padding={"0px 2rem"}
                   >
                     <img
-                      src=""
+                      src={serviceImage}
                       alt={serviceImageAltText}
                       style={{
                         width: "100%",
@@ -867,7 +863,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
         </>
       ) : (
         <Custom404 />
-      )} */}
+      )}
     </>
   );
 }
