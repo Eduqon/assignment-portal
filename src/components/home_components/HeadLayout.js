@@ -2,7 +2,7 @@ import React from "react";
 import Head from "next/head";
 
 const HeadLayout = ({ slug, seotags }) => {
-  console.log({ seotags, slug });
+  // console.log({ seotags, slug });
   const homeTags =
     seotags &&
     seotags.data.length !== 0 &&
@@ -14,6 +14,7 @@ const HeadLayout = ({ slug, seotags }) => {
     homeTags.length !== 0 && homeTags[0].attributes.description;
   const keyword = homeTags.length !== 0 && homeTags[0].attributes.keyword;
   const canonicalURL = homeTags.length !== 0 && homeTags[0].attributes.cntag;
+  console.log({ title, description, keyword, canonicalURL });
   const data = {
     "@context": "https://schema.org",
     "@type": "Organization",
