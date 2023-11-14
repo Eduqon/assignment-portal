@@ -9,11 +9,9 @@ import { client } from "./_app";
 import { SEOTAGS, SERVICES } from "../services/contants";
 
 export default function Contact({ services, seotags }) {
-  console.log("Contact", { services, seotags });
-
   return (
     <>
-      <HeadLayout slug="contact" seotags={seotags} />
+      <HeadLayout slug="Contact" seotags={seotags} />
       <Link href="/samples">
         <img src="/assets/foter/View.png" alt="" className="view" />
       </Link>

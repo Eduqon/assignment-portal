@@ -54,7 +54,7 @@ export default function Review({ services, seotags, reviews }) {
 
   return (
     <>
-      <HeadLayout slug="reviews" seotags={seotags} />
+      <HeadLayout slug="Reviews" seotags={seotags} />
       <NavbarHome services={services} />
       <Box position={"relative"}>
         <Box

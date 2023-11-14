@@ -140,7 +140,10 @@ export default function Blog({ services, seotags, blogs }) {
 
   return (
     <>
-      <HeadLayout slug="blog" seotags={seotags} />
+      <HeadLayout
+        slug="academic-help-blog-student-help-blog"
+        seotags={seotags}
+      />
       <NavbarHome services={services} />
       <Divider />
       <Box position={"relative"}>

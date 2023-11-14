@@ -10,7 +10,10 @@ import { SEOTAGS, SERVICES } from "../services/contants.js";
 function Home({ services, seotags }) {
   return (
     <>
-      <HeadLayout slug="home" seotags={seotags} />
+      <HeadLayout
+        slug="assignment-help-online-assignment-assistance"
+        seotags={seotags}
+      />
       <NavbarHome services={services} />
       <FormHome />
       <FeaturesHome />

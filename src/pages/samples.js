@@ -14,7 +14,6 @@ import AnonymousChat from "../components/chat_components/anonymous_chat";
 import { SEOTAGS, SERVICES } from "../services/contants";
 
 export default function Samples({ services, seotags }) {
-  console.log("Samples", { services, seotags });
   return (
     <>
       <HeadLayout slug="samples" seotags={seotags} />
