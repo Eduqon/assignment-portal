@@ -84,6 +84,7 @@ const productData = {
 };
 
 export default function NavService({ servicesdata, services, faqschemas }) {
+  console.log({ services, servicesdata });
   const [pages, setPages] = useState(0);
 
   const setEmail = ClientStore((state) => state.setId);
@@ -317,7 +318,8 @@ export default function NavService({ servicesdata, services, faqschemas }) {
 
   return (
     <>
-      {getURL ? (
+      Hell
+      {/* {getURL ? (
         <>
           <Head>
             {title && <title>{title}</title>}
@@ -560,22 +562,11 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                   >
                     <img
                       src=""
-                      // src={serviceImage}
-                      // src={`https://media.assignmentsanta.com/${
-                      //   serviceImageHash + serviceImageExt
-                      // }`}
                       alt={serviceImageAltText}
                       style={{
                         width: "100%",
                       }}
                     />
-                    {/* <Box
-                      width={"100%"}
-                      height={"100%"}
-                      backgroundImage={`url(${serviceImage})`}
-                      backgroundSize={"cover"}
-                      backgroundPosition={"center"}
-                    /> */}
                   </Box>
                   <br />
                 </>
@@ -876,7 +867,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
         </>
       ) : (
         <Custom404 />
-      )}
+      )} */}
     </>
   );
 }
