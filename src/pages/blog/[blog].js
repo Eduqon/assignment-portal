@@ -277,12 +277,12 @@ export default function NavService({ blogsdata, services, faqschemas }) {
 
   const bgColor = useColorModeValue("white", "gray.700");
 
-  // const blogImage =
-  //   blogsdata &&
-  //   getURL &&
-  //   blogsdata.data[0].attributes.Image &&
-  //   blogsdata.data[0].attributes.Image.data.length !== 0 &&
-  //   blogsdata.data[0].attributes.Image.data[0].attributes.url;
+  const blogImage =
+    blogsdata &&
+    getURL &&
+    blogsdata.data[0].attributes.Image &&
+    blogsdata.data[0].attributes.Image.data.length !== 0 &&
+    blogsdata.data[0].attributes.Image.data[0].attributes.url;
 
   console.log({ blogsdata });
 
