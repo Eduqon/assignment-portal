@@ -173,3 +173,16 @@ export const REVIEWS = gql`
     }
   }
 `;
+
+export const OTHERASSIGNMENTSERVICES = gql`
+  query {
+    otherAssignmentservices(pagination: { limit: 100 }) {
+      data {
+        id
+        attributes {
+          Other_Assignment_Services
+        }
+      }
+    }
+  }
+`;
