@@ -36,6 +36,7 @@ import {
   BLOGS,
   FAQSCHEMA,
   mediaUrl,
+  OTHERASSIGNMENTSERVICES,
   SERVICES,
 } from "../../services/contants";
 import { useRouter } from "next/router";
@@ -80,7 +81,13 @@ const productData = {
   },
 };
 
-export default function NavService({ blogsdata, services, faqschemas }) {
+export default function NavService({
+  blogsdata,
+  services,
+  faqschemas,
+  allBlogs,
+  otherAssignmentservices,
+}) {
   const [pages, setPages] = useState(0);
 
   const setEmail = ClientStore((state) => state.setId);
@@ -289,6 +296,35 @@ export default function NavService({ blogsdata, services, faqschemas }) {
     blogsdata.data[0].attributes.Image.data.length !== 0 &&
     blogsdata.data[0].attributes.Image.data[0].attributes.alternativeText;
 
+  const topPostValues =
+    otherAssignmentservices &&
+    otherAssignmentservices.data.length !== 0 &&
+    otherAssignmentservices.data[0].attributes &&
+    otherAssignmentservices.data[0].attributes.Other_Assignment_Services &&
+    otherAssignmentservices.data[0].attributes.Other_Assignment_Services
+      .topPosts;
+
+  const relatedPostsValues =
+    otherAssignmentservices &&
+    otherAssignmentservices.data.length !== 0 &&
+    otherAssignmentservices.data[0].attributes &&
+    otherAssignmentservices.data[0].attributes.Other_Assignment_Services &&
+    otherAssignmentservices.data[0].attributes.Other_Assignment_Services
+      .relatedPosts;
+  // const topPostValues = ["robert-hayden-essay", "olaudah-equiano-essay"];
+  // const relatedPostsValues = ["robert-hayden-essay", "olaudah-equiano-essay"];
+  const relatedPosts = relatedPostsValues
+    .map((post) => {
+      return (
+        allBlogs &&
+        allBlogs.data.length !== 0 &&
+        allBlogs.data.filter((val) => val.attributes.Slug === post)
+      );
+    })
+    .flat();
+
+  console.log({ blogsdata, allBlogs, relatedPosts });
+
   const fetchSearchData = (value) => {
     const results =
       subjects &&
@@ -384,263 +420,333 @@ export default function NavService({ blogsdata, services, faqschemas }) {
             justifyContent="space-around"
             flexDirection={["column", "column", "column", "row"]}
           >
-            <Box
-              id="left_section"
-              w={["100%", "100%", "100%", "65%"]}
-              h="100%"
-              border="1px solid #eee"
-              padding="1rem"
-              boxShadow="lg"
-              borderRadius="10px"
-            >
-              <Heading fontSize={["1.6rem", "2rem"]}>
-                {blogsdata.data[0].attributes.Heading}
-              </Heading>
-              <HStack mt="1rem">
-                <span>
-                  Published by <i class="fa fa-user" aria-hidden="true"></i>{" "}
-                  {blogsdata.data[0].attributes.Author} at{" "}
-                  <i class="fa fa-clock-o" aria-hidden="true"></i>{" "}
-                  {new Date(
-                    blogsdata.data[0].attributes.createdAt
-                  ).toLocaleDateString()}
-                </span>
-              </HStack>
-              {blogImage && (
-                <>
-                  <Box
-                    display={"flex"}
-                    alignItems={"center"}
-                    justifyContent={"space-around"}
-                    width={"100%"}
-                    height={"500px"}
-                    marginTop={2}
-                    overflow="hidden"
-                  >
-                    <Box width={"100%"}>
-                      <img
-                        src={blogImage}
-                        alt={blogImageAltText}
-                        // data-name={`${blogImageNameText}`}
-                        style={{
-                          width: "100%",
-                        }}
-                      />
-                    </Box>
+            <Box id="left_section" w={["100%", "100%", "100%", "65%"]} h="100%">
+              <Box
+                boxShadow="lg"
+                borderRadius="10px"
+                border="1px solid #eee"
+                padding="1rem"
+              >
+                <Heading fontSize={["1.6rem", "2rem"]}>
+                  {blogsdata.data[0].attributes.Heading}
+                </Heading>
+                <HStack mt="1rem">
+                  <span>
+                    Published by <i class="fa fa-user" aria-hidden="true"></i>{" "}
+                    {blogsdata.data[0].attributes.Author} at{" "}
+                    <i class="fa fa-clock-o" aria-hidden="true"></i>{" "}
+                    {new Date(
+                      blogsdata.data[0].attributes.createdAt
+                    ).toLocaleDateString()}
+                  </span>
+                </HStack>
+                {blogImage && (
+                  <>
+                    <Box
+                      display={"flex"}
+                      alignItems={"center"}
+                      justifyContent={"space-around"}
+                      width={"100%"}
+                      height={"500px"}
+                      marginTop={2}
+                      overflow="hidden"
+                    >
+                      <Box width={"100%"}>
+                        <img
+                          src={blogImage}
+                          alt={blogImageAltText}
+                          // data-name={`${blogImageNameText}`}
+                          style={{
+                            width: "100%",
+                          }}
+                        />
+                      </Box>
 
-                    {/* <Box
+                      {/* <Box
                       width={"100%"}
                       height={"100%"}
                       backgroundImage={`url(https://assignmentsantastrapi.fly.dev${blogImage[0].url})`}
                       backgroundSize={"cover"}
                       backgroundPosition={"center"}
                     /> */}
-                  </Box>
-                  <br />
-                </>
-              )}
-              <Box
-                mt="1rem"
-                className="service-body"
-                style={{ "white-space": "pre-line", padding: "0 2rem" }}
-              >
-                <ReactMarkdown>
-                  {blogsdata &&
-                    blogsdata.data[0].attributes.body.split("<br/>").join("\n")}
-                </ReactMarkdown>
-              </Box>
-              <br />
-              {blogsdata && blogsdata.data[0].attributes.table_heading && (
-                <TableContainer
-                  width={"90%"}
-                  border="1px solid #eee"
-                  borderRadius={"15px"}
+                    </Box>
+                    <br />
+                  </>
+                )}
+                <Box
+                  mt="1rem"
+                  className="service-body"
+                  style={{ "white-space": "pre-line", padding: "0 2rem" }}
                 >
-                  <Table variant="simple">
-                    <TableCaption
-                      style={{
-                        captionSide: "top",
-                        marginTop: "0",
-                        padding: "1.5rem",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      <h2 style={{ fontSize: "20px" }}>
-                        {blogsdata &&
-                          blogsdata.data[0].attributes.table_heading}
-                      </h2>
-                    </TableCaption>
-                    <Tbody borderTopWidth={"1px"}>
-                      {blogsdata &&
-                        blogsdata.data[0].attributes.table_data &&
-                        blogsdata.data[0].attributes.table_data.length !== 0 &&
-                        blogsdata &&
-                        blogsdata.data[0].attributes.table_data.map((data) => {
-                          return (
-                            <Tr>
-                              {data.firstData && (
-                                <Td
-                                  borderRight={"1px solid #eee"}
-                                  textAlign="center"
-                                >
-                                  <Link
-                                    href={data.firstData.Link}
-                                    target="_blank"
-                                    _hover={{
-                                      color: "#dc3545",
-                                    }}
-                                  >
-                                    {data.firstData.name}
-                                  </Link>
-                                </Td>
-                              )}
-                              {data.secondData && (
-                                <Td
-                                  borderRight={"1px solid #eee"}
-                                  textAlign="center"
-                                >
-                                  <Link
-                                    href={data.secondData.Link}
-                                    target="_blank"
-                                    _hover={{
-                                      color: "#dc3545",
-                                    }}
-                                  >
-                                    {data.secondData.name}
-                                  </Link>
-                                </Td>
-                              )}
-                              {data.thirdData && (
-                                <Td
-                                  borderRight={"1px solid #eee"}
-                                  textAlign="center"
-                                >
-                                  <Link
-                                    href={data.thirdData.Link}
-                                    target="_blank"
-                                    _hover={{
-                                      color: "#dc3545",
-                                    }}
-                                  >
-                                    {data.thirdData.name}
-                                  </Link>
-                                </Td>
-                              )}
-                              {data.fourthData && (
-                                <Td
-                                  borderRight={"1px solid #eee"}
-                                  textAlign="center"
-                                >
-                                  <Link
-                                    href={data.fourthData.Link}
-                                    target="_blank"
-                                    _hover={{
-                                      color: "#dc3545",
-                                    }}
-                                  >
-                                    {data.fourthData.name}
-                                  </Link>
-                                </Td>
-                              )}
-                              {data.fifthData && (
-                                <Td
-                                  borderRight={"1px solid #eee"}
-                                  textAlign="center"
-                                >
-                                  <Link
-                                    href={data.fifthData.Link}
-                                    target="_blank"
-                                    _hover={{
-                                      color: "#dc3545",
-                                    }}
-                                  >
-                                    {data.fifthData.name}
-                                  </Link>
-                                </Td>
-                              )}
-                              {data.sixthData && (
-                                <Td
-                                  borderRight={"1px solid #eee"}
-                                  textAlign="center"
-                                >
-                                  <Link
-                                    href={data.sixthData.Link}
-                                    target="_blank"
-                                    _hover={{
-                                      color: "#dc3545",
-                                    }}
-                                  >
-                                    {data.sixthData.name}
-                                  </Link>
-                                </Td>
-                              )}
-                              {data.seventhData && (
-                                <Td
-                                  borderRight={"1px solid #eee"}
-                                  textAlign="center"
-                                >
-                                  <Link
-                                    href={data.seventhData.Link}
-                                    target="_blank"
-                                    _hover={{
-                                      color: "#dc3545",
-                                    }}
-                                  >
-                                    {data.seventhData.name}
-                                  </Link>
-                                </Td>
-                              )}
-                              {data.eighthData && (
-                                <Td
-                                  borderRight={"1px solid #eee"}
-                                  textAlign="center"
-                                >
-                                  <Link
-                                    href={data.eighthData.Link}
-                                    target="_blank"
-                                    _hover={{
-                                      color: "#dc3545",
-                                    }}
-                                  >
-                                    {data.eighthData.name}
-                                  </Link>
-                                </Td>
-                              )}
-                            </Tr>
-                          );
-                        })}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-              )}
-              <br />
-              <Faqschema
-                title={SchemaTitle}
-                slug={blog}
-                faqschemas={faqschemas}
-              />
-              <Divider mt="1rem" />
-              <Box
-                display="flex"
-                justifyContent="space-evenly"
-                mt="1rem"
-                p={4}
-                background="gray.100"
-                borderRadius="15px"
-              >
-                <Box id="user_icon" w={["auto", "5%"]}>
-                  <Avatar />
-                </Box>
-                <Box id="user_info" w={["80%", "90%"]}>
-                  <Heading fontSize={"3xl"} paddingBottom="0.5rem">
-                    {blogsdata.data[0].attributes.Author}
-                  </Heading>
                   <ReactMarkdown>
-                    {blogsdata.data[0].attributes.Author_BIO}
+                    {blogsdata &&
+                      blogsdata.data[0].attributes.body
+                        .split("<br/>")
+                        .join("\n")}
                   </ReactMarkdown>
                 </Box>
+                <br />
+                {blogsdata && blogsdata.data[0].attributes.table_heading && (
+                  <TableContainer
+                    width={"90%"}
+                    border="1px solid #eee"
+                    borderRadius={"15px"}
+                  >
+                    <Table variant="simple">
+                      <TableCaption
+                        style={{
+                          captionSide: "top",
+                          marginTop: "0",
+                          padding: "1.5rem",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        <h2 style={{ fontSize: "20px" }}>
+                          {blogsdata &&
+                            blogsdata.data[0].attributes.table_heading}
+                        </h2>
+                      </TableCaption>
+                      <Tbody borderTopWidth={"1px"}>
+                        {blogsdata &&
+                          blogsdata.data[0].attributes.table_data &&
+                          blogsdata.data[0].attributes.table_data.length !==
+                            0 &&
+                          blogsdata &&
+                          blogsdata.data[0].attributes.table_data.map(
+                            (data) => {
+                              return (
+                                <Tr>
+                                  {data.firstData && (
+                                    <Td
+                                      borderRight={"1px solid #eee"}
+                                      textAlign="center"
+                                    >
+                                      <Link
+                                        href={data.firstData.Link}
+                                        target="_blank"
+                                        _hover={{
+                                          color: "#dc3545",
+                                        }}
+                                      >
+                                        {data.firstData.name}
+                                      </Link>
+                                    </Td>
+                                  )}
+                                  {data.secondData && (
+                                    <Td
+                                      borderRight={"1px solid #eee"}
+                                      textAlign="center"
+                                    >
+                                      <Link
+                                        href={data.secondData.Link}
+                                        target="_blank"
+                                        _hover={{
+                                          color: "#dc3545",
+                                        }}
+                                      >
+                                        {data.secondData.name}
+                                      </Link>
+                                    </Td>
+                                  )}
+                                  {data.thirdData && (
+                                    <Td
+                                      borderRight={"1px solid #eee"}
+                                      textAlign="center"
+                                    >
+                                      <Link
+                                        href={data.thirdData.Link}
+                                        target="_blank"
+                                        _hover={{
+                                          color: "#dc3545",
+                                        }}
+                                      >
+                                        {data.thirdData.name}
+                                      </Link>
+                                    </Td>
+                                  )}
+                                  {data.fourthData && (
+                                    <Td
+                                      borderRight={"1px solid #eee"}
+                                      textAlign="center"
+                                    >
+                                      <Link
+                                        href={data.fourthData.Link}
+                                        target="_blank"
+                                        _hover={{
+                                          color: "#dc3545",
+                                        }}
+                                      >
+                                        {data.fourthData.name}
+                                      </Link>
+                                    </Td>
+                                  )}
+                                  {data.fifthData && (
+                                    <Td
+                                      borderRight={"1px solid #eee"}
+                                      textAlign="center"
+                                    >
+                                      <Link
+                                        href={data.fifthData.Link}
+                                        target="_blank"
+                                        _hover={{
+                                          color: "#dc3545",
+                                        }}
+                                      >
+                                        {data.fifthData.name}
+                                      </Link>
+                                    </Td>
+                                  )}
+                                  {data.sixthData && (
+                                    <Td
+                                      borderRight={"1px solid #eee"}
+                                      textAlign="center"
+                                    >
+                                      <Link
+                                        href={data.sixthData.Link}
+                                        target="_blank"
+                                        _hover={{
+                                          color: "#dc3545",
+                                        }}
+                                      >
+                                        {data.sixthData.name}
+                                      </Link>
+                                    </Td>
+                                  )}
+                                  {data.seventhData && (
+                                    <Td
+                                      borderRight={"1px solid #eee"}
+                                      textAlign="center"
+                                    >
+                                      <Link
+                                        href={data.seventhData.Link}
+                                        target="_blank"
+                                        _hover={{
+                                          color: "#dc3545",
+                                        }}
+                                      >
+                                        {data.seventhData.name}
+                                      </Link>
+                                    </Td>
+                                  )}
+                                  {data.eighthData && (
+                                    <Td
+                                      borderRight={"1px solid #eee"}
+                                      textAlign="center"
+                                    >
+                                      <Link
+                                        href={data.eighthData.Link}
+                                        target="_blank"
+                                        _hover={{
+                                          color: "#dc3545",
+                                        }}
+                                      >
+                                        {data.eighthData.name}
+                                      </Link>
+                                    </Td>
+                                  )}
+                                </Tr>
+                              );
+                            }
+                          )}
+                      </Tbody>
+                    </Table>
+                  </TableContainer>
+                )}
+                <br />
+                <Faqschema
+                  title={SchemaTitle}
+                  slug={blog}
+                  faqschemas={faqschemas}
+                />
+                <Divider mt="1rem" />
+                <Box
+                  display="flex"
+                  justifyContent="space-evenly"
+                  mt="1rem"
+                  p={4}
+                  background="gray.100"
+                  borderRadius="15px"
+                >
+                  <Box id="user_icon" w={["auto", "5%"]}>
+                    <Avatar />
+                  </Box>
+                  <Box id="user_info" w={["80%", "90%"]}>
+                    <Heading fontSize={"3xl"} paddingBottom="0.5rem">
+                      {blogsdata.data[0].attributes.Author}
+                    </Heading>
+                    <ReactMarkdown>
+                      {blogsdata.data[0].attributes.Author_BIO}
+                    </ReactMarkdown>
+                  </Box>
+                </Box>
+                <br />
               </Box>
-              <br />
+              <Box marginTop={"1rem"}>
+                <Heading>Related Posts</Heading>
+                <Box
+                  display={"flex"}
+                  // gridTemplateColumns={["auto", "auto auto auto auto"]}
+                  // justifyContent={"center"}
+                  gap={"1rem"}
+                  marginTop={"1rem"}
+                >
+                  {relatedPosts.map((post) => {
+                    return (
+                      post && (
+                        <Box
+                          maxW={["auto", "345px"]}
+                          // height={"30rem"}
+                          border="1px solid #eee"
+                          p="6"
+                          borderRadius="15px"
+                          display={"flex"}
+                          flexDirection={"column"}
+                          position={"relative"}
+                          // justifyContent={"space-between"}
+                        >
+                          <Box width={"100%"} height={"40vh"}>
+                            {post.attributes &&
+                              post.attributes.Image &&
+                              post.attributes.Image.data &&
+                              post.attributes.Image.data.length !== 0 &&
+                              post.attributes.Image.data[0].attributes &&
+                              post.attributes.Image.data[0].attributes.url && (
+                                <Box
+                                  width={"100%"}
+                                  height={"100%"}
+                                  backgroundImage={`url(${post.attributes.Image.data[0].attributes.url})`}
+                                  backgroundSize={"cover"}
+                                  backgroundPosition={"start"}
+                                />
+                              )}
+                          </Box>
+                          {post && post.attributes && post.attributes.Slug && (
+                            <Box>
+                              <Heading
+                                my="4"
+                                fontWeight={"600"}
+                                fontSize={"20px"}
+                                size="md"
+                                cursor={"pointer"}
+                              >
+                                <a
+                                  href={`/blog/${post.attributes.Slug}`}
+                                  style={{
+                                    color: "#000",
+                                    textDecoration: "none",
+                                  }}
+                                >
+                                  {`${post.attributes.Heading}`}
+                                </a>
+                              </Heading>
+                            </Box>
+                          )}
+                        </Box>
+                      )
+                    );
+                  })}
+                </Box>
+              </Box>
             </Box>
             <Box
               id="right_section"
@@ -797,6 +903,34 @@ export default function NavService({ blogsdata, services, faqschemas }) {
                   </Box>
                 </Stack>
               </div>
+              <Box width={"100%"} backgroundColor={"#f0f5f8"}>
+                <div
+                  className="bg-grey p-20 mb-20"
+                  style={{ "margin-top": "20px" }}
+                >
+                  <Heading marginTop={"10"} marginLeft={"3"}>
+                    Top Posts
+                  </Heading>
+                  <ul className="list-group list-group-flush">
+                    {topPostValues &&
+                      topPostValues.map((value) => {
+                        return (
+                          <li
+                            className="list-group-item"
+                            style={{ background: "#0000" }}
+                          >
+                            <a
+                              href={`/blog/${value}`}
+                              style={{ textTransform: "capitalize" }}
+                            >
+                              {value.split("-").join(" ")}
+                            </a>
+                          </li>
+                        );
+                      })}{" "}
+                  </ul>
+                </div>
+              </Box>
             </Box>
           </Box>
 
@@ -814,16 +948,25 @@ export async function getServerSideProps({ params: { blog } }) {
     query: BLOG,
     variables: { blog: blog },
   });
+  const { data: allBlogs } = await client.query({
+    query: BLOGS,
+  });
   const { data: serviceData } = await client.query({
     query: SERVICES,
   });
   const { data: faqschemasData } = await client.query({
     query: FAQSCHEMA,
   });
+  const { data: otherAssignmentservicesData } = await client.query({
+    query: OTHERASSIGNMENTSERVICES,
+  });
   if (
     Object.keys(data.blogs).length === 0 ||
     Object.keys(serviceData.services).length === 0 ||
-    Object.keys(faqschemasData.faqschemas).length === 0
+    Object.keys(faqschemasData.faqschemas).length === 0 ||
+    Object.keys(allBlogs.blogs).length === 0 ||
+    Object.keys(otherAssignmentservicesData.otherAssignmentservices).length ===
+      0
   ) {
     return {
       notFound: true,
@@ -836,6 +979,9 @@ export async function getServerSideProps({ params: { blog } }) {
       blogsdata: data.blogs || null,
       services: serviceData.services || null,
       faqschemas: faqschemasData.faqschemas || null,
+      allBlogs: allBlogs.blogs || null,
+      otherAssignmentservices:
+        otherAssignmentservicesData.otherAssignmentservices || null,
     },
   };
 }

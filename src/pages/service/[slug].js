@@ -908,10 +908,10 @@ export default function NavService({
                   <Heading marginTop={"10"} marginLeft={"3"}>
                     Other Assignment Services
                   </Heading>
-                  {otherAssignmentservicesValues &&
-                    otherAssignmentservicesValues.map((value) => {
-                      return (
-                        <ul className="list-group list-group-flush">
+                  <ul className="list-group list-group-flush">
+                    {otherAssignmentservicesValues &&
+                      otherAssignmentservicesValues.map((value) => {
+                        return (
                           <li
                             className="list-group-item"
                             style={{ background: "#0000" }}
@@ -923,9 +923,9 @@ export default function NavService({
                               {value.split("-").join(" ")}
                             </a>
                           </li>
-                        </ul>
-                      );
-                    })}
+                        );
+                      })}{" "}
+                  </ul>
                 </div>
               </Box>
             </Box>
