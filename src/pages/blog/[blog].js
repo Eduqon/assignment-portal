@@ -392,7 +392,7 @@ export default function NavService({
                   itemscope
                   itemprop="item"
                   itemid="https://www.assignmentsanta.com/blog"
-                  href="#"
+                  href="/blog"
                 >
                   <span itemprop="name">
                     Blog <ChevronRightIcon color="gray.500" />
