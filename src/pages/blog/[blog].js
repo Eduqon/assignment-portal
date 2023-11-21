@@ -447,7 +447,7 @@ export default function NavService({
                       alignItems={"center"}
                       justifyContent={"space-around"}
                       width={"100%"}
-                      height={"500px"}
+                      height={["auto", "auto", "auto", "500px"]}
                       marginTop={2}
                       overflow="hidden"
                     >
@@ -455,20 +455,11 @@ export default function NavService({
                         <img
                           src={blogImage}
                           alt={blogImageAltText}
-                          // data-name={`${blogImageNameText}`}
                           style={{
                             width: "100%",
                           }}
                         />
                       </Box>
-
-                      {/* <Box
-                      width={"100%"}
-                      height={"100%"}
-                      backgroundImage={`url(https://assignmentsantastrapi.fly.dev${blogImage[0].url})`}
-                      backgroundSize={"cover"}
-                      backgroundPosition={"center"}
-                    /> */}
                     </Box>
                     <br />
                   </>
@@ -666,11 +657,12 @@ export default function NavService({
                   p={4}
                   background="gray.100"
                   borderRadius="15px"
+                  flexDirection={["column", "column", "column", "row"]}
                 >
                   <Box id="user_icon" w={["auto", "5%"]}>
                     <Avatar />
                   </Box>
-                  <Box id="user_info" w={["80%", "90%"]}>
+                  <Box id="user_info" w={["100%", "100%", "100%", "90%"]}>
                     <Heading fontSize={"3xl"} paddingBottom="0.5rem">
                       {blogsdata.data[0].attributes.Author}
                     </Heading>
@@ -682,29 +674,32 @@ export default function NavService({
                 <br />
               </Box>
               <Box marginTop={"1rem"}>
-                <Heading>Related Posts</Heading>
+                <Heading textAlign={["center", "center", "center", "left"]}>
+                  Related Posts
+                </Heading>
                 <Box
                   display={"flex"}
-                  // gridTemplateColumns={["auto", "auto auto auto auto"]}
-                  // justifyContent={"center"}
                   gap={"1rem"}
                   marginTop={"1rem"}
+                  marginBottom={"1rem"}
+                  flexDirection={["column", "column", "column", "row"]}
                 >
                   {relatedPosts.map((post) => {
                     return (
                       post && (
                         <Box
                           maxW={["auto", "345px"]}
-                          // height={"30rem"}
                           border="1px solid #eee"
                           p="6"
                           borderRadius="15px"
                           display={"flex"}
                           flexDirection={"column"}
                           position={"relative"}
-                          // justifyContent={"space-between"}
                         >
-                          <Box width={"100%"} height={"40vh"}>
+                          <Box
+                            width={"100%"}
+                            height={["30vh", "30vh", "30vh", "20vh"]}
+                          >
                             {post.attributes &&
                               post.attributes.Image &&
                               post.attributes.Image.data &&
@@ -716,7 +711,12 @@ export default function NavService({
                                   height={"100%"}
                                   backgroundImage={`url(${post.attributes.Image.data[0].attributes.url})`}
                                   backgroundSize={"cover"}
-                                  backgroundPosition={"start"}
+                                  backgroundPosition={[
+                                    "center",
+                                    "center",
+                                    "center",
+                                    "start",
+                                  ]}
                                 />
                               )}
                           </Box>
