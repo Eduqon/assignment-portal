@@ -183,6 +183,14 @@ export default function NavService({
     servicesdata.data[0].attributes.Media.data.length !== 0 &&
     servicesdata.data[0].attributes.Media.data[0].attributes.url;
 
+  const otherAssignmentservicesValues =
+    otherAssignmentservices &&
+    otherAssignmentservices.data.length !== 0 &&
+    otherAssignmentservices.data[0].attributes &&
+    otherAssignmentservices.data[0].attributes.Other_Assignment_Services &&
+    otherAssignmentservices.data[0].attributes.Other_Assignment_Services
+      .services;
+
   async function _submit() {
     let email = document.getElementById("email");
     let subject = document.getElementById("subject");
@@ -323,7 +331,7 @@ export default function NavService({
     fetchSearchData(searchValue);
   };
 
-  console.log({ otherAssignmentservices });
+  console.log({ otherAssignmentservices, otherAssignmentservicesValues });
 
   return (
     <>
@@ -900,27 +908,24 @@ export default function NavService({
                   <Heading marginTop={"10"} marginLeft={"3"}>
                     Other Assignment Services
                   </Heading>
-                  <ul className="list-group list-group-flush">
-                    <li
-                      className="list-group-item"
-                      style={{ background: "#0000" }}
-                    >
-                      <a href="#">My Assignment Help</a>
-                    </li>
-
-                    <li
-                      className="list-group-item"
-                      style={{ background: "#0000" }}
-                    >
-                      <a href="#">SCM Assignment Help</a>
-                    </li>
-                    <li
-                      className="list-group-item"
-                      style={{ background: "#0000" }}
-                    >
-                      <a href="#">HRM Assignment Help</a>
-                    </li>
-                  </ul>
+                  {otherAssignmentservicesValues &&
+                    otherAssignmentservicesValues.map((value) => {
+                      return (
+                        <ul className="list-group list-group-flush">
+                          <li
+                            className="list-group-item"
+                            style={{ background: "#0000" }}
+                          >
+                            <a
+                              href={`/service/${value}`}
+                              style={{ textTransform: "capitalize" }}
+                            >
+                              {value.split("-").join(" ")}
+                            </a>
+                          </li>
+                        </ul>
+                      );
+                    })}
                 </div>
               </Box>
             </Box>
