@@ -22,11 +22,15 @@ import {
   Tbody,
   Link,
   Text,
-  Select,
   Divider,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { AddIcon, MinusIcon, Search2Icon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  ChevronRightIcon,
+  MinusIcon,
+  Search2Icon,
+} from "@chakra-ui/icons";
 import { isMobile } from "react-device-detect";
 import validator from "validator";
 import { ClientStore } from "../../services/stores/client_store";
@@ -36,6 +40,7 @@ import {
   apiUrl,
   FAQSCHEMA,
   mediaUrl,
+  OTHERASSIGNMENTSERVICES,
   SERVICE,
   SERVICES,
 } from "../../services/contants";
@@ -83,7 +88,12 @@ const productData = {
   },
 };
 
-export default function NavService({ servicesdata, services, faqschemas }) {
+export default function NavService({
+  servicesdata,
+  services,
+  faqschemas,
+  otherAssignmentservices,
+}) {
   const [pages, setPages] = useState(0);
 
   const setEmail = ClientStore((state) => state.setId);
@@ -313,6 +323,8 @@ export default function NavService({ servicesdata, services, faqschemas }) {
     fetchSearchData(searchValue);
   };
 
+  console.log({ otherAssignmentservices });
+
   return (
     <>
       {getURL ? (
@@ -523,16 +535,71 @@ export default function NavService({ servicesdata, services, faqschemas }) {
               </Box>
             </Box>
           </Box>
+
           <Box className="row w-100 h-100 d-flex" margin={"0"}>
-            <div
+            <Box padding={"0 3rem"}>
+              <ol
+                itemscope
+                itemtype="https://schema.org/BreadcrumbList"
+                style={{
+                  listStyleType: "none",
+                  display: "flex",
+                }}
+              >
+                <li
+                  itemprop="itemListElement"
+                  itemscope
+                  itemtype="https://schema.org/ListItem"
+                >
+                  <a itemprop="item" href="https://www.assignmentsanta.com/">
+                    <span itemprop="name">
+                      Home <ChevronRightIcon color="gray.500" />
+                    </span>
+                  </a>
+                  <meta itemprop="position" content="1" />
+                </li>
+                <li
+                  itemprop="itemListElement"
+                  itemscope
+                  itemtype="https://schema.org/ListItem"
+                >
+                  <a
+                    itemscope
+                    itemprop="item"
+                    itemid="https://www.assignmentsanta.com/services"
+                    href="#"
+                  >
+                    <span itemprop="name">
+                      Service <ChevronRightIcon color="gray.500" />
+                    </span>
+                  </a>
+                  <meta itemprop="position" content="2" />
+                </li>
+                <li
+                  itemprop="itemListElement"
+                  itemscope
+                  itemtype="https://schema.org/ListItem"
+                >
+                  <span itemprop="name">
+                    {servicesdata && servicesdata.data[0].attributes.title}
+                  </span>
+                  <meta itemprop="position" content="3" />
+                </li>
+              </ol>
+            </Box>
+            <Box
               id="bottom-section"
-              className="col-md-8 col-12 d-flex align-items-center flex-column p-5"
+              padding={[5]}
+              className="col-md-8 col-12 d-flex align-items-center flex-column"
             >
-              <div className="headings d-flex justify-content-center align-items-center mb-4">
+              <Box
+                className="headings d-flex justify-content-center align-items-center mb-4"
+                marginTop={0}
+              >
                 <Heading size={"lg"}>
                   {servicesdata && servicesdata.data[0].attributes.body_title}
                 </Heading>
-              </div>
+              </Box>
               <Box
                 className="service-body"
                 style={{ whiteSpace: "pre-line", padding: "0 2rem" }}
@@ -755,7 +822,7 @@ export default function NavService({ servicesdata, services, faqschemas }) {
                 slug={slug}
                 faqschemas={faqschemas}
               />
-            </div>
+            </Box>
             <Box
               id="right-section"
               className="col-md-3 col-12 d-flex align-items-center flex-column justify-content-top p-4"
@@ -879,10 +946,15 @@ export async function getServerSideProps({ params: { slug } }) {
   const { data: faqschemasData } = await client.query({
     query: FAQSCHEMA,
   });
+  const { data: otherAssignmentservicesData } = await client.query({
+    query: OTHERASSIGNMENTSERVICES,
+  });
   if (
     Object.keys(data.services).length === 0 ||
     Object.keys(serviceData.services).length === 0 ||
-    Object.keys(faqschemasData.faqschemas).length === 0
+    Object.keys(faqschemasData.faqschemas).length === 0 ||
+    Object.keys(otherAssignmentservicesData.otherAssignmentservices).length ===
+      0
   ) {
     return {
       notFound: true,
@@ -894,6 +966,8 @@ export async function getServerSideProps({ params: { slug } }) {
       servicesdata: data.services || null,
       services: serviceData.services || null,
       faqschemas: faqschemasData.faqschemas || null,
+      otherAssignmentservices:
+        otherAssignmentservicesData.otherAssignmentservices || null,
     },
   };
 }

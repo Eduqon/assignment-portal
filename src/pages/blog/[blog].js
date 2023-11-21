@@ -23,10 +23,9 @@ import {
   Td,
   Tbody,
   Link,
-  Select,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+import { AddIcon, ChevronRightIcon, MinusIcon } from "@chakra-ui/icons";
 import validator from "validator";
 import { ClientStore } from "../../services/stores/client_store";
 import { AssignmentFormStore } from "../../services/stores/assignment_form_store";
@@ -40,7 +39,6 @@ import {
   SERVICES,
 } from "../../services/contants";
 import { useRouter } from "next/router";
-import useFetch from "../../hooks/useFetch";
 import { NavbarHome } from "../../components/home_components/navbar_home";
 import { FooterHome } from "../../components/home_components/footer_home";
 import { client } from "../_app";
@@ -284,43 +282,12 @@ export default function NavService({ blogsdata, services, faqschemas }) {
     blogsdata.data[0].attributes.Image.data.length !== 0 &&
     blogsdata.data[0].attributes.Image.data[0].attributes.url;
 
-  console.log({ blogsdata });
-
   const blogImageAltText =
     blogsdata &&
     getURL &&
     blogsdata.data[0].attributes.Image &&
     blogsdata.data[0].attributes.Image.data.length !== 0 &&
     blogsdata.data[0].attributes.Image.data[0].attributes.alternativeText;
-
-  // const blogImageNameText =
-  //   blogsdata &&
-  //   getURL &&
-  //   blogsdata.data[0].attributes.Image &&
-  //   blogsdata.data[0].attributes.Image.data.length !== 0 &&
-  //   blogsdata.data[0].attributes.Image.data[0].attributes.name;
-
-  // const blogImageHash =
-  //   blogsdata &&
-  //   getURL &&
-  //   blogsdata.data[0].attributes.Image &&
-  //   blogsdata.data[0].attributes.Image.data.length !== 0 &&
-  //   blogsdata.data[0].attributes.Image.data[0].attributes.hash;
-
-  // const blogImageExt =
-  //   blogsdata &&
-  //   getURL &&
-  //   blogsdata.data[0].attributes.Image &&
-  //   blogsdata.data[0].attributes.Image.data.length !== 0 &&
-  //   blogsdata.data[0].attributes.Image.data[0].attributes.ext;
-
-  // console.log({ blogImage, blogsdata });
-  // const { apiData } = useFetch(mediaUrl + "/upload/files");
-  // const blogImage =
-  //   apiData &&
-  //   blogsdata &&
-  //   getURL &&
-  //   apiData.filter((data) => data.name === blogsdata.data[0].attributes.Slug);
 
   const fetchSearchData = (value) => {
     const results =
@@ -359,6 +326,56 @@ export default function NavService({ blogsdata, services, faqschemas }) {
           </Link>
           <NavbarHome services={services} />
           <Divider />
+          <Box padding={"1rem"} width={"90%"} margin={"0 auto"}>
+            <ol
+              itemscope
+              itemtype="https://schema.org/BreadcrumbList"
+              style={{
+                listStyleType: "none",
+                display: "flex",
+              }}
+            >
+              <li
+                itemprop="itemListElement"
+                itemscope
+                itemtype="https://schema.org/ListItem"
+              >
+                <a itemprop="item" href="https://www.assignmentsanta.com/">
+                  <span itemprop="name">
+                    Home <ChevronRightIcon color="gray.500" />
+                  </span>
+                </a>
+                <meta itemprop="position" content="1" />
+              </li>
+              <li
+                itemprop="itemListElement"
+                itemscope
+                itemtype="https://schema.org/ListItem"
+              >
+                <a
+                  itemscope
+                  itemprop="item"
+                  itemid="https://www.assignmentsanta.com/blog"
+                  href="#"
+                >
+                  <span itemprop="name">
+                    Blog <ChevronRightIcon color="gray.500" />
+                  </span>
+                </a>
+                <meta itemprop="position" content="2" />
+              </li>
+              <li
+                itemprop="itemListElement"
+                itemscope
+                itemtype="https://schema.org/ListItem"
+              >
+                <span itemprop="name" style={{ textTransform: "capitalize" }}>
+                  {blog.split("-").join(" ")}
+                </span>
+                <meta itemprop="position" content="3" />
+              </li>
+            </ol>
+          </Box>
           <Box
             w="90%"
             overflow="hidden"
