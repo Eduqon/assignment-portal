@@ -547,51 +547,51 @@ export default function NavService({
           <Box className="row w-100 h-100 d-flex" margin={"0"}>
             <Box padding={"0 3rem"}>
               <ol
-                itemscope
-                itemtype="https://schema.org/BreadcrumbList"
+                itemScope
+                itemType="https://schema.org/BreadcrumbList"
                 style={{
                   listStyleType: "none",
                   display: "flex",
                 }}
               >
                 <li
-                  itemprop="itemListElement"
-                  itemscope
-                  itemtype="https://schema.org/ListItem"
+                  itemProp="itemListElement"
+                  itemScope
+                  itemType="https://schema.org/ListItem"
                 >
-                  <a itemprop="item" href="https://www.assignmentsanta.com/">
-                    <span itemprop="name">
+                  <a itemProp="item" href="https://www.assignmentsanta.com/">
+                    <span itemProp="name">
                       Home <ChevronRightIcon color="gray.500" />
                     </span>
                   </a>
-                  <meta itemprop="position" content="1" />
+                  <meta itemProp="position" content="1" />
                 </li>
                 <li
-                  itemprop="itemListElement"
-                  itemscope
-                  itemtype="https://schema.org/ListItem"
+                  itemProp="itemListElement"
+                  itemScope
+                  itemType="https://schema.org/ListItem"
                 >
                   <a
-                    itemscope
-                    itemprop="item"
-                    itemid="https://www.assignmentsanta.com/services"
+                    itemScope
+                    itemProp="item"
+                    itemID="https://www.assignmentsanta.com/services"
                     href="#"
                   >
-                    <span itemprop="name">
+                    <span itemProp="name">
                       Service <ChevronRightIcon color="gray.500" />
                     </span>
                   </a>
-                  <meta itemprop="position" content="2" />
+                  <meta itemProp="position" content="2" />
                 </li>
                 <li
-                  itemprop="itemListElement"
-                  itemscope
-                  itemtype="https://schema.org/ListItem"
+                  itemProp="itemListElement"
+                  itemScope
+                  itemType="https://schema.org/ListItem"
                 >
-                  <span itemprop="name">
+                  <span itemProp="name">
                     {servicesdata && servicesdata.data[0].attributes.title}
                   </span>
-                  <meta itemprop="position" content="3" />
+                  <meta itemProp="position" content="3" />
                 </li>
               </ol>
             </Box>

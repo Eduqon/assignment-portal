@@ -364,51 +364,51 @@ export default function NavService({
           <Divider />
           <Box padding={"1rem"} width={"90%"} margin={"0 auto"}>
             <ol
-              itemscope
-              itemtype="https://schema.org/BreadcrumbList"
+              itemScope
+              itemType="https://schema.org/BreadcrumbList"
               style={{
                 listStyleType: "none",
                 display: "flex",
               }}
             >
               <li
-                itemprop="itemListElement"
-                itemscope
-                itemtype="https://schema.org/ListItem"
+                itemProp="itemListElement"
+                itemScope
+                itemType="https://schema.org/ListItem"
               >
-                <a itemprop="item" href="https://www.assignmentsanta.com/">
-                  <span itemprop="name">
+                <a itemProp="item" href="https://www.assignmentsanta.com/">
+                  <span itemProp="name">
                     Home <ChevronRightIcon color="gray.500" />
                   </span>
                 </a>
-                <meta itemprop="position" content="1" />
+                <meta itemProp="position" content="1" />
               </li>
               <li
-                itemprop="itemListElement"
-                itemscope
-                itemtype="https://schema.org/ListItem"
+                itemProp="itemListElement"
+                itemScope
+                itemType="https://schema.org/ListItem"
               >
                 <a
-                  itemscope
-                  itemprop="item"
-                  itemid="https://www.assignmentsanta.com/blog"
+                  itemScope
+                  itemProp="item"
+                  itemId="https://www.assignmentsanta.com/blog"
                   href="/blog"
                 >
-                  <span itemprop="name">
+                  <span itemProp="name">
                     Blog <ChevronRightIcon color="gray.500" />
                   </span>
                 </a>
-                <meta itemprop="position" content="2" />
+                <meta itemProp="position" content="2" />
               </li>
               <li
-                itemprop="itemListElement"
-                itemscope
-                itemtype="https://schema.org/ListItem"
+                itemProp="itemListElement"
+                itemScope
+                itemType="https://schema.org/ListItem"
               >
-                <span itemprop="name" style={{ textTransform: "capitalize" }}>
+                <span itemProp="name" style={{ textTransform: "capitalize" }}>
                   {blog.split("-").join(" ")}
                 </span>
-                <meta itemprop="position" content="3" />
+                <meta itemProp="position" content="3" />
               </li>
             </ol>
           </Box>
