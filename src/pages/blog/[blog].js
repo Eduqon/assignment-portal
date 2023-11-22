@@ -305,23 +305,24 @@ export default function NavService({
       .topPosts;
 
   const relatedPostsValues =
-    otherAssignmentservices &&
-    otherAssignmentservices.data.length !== 0 &&
-    otherAssignmentservices.data[0].attributes &&
-    otherAssignmentservices.data[0].attributes.Other_Assignment_Services &&
-    otherAssignmentservices.data[0].attributes.Other_Assignment_Services
-      .relatedPosts;
-  // const topPostValues = ["robert-hayden-essay", "olaudah-equiano-essay"];
-  // const relatedPostsValues = ["robert-hayden-essay", "olaudah-equiano-essay"];
-  const relatedPosts = relatedPostsValues
-    .map((post) => {
-      return (
-        allBlogs &&
-        allBlogs.data.length !== 0 &&
-        allBlogs.data.filter((val) => val.attributes.Slug === post)
-      );
-    })
-    .flat();
+    blogsdata &&
+    blogsdata.data[0].attributes &&
+    blogsdata.data[0].attributes.related_post &&
+    blogsdata.data[0].attributes.related_post.related_posts.length !== 0 &&
+    blogsdata.data[0].attributes.related_post.related_posts;
+
+  const relatedPosts =
+    relatedPostsValues &&
+    relatedPostsValues.length !== 0 &&
+    relatedPostsValues
+      .map((post) => {
+        return (
+          allBlogs &&
+          allBlogs.data.length !== 0 &&
+          allBlogs.data.filter((val) => val.attributes.Slug === post)
+        );
+      })
+      .flat();
 
   console.log({ blogsdata, allBlogs, relatedPosts });
 
@@ -502,7 +503,6 @@ export default function NavService({
                           blogsdata.data[0].attributes.table_data &&
                           blogsdata.data[0].attributes.table_data.length !==
                             0 &&
-                          blogsdata &&
                           blogsdata.data[0].attributes.table_data.map(
                             (data) => {
                               return (
@@ -673,80 +673,85 @@ export default function NavService({
                 </Box>
                 <br />
               </Box>
-              <Box marginTop={"1rem"}>
-                <Heading textAlign={["center", "center", "center", "left"]}>
-                  Related Posts
-                </Heading>
-                <Box
-                  display={"flex"}
-                  gap={"1rem"}
-                  marginTop={"1rem"}
-                  marginBottom={"1rem"}
-                  flexDirection={["column", "column", "column", "row"]}
-                >
-                  {relatedPosts.map((post) => {
-                    return (
-                      post && (
-                        <Box
-                          maxW={["auto", "345px"]}
-                          border="1px solid #eee"
-                          p="6"
-                          borderRadius="15px"
-                          display={"flex"}
-                          flexDirection={"column"}
-                          position={"relative"}
-                        >
+              {relatedPosts && relatedPosts.length !== 0 && (
+                <Box marginTop={"1rem"}>
+                  <Heading textAlign={["center", "center", "center", "left"]}>
+                    Related Posts
+                  </Heading>
+                  <Box
+                    display={"flex"}
+                    gap={"1rem"}
+                    marginTop={"1rem"}
+                    marginBottom={"1rem"}
+                    flexDirection={["column", "column", "column", "row"]}
+                  >
+                    {relatedPosts.map((post) => {
+                      return (
+                        post && (
                           <Box
-                            width={"100%"}
-                            height={["30vh", "30vh", "30vh", "20vh"]}
+                            maxW={["auto", "345px"]}
+                            border="1px solid #eee"
+                            p="6"
+                            borderRadius="15px"
+                            display={"flex"}
+                            flexDirection={"column"}
+                            position={"relative"}
                           >
-                            {post.attributes &&
-                              post.attributes.Image &&
-                              post.attributes.Image.data &&
-                              post.attributes.Image.data.length !== 0 &&
-                              post.attributes.Image.data[0].attributes &&
-                              post.attributes.Image.data[0].attributes.url && (
-                                <Box
-                                  width={"100%"}
-                                  height={"100%"}
-                                  backgroundImage={`url(${post.attributes.Image.data[0].attributes.url})`}
-                                  backgroundSize={"cover"}
-                                  backgroundPosition={[
-                                    "center",
-                                    "center",
-                                    "center",
-                                    "start",
-                                  ]}
-                                />
+                            <Box
+                              width={"100%"}
+                              height={["30vh", "30vh", "30vh", "20vh"]}
+                            >
+                              {post.attributes &&
+                                post.attributes.Image &&
+                                post.attributes.Image.data &&
+                                post.attributes.Image.data.length !== 0 &&
+                                post.attributes.Image.data[0].attributes &&
+                                post.attributes.Image.data[0].attributes
+                                  .url && (
+                                  <Box
+                                    width={"100%"}
+                                    height={"100%"}
+                                    backgroundImage={`url(${post.attributes.Image.data[0].attributes.url})`}
+                                    backgroundSize={"cover"}
+                                    backgroundPosition={[
+                                      "center",
+                                      "center",
+                                      "center",
+                                      "start",
+                                    ]}
+                                  />
+                                )}
+                            </Box>
+                            {post &&
+                              post.attributes &&
+                              post.attributes.Slug && (
+                                <Box>
+                                  <Heading
+                                    my="4"
+                                    fontWeight={"600"}
+                                    fontSize={"20px"}
+                                    size="md"
+                                    cursor={"pointer"}
+                                  >
+                                    <a
+                                      href={`/blog/${post.attributes.Slug}`}
+                                      style={{
+                                        color: "#000",
+                                        textDecoration: "none",
+                                      }}
+                                    >
+                                      {`${post.attributes.Heading}`}
+                                    </a>
+                                  </Heading>
+                                </Box>
                               )}
                           </Box>
-                          {post && post.attributes && post.attributes.Slug && (
-                            <Box>
-                              <Heading
-                                my="4"
-                                fontWeight={"600"}
-                                fontSize={"20px"}
-                                size="md"
-                                cursor={"pointer"}
-                              >
-                                <a
-                                  href={`/blog/${post.attributes.Slug}`}
-                                  style={{
-                                    color: "#000",
-                                    textDecoration: "none",
-                                  }}
-                                >
-                                  {`${post.attributes.Heading}`}
-                                </a>
-                              </Heading>
-                            </Box>
-                          )}
-                        </Box>
-                      )
-                    );
-                  })}
+                        )
+                      );
+                    })}
+                  </Box>
                 </Box>
-              </Box>
+              )}
             </Box>
             <Box
               id="right_section"

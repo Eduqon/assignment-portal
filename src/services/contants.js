@@ -139,6 +139,7 @@ export const BLOG = gql`
           SchemaTitle
           table_heading
           table_data
+          related_post
           Image {
             data {
               attributes {
