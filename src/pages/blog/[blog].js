@@ -390,7 +390,6 @@ export default function NavService({
                 itemType="https://schema.org/ListItem"
               >
                 <a
-                  itemScope
                   itemProp="item"
                   itemId="https://www.assignmentsanta.com/blog"
                   href="/blog"
@@ -679,11 +678,16 @@ export default function NavService({
                     Related Posts
                   </Heading>
                   <Box
-                    display={"flex"}
+                    display={"grid"}
                     gap={"1rem"}
                     marginTop={"1rem"}
                     marginBottom={"1rem"}
-                    flexDirection={["column", "column", "column", "row"]}
+                    gridTemplateColumns={[
+                      "auto",
+                      "auto",
+                      "auto auto",
+                      "auto auto auto",
+                    ]}
                   >
                     {relatedPosts.map((post) => {
                       return (

@@ -358,7 +358,7 @@ export default function NavService({
           <Box
             className="contain"
             position={"relative"}
-            height={["100vh", "100vh", "55vh", "70vh"]}
+            height={["100vh", "100vh", "55vh", "80vh"]}
             marginBottom={"2rem"}
           >
             <Box
@@ -572,7 +572,6 @@ export default function NavService({
                   itemType="https://schema.org/ListItem"
                 >
                   <a
-                    itemScope
                     itemProp="item"
                     itemID="https://www.assignmentsanta.com/services"
                     href="#"
