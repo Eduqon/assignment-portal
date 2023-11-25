@@ -80,22 +80,6 @@ export default function Contact({ services, seotags }) {
                       <div className="d-flex">
                         <FaRegAddressCard className="whst" />
                         <span style={{ marginLeft: "1rem" }}>
-                          Canada address and contact number 9990 125 Street
-                          Surrey, V3V 4Y2
-                        </span>
-                      </div>
-                      <div className="d-flex">
-                        <FaPhoneAlt className="whst" />
-                        <span style={{ marginLeft: "1rem" }}>
-                          +1(604) 256-2312
-                        </span>
-                      </div>
-                    </li>
-                    <br />
-                    <li>
-                      <div className="d-flex">
-                        <FaRegAddressCard className="whst" />
-                        <span style={{ marginLeft: "1rem" }}>
                           UK address and contact number Stringfellow Hall Block
                           5, Cranfield, Wharley End, Bedford, Bedfordshire- MK43
                           0FX 44
