@@ -18,8 +18,6 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { NavbarHome } from "../components/home_components/navbar_home.js";
-import { FormHome } from "../components/home_components/form_home.js";
-import { FeaturesHome } from "../components/home_components/features_home.js";
 import { FooterHome } from "../components/home_components/footer_home.js";
 import HeadLayout from "../components/home_components/HeadLayout.js";
 import { client } from "./_app.js";
@@ -451,7 +449,7 @@ function Home({ services, seotags, reviews }) {
                       _submit();
                     }}
                   >
-                    Submit
+                    <h2>Order Now</h2>
                   </button>
                 </Stack>
               </Stack>
@@ -500,7 +498,6 @@ function Home({ services, seotags, reviews }) {
             width={["100%", "100%", "100%", "50%"]}
             display={"flex"}
             flexDirection={"column"}
-            // gap={"2rem"}
             position={"relative"}
           >
             {steps_data.map((data) => {
@@ -515,10 +512,15 @@ function Home({ services, seotags, reviews }) {
                     gap={"1rem"}
                   >
                     <Box width={["30%", "30%", "30%", "15%"]}>
-                      <img src={data.icon} />
+                      <img src={data.icon} alt={data.altText} />
                     </Box>
                     <Box width={["70%", "70%", "70%", "80%"]}>
-                      <Heading size="md">
+                      <h3
+                        style={{
+                          fontSize: "1.75rem",
+                          fontWeight: 500,
+                        }}
+                      >
                         Step{" "}
                         <span style={{ color: "#EF2B4B" }}>{data.step_no}</span>{" "}
                         : {data.before_spanText}{" "}
@@ -526,10 +528,10 @@ function Home({ services, seotags, reviews }) {
                           {data.spanText}
                         </span>{" "}
                         {data?.after_spanText}
-                      </Heading>
-                      <Box fontSize={["0.7rem", "0.7rem", "0.7rem", "1rem"]}>
+                      </h3>
+                      <Text fontSize={["0.7rem", "0.7rem", "0.7rem", "1rem"]}>
                         {data.sub_heading}
-                      </Box>
+                      </Text>
                     </Box>
                   </Box>
                   {data.lastDiv && (
@@ -557,7 +559,7 @@ function Home({ services, seotags, reviews }) {
         <Box id="services">
           <Box>
             <Heading textTransform={"capitalize"} textAlign={"center"}>
-              Our <span style={{ color: "#EF2B4B" }}>Services</span>
+              Assignment Help <span style={{ color: "#EF2B4B" }}>Services</span>
             </Heading>
             <hr
               style={{
@@ -597,7 +599,7 @@ function Home({ services, seotags, reviews }) {
                     background={"#ffd9df"}
                     padding={"0.4rem"}
                   >
-                    <img src={data.icon} />
+                    <img src={data.icon} alt={data.altText} />
                   </Box>
                   <Box>
                     <Heading size="md">{data.heading}</Heading>
@@ -611,7 +613,7 @@ function Home({ services, seotags, reviews }) {
         <Box id="features">
           <Box>
             <Heading textTransform={"capitalize"} textAlign={"center"}>
-              Our <span style={{ color: "#EF2B4B" }}>Key Features</span>
+              Assignment Help <span style={{ color: "#EF2B4B" }}>Features</span>
             </Heading>
             <hr
               style={{
@@ -651,7 +653,7 @@ function Home({ services, seotags, reviews }) {
                     background={"#ffd9df"}
                     padding={"0.4rem"}
                   >
-                    <img src={data.icon} />
+                    <img src={data.icon} alt={data.altText} />
                   </Box>
                   <Box>
                     <Heading size="md">{data.heading}</Heading>

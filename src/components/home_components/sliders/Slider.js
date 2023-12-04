@@ -41,7 +41,10 @@ export default function Slider() {
             id="vid"
             muted
           >
-            <source src="/assets/educon.mp4" type="video/mp4" />
+            <source
+              src="/assets/assignment-feedback-by-student.mp4"
+              type="video/mp4"
+            />
           </video>
         </SwiperSlide>
         {/* <SwiperSlide><img src={Appreciation} class="d-block w-100" alt="..." /></SwiperSlide>
