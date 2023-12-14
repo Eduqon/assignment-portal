@@ -926,7 +926,11 @@ function AssignmentDetails() {
                 flex={{ base: 1 }}
                 justify={{ base: "center", md: "start" }}
               >
-                <Image src="/assets/newDesigns/Logo.png" w={20} />
+                <Image
+                  src="/assets/newDesigns/assignment-santa-logo.png"
+                  alt="assignment santa logo"
+                  w={20}
+                />
               </Flex>
             </Flex>
           </Box>

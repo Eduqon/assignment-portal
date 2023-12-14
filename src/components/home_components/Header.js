@@ -45,7 +45,10 @@ function Header({ services, onOpen }) {
     <Navbar expand="lg" style={{ zIndex: "22" }}>
       <Container fluid>
         <Navbar.Brand href="/">
-          <img src="/assets/newDesigns/Logo.png" alt="" />
+          <img
+            src="/assets/newDesigns/assignment-santa-logo.png"
+            alt="assignment santa logo"
+          />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse

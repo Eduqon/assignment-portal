@@ -255,7 +255,10 @@ function Home({ services, seotags, reviews }) {
         >
           <Box display={"flex"} justifyContent={"center"}>
             <Box width={["8%", "8%", "8%", "6%"]}>
-              <img src="/assets/icons/lines.png" />
+              <img
+                src="/assets/icons/assignment-santa-lines.png"
+                alt="assignment santa line"
+              />
             </Box>
             <Box
               display="flex"
@@ -703,6 +706,7 @@ function Home({ services, seotags, reviews }) {
                   require assistance with one?
                 </h3>
               </Box>
+              <br />
               <Text>
                 There is no doubt that writing projects are among the most
                 dreaded chores that students are given to complete during their
@@ -715,6 +719,7 @@ function Home({ services, seotags, reviews }) {
                 into difficulties while writing their assignments and are unsure
                 of who to turn to or where to look for assistance.
               </Text>
+              <br />
               <Text>
                 Academic assignments can be challenging or simple, depending on
                 the subject. Things will be a lot easier to manage for students
@@ -728,6 +733,7 @@ function Home({ services, seotags, reviews }) {
                 <strong>Assignment Santa</strong> for any form of assistance. We
                 are always available to assist you in finishing your assignment.
               </Text>
+              <br />
               <Text>
                 Although 24x7 accessibility is a minor aspect of our assignment
                 assistance services, other features like timeliness and
@@ -754,6 +760,7 @@ function Home({ services, seotags, reviews }) {
                   Assignments on Time
                 </h3>
               </Box>
+              <br />
               <Text>
                 The assignment is one of the most challenging tasks that
                 students have to do throughout their academic careers. Students
@@ -766,6 +773,7 @@ function Home({ services, seotags, reviews }) {
                 experience, students ultimately turned to the best assignment
                 assistance services online for help.
               </Text>
+              <br />
               <Text>
                 You might be having trouble finishing your assignments if you're
                 a student in high school, or university. Do you need any
@@ -779,6 +787,7 @@ function Home({ services, seotags, reviews }) {
                 deliver top-notch, precise answers before the deadline,
                 depending on your needs.
               </Text>
+              <br />
               <Text>
                 Take advantage of our online assignment writing assistance. By
                 enlisting our assignment help, you'll experience less academic
@@ -800,6 +809,7 @@ function Home({ services, seotags, reviews }) {
                   assignment help service, Best Writers, and Great Results.
                 </h3>
               </Box>
+              <br />
               <Text>
                 The cause for assignment writing failure is a query that the
                 majority of students ask themselves. Why getting an A on your
@@ -837,6 +847,7 @@ function Home({ services, seotags, reviews }) {
                   Canada, the UK, and the USA.
                 </h3>
               </Box>
+              <br />
               <Text>
                 Looking for reliable assignment help? Do you dislike having to
                 write essays? Or unsure of where to begin but eager to produce a
@@ -850,6 +861,7 @@ function Home({ services, seotags, reviews }) {
                 services stand out for their accessibility from everywhere,
                 which is a major plus.
               </Text>
+              <br />
               <Text>
                 Assignment Santa of Australia has a solid reputation in the
                 fields of custom dissertation writing, court writing services,
@@ -877,7 +889,7 @@ function Home({ services, seotags, reviews }) {
                   What Makes Our Online Assignment Helpers the Best for You?
                 </h3>
               </Box>
-
+              <br />
               <Text>
                 Whenever you run into any assignment-related issues, get in
                 touch with us right away. Our staff of academic writers is
@@ -886,6 +898,7 @@ function Home({ services, seotags, reviews }) {
                 is considered to be the best among all assignment writing
                 websites for the following reasons.
               </Text>
+              <br />
               <UnorderedList>
                 <ListItem>
                   We have native academic experts on our staff. Based on the

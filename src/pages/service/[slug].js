@@ -58,7 +58,7 @@ const data = {
   "@type": "Organization",
   name: "AssignmentSanta",
   url: "https://www.assignmentsanta.com",
-  logo: "https://www.assignmentsanta.com/assets/newDesigns/Logo.png",
+  logo: "https://www.assignmentsanta.com/assets/newDesigns/assignment-santa-logo.png",
   sameAs: [
     "https://www.facebook.com/assignmentsanta/",
     "https://twitter.com/AssignmentSanta",
@@ -80,7 +80,8 @@ const productData = {
   "@context": "http://schema.org/",
   "@type": "product",
   name: "assignmentsanta",
-  image: "https://www.assignmentsanta.com/assets/newDesigns/Logo.png",
+  image:
+    "https://www.assignmentsanta.com/assets/newDesigns/assignment-santa-logo.png",
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: "4.9",

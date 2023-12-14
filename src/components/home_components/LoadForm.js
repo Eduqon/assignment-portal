@@ -193,8 +193,8 @@ export default function LoadForm() {
               <div className="row set-dis">
                 <div className="col-2 ">
                   <img
-                    src="/assets/newDesigns/Logo.png"
-                    alt=""
+                    src="/assets/newDesigns/assignment-santa-logo.png"
+                    alt="assignment santa logo"
                     className="set_width1"
                   />
                 </div>

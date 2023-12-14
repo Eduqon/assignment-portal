@@ -26,7 +26,11 @@ export function NavbarAssignments() {
         align={"center"}
       >
         <Flex flex={{ base: 1 }} justify={{ base: "start", md: "start" }}>
-          <Image src="/assets/newDesigns/Logo.png" w={"10rem"} />
+          <Image
+            src="/assets/newDesigns/assignment-santa-logo.png"
+            w={"10rem"}
+            alt="assignment santa logo"
+          />
         </Flex>
         <HStack
           spacing={5}
