@@ -1,5 +1,7 @@
 "use client";
 import moment from "moment";
+import { useRouter } from "next/router";
+import validator from "validator";
 import { RiDoubleQuotesL } from "react-icons/ri";
 import { FaLocationArrow } from "react-icons/fa";
 import {
@@ -55,6 +57,7 @@ function Home({ services, seotags, reviews }) {
   const [subjects, setSubjects] = useState([]);
   const { data: reviewsData } = reviews;
   const limit = 12;
+  let navigate = useRouter();
 
   useEffect(() => {
     _fetchSubjects();

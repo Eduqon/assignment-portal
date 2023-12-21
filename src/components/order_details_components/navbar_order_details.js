@@ -16,7 +16,7 @@ export function NavbarOrderDetails() {
       >
         <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
           <Image
-            src="/assets/newDesigns/assignment-santa-logo.png.png"
+            src="/assets/newDesigns/assignment-santa-logo.png"
             alt="assignment santa logo"
             w={40}
           />
