@@ -53,10 +53,9 @@ const HeadLayout = ({ slug, seotags }) => {
     <>
       <Head>
         <title>{title}</title>
-        <meta name="description" content={description} />
-        <meta name="keyword" content={keyword} />
+        {description && <meta name="description" content={description} />}
+        {keyword && <meta name="keyword" content={keyword} />}
         {canonicalURL && <link rel="canonical" href={canonicalURL} />}
-
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}

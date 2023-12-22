@@ -28,6 +28,7 @@ import { client } from "../_app";
 import useFetch from "../../hooks/useFetch";
 import { Search2Icon } from "@chakra-ui/icons";
 import Pagination from "../../components/pagination_component/pagination";
+import Head from "next/head";
 
 export default function Blog({ services, seotags, blogs }) {
   // console.log({ blogs, services, seotags });
@@ -144,6 +145,36 @@ export default function Blog({ services, seotags, blogs }) {
         slug="academic-help-blog-student-help-blog"
         seotags={seotags}
       />
+      <Head>
+        <meta name="robots" content="max-image-preview:large" />
+        <meta
+          prefix="og: http://ogp.me/ns#"
+          property="og:type"
+          content="article"
+        />
+        <meta
+          prefix="og: http://ogp.me/ns#"
+          property="og:title"
+          content="Academic Help Blog for Students from Assignment Santa"
+        />
+        <meta
+          prefix="og: http://ogp.me/ns#"
+          property="og:description"
+          content="Get the latest updates and tips for academic students from Assignment Santa. Here you will find valuable content to help your academic career growth."
+        />
+        <meta
+          prefix="og: http://ogp.me/ns#"
+          property="og:url"
+          content="https://www.assignmentsanta.com/blog"
+        />
+        <meta
+          prefix="og: http://ogp.me/ns#"
+          property="og:site_name"
+          content="Assignment Santa Blog"
+        />
+        <meta name="twitter:site" content="@AssignmentSanta" />
+        <meta name="twitter:creator" content="@AssignmentSanta" />
+      </Head>
       <NavbarHome services={services} />
       <Divider />
       <Box position={"relative"}>

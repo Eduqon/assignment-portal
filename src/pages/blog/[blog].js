@@ -347,8 +347,55 @@ export default function NavService({
         <>
           <Head>
             {title && <title>{title}</title>}
+            {title && (
+              <meta
+                prefix="og: http://ogp.me/ns#"
+                property="og:title"
+                content={title}
+              />
+            )}
+            <meta name="robots" content="max-image-preview:large" />
+            <meta
+              prefix="og: http://ogp.me/ns#"
+              property="og:type"
+              content="article"
+            />
+            {description && (
+              <meta
+                prefix="og: http://ogp.me/ns#"
+                property="og:description"
+                content={description}
+              />
+            )}
+            <meta
+              prefix="og: http://ogp.me/ns#"
+              property="og:url"
+              content={`https://www.assignmentsanta.com/blog/${blog}`}
+            />
+            {blogImage && (
+              <meta
+                prefix="og: http://ogp.me/ns#"
+                property="og:image"
+                content={blogImage}
+              />
+            )}
+            <meta
+              prefix="article: http://ogp.me/ns/article#"
+              property="article:published_time"
+              content={new Date(
+                blogsdata.data[0].attributes.createdAt
+              ).toLocaleDateString()}
+            />
             {description && <meta name="description" content={description} />}
             {keyword && <meta name="keyword" content={keyword} />}
+            <meta
+              prefix="og: http://ogp.me/ns#"
+              property="og:site_name"
+              content="Assignment Santa Blog"
+            />
+            <meta name="twitter:card" content="summary" />
+            <meta name="twitter:site" content="@AssignmentSanta" />
+            <meta name="twitter:creator" content="@AssignmentSanta" />
             {canonicalURL && <link rel="canonical" href={canonicalURL} />}
             <script
               type="application/ld+json"
