@@ -17,6 +17,7 @@ import {
   FormLabel,
   HStack,
   Heading,
+  Image,
   Input,
   InputGroup,
   InputLeftElement,
@@ -258,10 +259,14 @@ function Home({ services, seotags, reviews }) {
         >
           <Box display={"flex"} justifyContent={"center"}>
             <Box width={["8%", "8%", "8%", "6%"]}>
-              <img
+              <Image
                 src="/assets/icons/assignment-santa-lines.png"
                 alt="assignment santa line"
               />
+              {/* <img
+                src="/assets/icons/assignment-santa-lines.png"
+                alt="assignment santa line"
+              /> */}
             </Box>
             <Box
               display="flex"
@@ -435,6 +440,7 @@ function Home({ services, seotags, reviews }) {
                     <InputLeftElement h={"full"}>
                       <Button
                         variant={"outline"}
+                        aria-label="Minus Icon"
                         onClick={() => {
                           if (pages <= 0) {
                             console.log("Already zero");
@@ -454,6 +460,7 @@ function Home({ services, seotags, reviews }) {
                     <InputRightElement h={"full"}>
                       <Button
                         variant={"outline"}
+                        aria-label="Add Icon"
                         onClick={() => {
                           setPages(pages + 1);
                         }}
@@ -466,8 +473,8 @@ function Home({ services, seotags, reviews }) {
                 <FormControl id="deadline">
                   <FormLabel>Deadline</FormLabel>
                   <HStack>
-                    <Input type="date" id="date" aria-labelledby="deadline" />
-                    <Input type="time" id="time" aria-labelledby="deadline" />
+                    <Input type="date" aria-labelledby="deadline" />
+                    <Input type="time" aria-labelledby="deadline" />
                   </HStack>
                 </FormControl>
                 <Stack spacing={10} pt={2}>
@@ -1014,9 +1021,7 @@ function Home({ services, seotags, reviews }) {
                           {review.attributes.Rating}
                         </span>
                       </Box>
-                      <Box id="date">
-                        {moment(review.attributes.Date).format("ll")}
-                      </Box>
+                      <Box>{moment(review.attributes.Date).format("ll")}</Box>
                     </Box>
                     <Box>
                       User ID:{" "}
