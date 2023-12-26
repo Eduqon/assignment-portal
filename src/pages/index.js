@@ -466,8 +466,8 @@ function Home({ services, seotags, reviews }) {
                 <FormControl id="deadline">
                   <FormLabel>Deadline</FormLabel>
                   <HStack>
-                    <Input type="date" id="date" />
-                    <Input type="time" id="time" />
+                    <Input type="date" id="date" aria-labelledby="deadline" />
+                    <Input type="time" id="time" aria-labelledby="deadline" />
                   </HStack>
                 </FormControl>
                 <Stack spacing={10} pt={2}>
@@ -489,7 +489,7 @@ function Home({ services, seotags, reviews }) {
               top={"5rem"}
               display={["none", "none", "block", "block"]}
             >
-              <img src="/assets/icons/Santa_home.png" />
+              <img src="/assets/icons/Santa_home.png" alt="Assignment Santa" />
             </Box>
           </Box>
         </Box>

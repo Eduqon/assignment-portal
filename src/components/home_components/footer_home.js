@@ -156,6 +156,7 @@ export function FooterHome() {
                   style={{
                     color: "#fff",
                   }}
+                  aria-label="Read more about on Instagram"
                 >
                   <TiSocialInstagramCircular />
                 </a>
@@ -165,6 +166,7 @@ export function FooterHome() {
                   style={{
                     color: "#fff",
                   }}
+                  aria-label="Read more about on Facebook"
                 >
                   <TiSocialFacebookCircular />
                 </a>
@@ -174,6 +176,7 @@ export function FooterHome() {
                   style={{
                     color: "#fff",
                   }}
+                  aria-label="Read more about on Twitter"
                 >
                   <TiSocialTwitterCircular />
                 </a>
@@ -183,6 +186,7 @@ export function FooterHome() {
                   style={{
                     color: "#fff",
                   }}
+                  aria-label="Read more about on Youtube"
                 >
                   <TiSocialYoutube />
                 </a>
