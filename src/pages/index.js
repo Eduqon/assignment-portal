@@ -260,8 +260,8 @@ function Home({ services, seotags, reviews }) {
           <Box display={"flex"} justifyContent={"center"}>
             <Box width={["8%", "8%", "8%", "6%"]}>
               <img
-                width="auto"
-                height="auto"
+                width="600"
+                height="400"
                 src="/assets/icons/assignment-santa-lines.png"
                 alt="assignment santa line"
               />
@@ -495,8 +495,8 @@ function Home({ services, seotags, reviews }) {
               display={["none", "none", "block", "block"]}
             >
               <img
-                width="auto"
-                height="auto"
+                width="600"
+                height="400"
                 src="/assets/icons/Santa_home.png"
                 alt="Assignment Santa"
               />
@@ -551,8 +551,8 @@ function Home({ services, seotags, reviews }) {
                   >
                     <Box width={["30%", "30%", "30%", "15%"]}>
                       <img
-                        width="auto"
-                        height="auto"
+                        width="600"
+                        height="400"
                         src={data.icon}
                         alt={data.altText}
                       />
@@ -643,8 +643,8 @@ function Home({ services, seotags, reviews }) {
                     padding={"0.4rem"}
                   >
                     <img
-                      width="auto"
-                      height="auto"
+                      width="600"
+                      height="400"
                       src={data.icon}
                       alt={data.altText}
                     />
@@ -702,8 +702,8 @@ function Home({ services, seotags, reviews }) {
                     padding={"0.4rem"}
                   >
                     <img
-                      width="auto"
-                      height="auto"
+                      width="600"
+                      height="400"
                       src={data.icon}
                       alt={data.altText}
                     />
@@ -1445,8 +1445,8 @@ function Home({ services, seotags, reviews }) {
             display={["none", "none", "none", "block"]}
           >
             <img
-              width="auto"
-              height="auto"
+              width="600"
+              height="400"
               src="/assets/newDesigns/FooterSanta.png"
               alt="Footer Santa"
             />
@@ -1495,8 +1495,8 @@ function Home({ services, seotags, reviews }) {
             transform={["scale(1)", "scale(1.1)"]}
           >
             <img
-              width="auto"
-              height="auto"
+              width="600"
+              height="400"
               src="/assets/newDesigns/Gifts.png"
               alt="Gifts"
             />
