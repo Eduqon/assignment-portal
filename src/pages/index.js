@@ -259,8 +259,9 @@ function Home({ services, seotags, reviews }) {
         >
           <Box display={"flex"} justifyContent={"center"}>
             <Box width={["8%", "8%", "8%", "6%"]}>
-              <Image
-                layout="fill"
+              <img
+                width="auto"
+                height="auto"
                 src="/assets/icons/assignment-santa-lines.png"
                 alt="assignment santa line"
               />
@@ -493,8 +494,9 @@ function Home({ services, seotags, reviews }) {
               top={"5rem"}
               display={["none", "none", "block", "block"]}
             >
-              <Image
-                layout="fill"
+              <img
+                width="auto"
+                height="auto"
                 src="/assets/icons/Santa_home.png"
                 alt="Assignment Santa"
               />
@@ -548,7 +550,12 @@ function Home({ services, seotags, reviews }) {
                     gap={"1rem"}
                   >
                     <Box width={["30%", "30%", "30%", "15%"]}>
-                      <Image layout="fill" src={data.icon} alt={data.altText} />
+                      <img
+                        width="auto"
+                        height="auto"
+                        src={data.icon}
+                        alt={data.altText}
+                      />
                     </Box>
                     <Box width={["70%", "70%", "70%", "80%"]}>
                       <h3
@@ -635,7 +642,12 @@ function Home({ services, seotags, reviews }) {
                     background={"#ffd9df"}
                     padding={"0.4rem"}
                   >
-                    <Image layout="fill" src={data.icon} alt={data.altText} />
+                    <img
+                      width="auto"
+                      height="auto"
+                      src={data.icon}
+                      alt={data.altText}
+                    />
                   </Box>
                   <Box>
                     <Heading size="md">{data.heading}</Heading>
@@ -689,7 +701,12 @@ function Home({ services, seotags, reviews }) {
                     background={"#ffd9df"}
                     padding={"0.4rem"}
                   >
-                    <Image layout="fill" src={data.icon} alt={data.altText} />
+                    <img
+                      width="auto"
+                      height="auto"
+                      src={data.icon}
+                      alt={data.altText}
+                    />
                   </Box>
                   <Box>
                     <Heading size="md">{data.heading}</Heading>
@@ -1427,8 +1444,9 @@ function Home({ services, seotags, reviews }) {
             transform={["translateX(-50%)", "none"]}
             display={["none", "none", "none", "block"]}
           >
-            <Image
-              layout="fill"
+            <img
+              width="auto"
+              height="auto"
               src="/assets/newDesigns/FooterSanta.png"
               alt="Footer Santa"
             />
@@ -1476,8 +1494,9 @@ function Home({ services, seotags, reviews }) {
             left={["0%", "7%"]}
             transform={["scale(1)", "scale(1.1)"]}
           >
-            <Image
-              layout="fill"
+            <img
+              width="auto"
+              height="auto"
               src="/assets/newDesigns/Gifts.png"
               alt="Gifts"
             />
