@@ -46,6 +46,8 @@ function Header({ services, onOpen }) {
       <Container fluid>
         <Navbar.Brand href="/">
           <img
+            width="600"
+            height="400"
             src="/assets/newDesigns/assignment-santa-logo.png"
             alt="assignment santa logo"
           />

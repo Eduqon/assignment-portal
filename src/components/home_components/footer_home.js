@@ -34,8 +34,9 @@ export function FooterHome() {
               >
                 <img
                   src="/assets/newDesigns/FooterLogo.png"
-                  alt=""
-                  style={{ width: "100%" }}
+                  alt="Footer Logo"
+                  width="600"
+                  height="400"
                 />
               </Box>
               <Box
