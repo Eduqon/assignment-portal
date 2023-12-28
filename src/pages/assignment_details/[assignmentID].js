@@ -927,7 +927,7 @@ function AssignmentDetails() {
                 justify={{ base: "center", md: "start" }}
               >
                 <Image
-                  src="/assets/newDesigns/assignment-santa-logo.png"
+                  src="/assets/newDesigns/assignment-santa-logo.webp"
                   alt="assignment santa logo"
                   w={20}
                 />

@@ -1,10 +1,5 @@
 import {
   Heading,
-  Image,
-  Card,
-  CardBody,
-  CardFooter,
-  ButtonGroup,
   Text,
   Box,
   HStack,
@@ -13,25 +8,21 @@ import {
   InputGroup,
   InputLeftElement,
   Input,
-  Stack,
 } from "@chakra-ui/react";
+import Head from "next/head";
 import { FiUsers } from "react-icons/fi";
 import { BiTime } from "react-icons/bi";
-import Link from "next/link";
 import Form from "react-bootstrap/Form";
 import React, { useEffect, useState } from "react";
 import { FooterHome } from "../../components/home_components/footer_home";
 import HeadLayout from "../../components/home_components/HeadLayout";
 import { NavbarHome } from "../../components/home_components/navbar_home";
-import { BLOGS, mediaUrl, SEOTAGS, SERVICES } from "../../services/contants";
+import { BLOGS, SEOTAGS, SERVICES } from "../../services/contants";
 import { client } from "../_app";
-import useFetch from "../../hooks/useFetch";
 import { Search2Icon } from "@chakra-ui/icons";
 import Pagination from "../../components/pagination_component/pagination";
-import Head from "next/head";
 
 export default function Blog({ services, seotags, blogs }) {
-  // console.log({ blogs, services, seotags });
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(12);
   const [input, setInput] = useState("");
@@ -39,15 +30,6 @@ export default function Blog({ services, seotags, blogs }) {
   const [blogListData, setBlogListData] = useState([]);
 
   const { data: blogData } = blogs;
-
-  // const { apiData } = useFetch(mediaUrl + "/upload/files");
-
-  // const blogImage =
-  //   apiData &&
-  //   blogData &&
-  //   apiData.filter((data) =>
-  //     blogData.find((val) => val.attributes.Slug === data.name)
-  //   );
 
   useEffect(() => {
     handleSort();
@@ -224,12 +206,11 @@ export default function Blog({ services, seotags, blogs }) {
           top={["3rem", "3rem", "2rem", "-5rem"]}
           right={["-3rem", "-3rem", "-5rem", 0]}
         >
-          <Image
-            src="/assets/newDesigns/SantaIcon.png"
+          <img
+            src="/assets/newDesigns/SantaIcon.webp"
             alt="Assignment santa"
-            borderRadius="xl"
-            objectFit="cover"
-            mx="auto"
+            width={"100%"}
+            height={"auto"}
           />
         </Box>
       </Box>
@@ -467,7 +448,12 @@ export default function Blog({ services, seotags, blogs }) {
             transform={["translateX(-50%)", "none"]}
             display={["none", "none", "none", "block"]}
           >
-            <img src="/assets/newDesigns/FooterSanta.png" alt="" />
+            <img
+              src="/assets/newDesigns/FooterSanta.png"
+              alt="Footer Santa"
+              width={"100%"}
+              height={"auto"}
+            />
           </Box>
         </Box>
         <Box
@@ -512,7 +498,12 @@ export default function Blog({ services, seotags, blogs }) {
             left={["0%", "7%"]}
             transform={["scale(1)", "scale(1.1)"]}
           >
-            <img src="/assets/newDesigns/Gifts.png" alt="" />
+            <img
+              src="/assets/newDesigns/Gifts.png"
+              alt="Gifts"
+              width={"100%"}
+              height={"auto"}
+            />
           </Box>
         </Box>
       </Box>

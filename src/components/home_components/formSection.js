@@ -212,7 +212,7 @@ const FormSection = () => {
             <Image
               width={600}
               height={600}
-              src="/assets/icons/assignment-santa-lines.png"
+              src="/assets/icons/assignment-santa-lines.webp"
               alt="assignment santa line"
             />
           </Box>
@@ -297,7 +297,7 @@ const FormSection = () => {
         >
           <Box
             position={"absolute"}
-            backgroundImage={"url(/assets/icons/orderNow_home.png)"}
+            backgroundImage={"url(/assets/icons/orderNow_home.webp)"}
             backgroundSize={"cover"}
             width={["100%", "100%", "65%", "100%"]}
             height={"4rem"}
@@ -419,8 +419,8 @@ const FormSection = () => {
               <FormControl id="deadline">
                 <FormLabel>Deadline</FormLabel>
                 <HStack>
-                  <Input type="date" aria-labelledby="deadline" />
-                  <Input type="time" aria-labelledby="deadline" />
+                  <Input type="date" aria-labelledby="deadline-date" />
+                  <Input type="time" aria-labelledby="deadline-time" />
                 </HStack>
               </FormControl>
               <Stack spacing={10} pt={2}>
@@ -445,7 +445,7 @@ const FormSection = () => {
             <Image
               width={600}
               height={1000}
-              src="/assets/icons/Santa_home.png"
+              src="/assets/icons/Santa_home.webp"
               alt="Assignment Santa"
             />
           </Box>

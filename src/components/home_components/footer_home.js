@@ -33,7 +33,7 @@ export function FooterHome() {
                 width={["auto", "auto", "auto", "15rem"]}
               >
                 <img
-                  src="/assets/newDesigns/FooterLogo.png"
+                  src="/assets/newDesigns/FooterLogo.webp"
                   alt="Footer Logo"
                   width="600"
                   height="400"

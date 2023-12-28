@@ -48,7 +48,7 @@ function Header({ services, onOpen }) {
           <img
             width="600"
             height="400"
-            src="/assets/newDesigns/assignment-santa-logo.png"
+            src="/assets/newDesigns/assignment-santa-logo.webp"
             alt="assignment santa logo"
           />
         </Navbar.Brand>

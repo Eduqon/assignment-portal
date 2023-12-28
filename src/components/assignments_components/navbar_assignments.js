@@ -27,7 +27,7 @@ export function NavbarAssignments() {
       >
         <Flex flex={{ base: 1 }} justify={{ base: "start", md: "start" }}>
           <Image
-            src="/assets/newDesigns/assignment-santa-logo.png"
+            src="/assets/newDesigns/assignment-santa-logo.webp"
             w={"10rem"}
             alt="assignment santa logo"
           />

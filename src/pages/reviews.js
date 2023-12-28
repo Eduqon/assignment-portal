@@ -104,7 +104,7 @@ export default function Review({ services, seotags, reviews }) {
           right={["-3rem", 0]}
         >
           <Image
-            src="/assets/newDesigns/SantaIcon.png"
+            src="/assets/newDesigns/SantaIcon.webp"
             alt="Assignment santa"
             borderRadius="xl"
             objectFit="cover"
@@ -141,7 +141,7 @@ export default function Review({ services, seotags, reviews }) {
             justifyContent={["start", "center"]}
           >
             <Box width={"25%"}>
-              <img src="/assets/newDesigns/score_icon.png" alt="" />
+              <img src="/assets/newDesigns/score_icon.webp" alt="" />
             </Box>
             <Box>
               <span
@@ -170,7 +170,7 @@ export default function Review({ services, seotags, reviews }) {
             justifyContent={["start", "center"]}
           >
             <Box width={"25%"}>
-              <img src="/assets/newDesigns/reviews_icon.png" alt="" />
+              <img src="/assets/newDesigns/reviews_icon.webp" alt="" />
             </Box>
             <Box>
               <span
@@ -199,7 +199,7 @@ export default function Review({ services, seotags, reviews }) {
             justifyContent={["start", "center"]}
           >
             <Box width={"25%"}>
-              <img src="/assets/newDesigns/customers_icons.png" alt="" />
+              <img src="/assets/newDesigns/customers_icons.webp" alt="" />
             </Box>
             <Box>
               <span
@@ -384,21 +384,33 @@ export default function Review({ services, seotags, reviews }) {
           </Heading>
           <Box display={"flex"} flexDirection={"column"} gap={"2rem"}>
             <Box display={"flex"} alignItems={"baseline"} gap={"1rem"}>
-              <img src="/assets/newDesigns/tick_icon.png" alt="" width={"2%"} />
+              <img
+                src="/assets/newDesigns/tick_icon.webp"
+                alt=""
+                width={"2%"}
+              />
               <Text fontSize={"18px"} fontWeight={"400"}>
                 Our reviews are exclusively from verified customers who have
                 received completed orders, ensuring authenticity.
               </Text>
             </Box>
             <Box display={"flex"} alignItems={"baseline"} gap={"1rem"}>
-              <img src="/assets/newDesigns/tick_icon.png" alt="" width={"2%"} />
+              <img
+                src="/assets/newDesigns/tick_icon.webp"
+                alt=""
+                width={"2%"}
+              />
               <Text fontSize={"18px"} fontWeight={"400"}>
                 Each feedback is derived from genuine customer experiences and
                 will never be manipulated or deleted.
               </Text>
             </Box>
             <Box display={"flex"} alignItems={"baseline"} gap={"1rem"}>
-              <img src="/assets/newDesigns/tick_icon.png" alt="" width={"2%"} />
+              <img
+                src="/assets/newDesigns/tick_icon.webp"
+                alt=""
+                width={"2%"}
+              />
               <Text fontSize={"18px"} fontWeight={"400"}>
                 We value your input: your reviews assist us in maintaining
                 quality control and improving the work of our writers.
