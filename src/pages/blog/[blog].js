@@ -35,13 +35,12 @@ import {
   BLOG,
   BLOGS,
   FAQSCHEMA,
-  mediaUrl,
   OTHERASSIGNMENTSERVICES,
   SERVICES,
 } from "../../services/contants";
 import { useRouter } from "next/router";
 import { NavbarHome } from "../../components/home_components/navbar_home";
-import { FooterHome } from "../../components/home_components/footer_home";
+import FooterHome from "../../components/home_components/footer_home";
 import { client } from "../_app";
 import Custom404 from "../404";
 import Faqschema from "../../components/home_components/Faqschema";

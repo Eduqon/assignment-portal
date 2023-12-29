@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { FaStar } from "react-icons/fa";
 import { RiDoubleQuotesL } from "react-icons/ri";
-import { FooterHome } from "../components/home_components/footer_home";
+import FooterHome from "../components/home_components/footer_home";
 import HeadLayout from "../components/home_components/HeadLayout";
 import { NavbarHome } from "../components/home_components/navbar_home";
 import { client } from "./_app";

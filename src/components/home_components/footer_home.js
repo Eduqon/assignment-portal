@@ -1,5 +1,4 @@
 import { Box, Divider, Heading, Text } from "@chakra-ui/react";
-import Image from "next/image";
 import { LiaMapMarkerSolid } from "react-icons/lia";
 import { AiOutlineMail } from "react-icons/ai";
 import {
@@ -8,9 +7,8 @@ import {
   TiSocialTwitterCircular,
   TiSocialYoutube,
 } from "react-icons/ti";
-import Link from "next/link";
 
-export function FooterHome() {
+export default function FooterHome() {
   return (
     <Box
       className="set-back"

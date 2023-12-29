@@ -12,7 +12,6 @@ import {
   Stack,
   Button,
   Heading,
-  useColorModeValue,
   InputLeftElement,
   TableContainer,
   Table,
@@ -31,7 +30,6 @@ import {
   MinusIcon,
   Search2Icon,
 } from "@chakra-ui/icons";
-import { isMobile } from "react-device-detect";
 import validator from "validator";
 import { ClientStore } from "../../services/stores/client_store";
 import { AssignmentFormStore } from "../../services/stores/assignment_form_store";
@@ -39,15 +37,13 @@ import axios from "axios";
 import {
   apiUrl,
   FAQSCHEMA,
-  mediaUrl,
   OTHERASSIGNMENTSERVICES,
   SERVICE,
   SERVICES,
 } from "../../services/contants";
 import { useRouter } from "next/router";
-import useFetch from "../../hooks/useFetch";
 import { NavbarHome } from "../../components/home_components/navbar_home";
-import { FooterHome } from "../../components/home_components/footer_home";
+import FooterHome from "../../components/home_components/footer_home";
 import Testomonial from "../../components/home_components/Testomonial";
 import Faqschema from "../../components/home_components/Faqschema";
 import { client } from "../_app";

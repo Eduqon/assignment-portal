@@ -1,16 +1,11 @@
 import React from "react";
-import MegaMenu from "../components/home_components/MegaMenu";
 import { NavbarHome } from "../components/home_components/navbar_home";
-import { FormHome } from "../components/home_components/form_home";
-import { FooterHome } from "../components/home_components/footer_home";
+import FooterHome from "../components/home_components/footer_home";
 import { MdOutlineChecklist } from "react-icons/md";
-import { BiMailSend, BiPhoneCall } from "react-icons/bi";
-import { AiOutlineWhatsApp } from "react-icons/ai";
 import { IoMdArrowDropright } from "react-icons/io";
 import Link from "next/link";
 import HeadLayout from "../components/home_components/HeadLayout";
 import { client } from "./_app";
-import AnonymousChat from "../components/chat_components/anonymous_chat";
 import { SEOTAGS, SERVICES } from "../services/contants";
 
 export default function Samples({ services, seotags }) {

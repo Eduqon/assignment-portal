@@ -14,7 +14,7 @@ import { FiUsers } from "react-icons/fi";
 import { BiTime } from "react-icons/bi";
 import Form from "react-bootstrap/Form";
 import React, { useEffect, useState } from "react";
-import { FooterHome } from "../../components/home_components/footer_home";
+import FooterHome from "../../components/home_components/footer_home";
 import HeadLayout from "../../components/home_components/HeadLayout";
 import { NavbarHome } from "../../components/home_components/navbar_home";
 import { BLOGS, SEOTAGS, SERVICES } from "../../services/contants";

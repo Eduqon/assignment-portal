@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { NavbarHome } from "../components/home_components/navbar_home";
-import { FooterHome } from "../components/home_components/footer_home";
+import FooterHome from "../components/home_components/footer_home";
 import { FcPrivacy } from "react-icons/fc";
 import HeadLayout from "../components/home_components/HeadLayout";
 import { client } from "./_app";

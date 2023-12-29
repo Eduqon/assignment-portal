@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { FcContacts } from "react-icons/fc";
 import { NavbarHome } from "../components/home_components/navbar_home";
-import { FooterHome } from "../components/home_components/footer_home";
+import FooterHome from "../components/home_components/footer_home";
 import { FaRegAddressCard, FaPhoneAlt } from "react-icons/fa";
 import HeadLayout from "../components/home_components/HeadLayout";
 import { client } from "./_app";

@@ -1,11 +1,9 @@
 import {
   Box,
-  Flex,
   FormControl,
   FormLabel,
   Input,
   InputGroup,
-  HStack,
   InputRightElement,
   Stack,
   Button,
@@ -28,7 +26,7 @@ import { useRouter } from "next/router";
 import { apiUrl, SERVICES } from "../services/contants";
 import { client } from "./_app";
 import Link from "next/link";
-import { FooterHome } from "../components/home_components/footer_home";
+import FooterHome from "../components/home_components/footer_home";
 
 const Custom404 = ({ services }) => {
   const [pages, setPages] = useState(0);

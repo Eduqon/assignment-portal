@@ -4,27 +4,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { FaListUl } from "react-icons/fa";
 import "swiper/css/navigation";
-// import one from './client-img/one.webp'
 import { Navigation, Autoplay } from "swiper";
-import { IoIosArrowForward } from "react-icons/io";
-import { AiFillProject } from "react-icons/ai";
-import { GiProgression } from "react-icons/gi";
-import { MdLiveHelp } from "react-icons/md";
-import { BsJournalBookmarkFill, BsPencilFill } from "react-icons/bs";
-import { ImSearch } from "react-icons/im";
-import LoadForm from "./LoadForm";
-import AutoFakePopup from "./AutoFakePopup";
-import Dissertation from "./featuresImages/Dissertation.png";
-import time from "./featuresImages/time.png";
-import Online from "./featuresImages/Online.png";
-import Casestudy from "./img/Casestudy.png";
-import Completecoursework from "./img/Completecoursework.png";
-import DissertationHead from "./img/DissertationHead.png";
-import EssayWritingHelp from "./img/EssayWritingHelp.png";
-import Researchpaperhelp from "./img/Researchpaperhelp.png";
-import Thesis from "./img/Thesis.png";
-import Whychooseourhelp from "./img/Whychooseourhelp.png";
-import { FooterHome } from "./footer_home";
 import one from "./sliders/one.webp";
 import newzland from "./sliders/newzland.gif";
 import UK from "./sliders/UK.webp";
@@ -36,9 +16,7 @@ import australia from "./sliders/australia.webp";
 import CountUp from "react-countup";
 import { HiOutlineClipboardList } from "react-icons/hi";
 import View from "../../assets/foter/View.png";
-// import educon from './img/educon.mp4';
 import { Box } from "@chakra-ui/react";
-import AnonymousChat from "../chat_components/anonymous_chat";
 import Allfeatures from "./Allfeatures";
 // main list
 const Subject1 = [

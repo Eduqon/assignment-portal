@@ -3,7 +3,6 @@ import { Helmet } from "react-helmet-async";
 import ReactMarkdown from "react-markdown";
 import { NavbarHome } from "./navbar_home";
 import {
-  Flex,
   Box,
   FormControl,
   FormLabel,
@@ -14,32 +13,21 @@ import {
   Stack,
   Button,
   Heading,
-  Text,
   useColorModeValue,
   InputLeftElement,
-  Center,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { isMobile } from "react-device-detect";
 import { useQuery, gql } from "@apollo/client";
-import home_image from "../../assets/home_bg.jpg";
 import validator from "validator";
 import { ClientStore } from "../../services/stores/client_store";
 import { AssignmentFormStore } from "../../services/stores/assignment_form_store";
 import axios from "axios";
 import { apiUrl, mediaUrl } from "../../services/contants";
 import { useNavigate, useParams } from "react-router-dom";
-import home4 from "../../assets/home4.jpg";
-import hom1 from "../../assets/hom1.jpg";
-import three from "../../assets/three.jpg";
-import imm from "./imm.png";
-import Slider from "./sliders/Slider";
-import AllhomePageForservie from "./AllhomePageForservie";
-import { FooterHome } from "./footer_home";
-import AutoFakePopup from "./AutoFakePopup";
+import FooterHome from "./footer_home";
 import { useLocation } from "react-router-dom";
-import { FormHome } from "./form_home";
 import Testomonial from "./Testomonial";
 import useFetch from "../../hooks/useFetch";
 import "./Navservice.css";
