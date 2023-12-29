@@ -344,10 +344,10 @@ const Custom404 = ({ services }) => {
                     </InputRightElement>
                   </InputGroup>
                 </FormControl>
-                <FormControl id="deadline">
+                <FormControl>
                   <Textarea placeholder="Enter Assignment Description" />
                 </FormControl>
-                <FormControl id="deadline">
+                <FormControl>
                   <Checkbox>
                     I accept the T&C and other policies of the website and agree
                     to receive offers and updates.

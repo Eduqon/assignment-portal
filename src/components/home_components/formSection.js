@@ -416,7 +416,7 @@ const FormSection = () => {
                   </InputRightElement>
                 </InputGroup>
               </FormControl>
-              <FormControl id="deadline">
+              <FormControl>
                 <FormLabel>Deadline</FormLabel>
                 <HStack>
                   <Input type="date" aria-labelledby="deadline-date" />

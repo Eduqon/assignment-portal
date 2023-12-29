@@ -259,7 +259,7 @@ export default function LoadForm() {
                   </FormControl>
                 </div>
                 <div className="col-2">
-                  <FormControl id="deadline">
+                  <FormControl>
                     <div className="d-flex justify-content-center align-itmes-center">
                       <input
                         type="date"

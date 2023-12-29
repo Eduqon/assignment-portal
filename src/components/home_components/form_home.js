@@ -356,7 +356,7 @@ export const FormHome = () => {
                       </InputRightElement>
                     </InputGroup>
                   </FormControl>
-                  <FormControl id="deadline">
+                  <FormControl>
                     <FormLabel>Deadline</FormLabel>
                     <HStack>
                       <Input type="date" id="date" />
